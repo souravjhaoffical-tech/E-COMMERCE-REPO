@@ -1,5 +1,5 @@
 
-USE ecommerce_db;
+USE c;
 
 CREATE TABLE  eproduct (
     id INT  AUTO_INCREMENT PRIMARY KEY, 
@@ -10,6 +10,7 @@ CREATE TABLE  eproduct (
 
 CREATE TABLE  users  (
     id INT AUTO_INCREMENT PRIMARY KEY, 
+    name VARCHAR (100),
     email VARCHAR (100),
     password VARCHAR (100)
 );

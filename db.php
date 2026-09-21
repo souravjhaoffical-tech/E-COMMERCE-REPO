@@ -3,7 +3,7 @@ $conn = mysqli_connect(
     "localhost",
     "root",
     "",
-    "ecommerce_db"
+    "c"
 );
 if(!$conn) {
     echo ("not connected");
