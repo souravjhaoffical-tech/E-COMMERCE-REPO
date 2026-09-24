@@ -9,12 +9,11 @@ if (isset($_POST['add'])) {
 
     $sql = "INSERT INTO users  ( name,email,password) VALUES ('$name','$email','$password')";
     mysqli_query($conn,$sql);
-    echo = "register sucessfully"
+    echo  "register sucessfully";
     header("location:login.php");
 
 }
 ?>
-<h1> add product </h1>
 <form method ="post">
     name :
     <input type = "text" name = "name" required>
