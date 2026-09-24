@@ -5,7 +5,8 @@ CREATE TABLE  eproduct (
     id INT  AUTO_INCREMENT PRIMARY KEY, 
     p_brand VARCHAR (100),
     p_name VARCHAR (100),
-    p_price VARCHAR (100)
+    p_price VARCHAR (100),
+    image  VARCHAR (250)
 );
 
 CREATE TABLE  users  (

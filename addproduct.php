@@ -5,12 +5,14 @@ if (isset($_POST['add'])) {
     $brand = $_POST['brand']; 
     $name = $_POST['name']; 
     $price = $_POST['price']; 
- 
-    $sql = "INSERT INTO eproduct (p_brand, p_name, p_price) 
-            VALUES ('$brand','$name','$price')"; 
-    
-    mysqli_query($conn,$sql); 
-    
+
+    $image = $_FILES['image'] ['name'];
+    $temp = $_FILES['image']['tmp_name'];
+
+    //upload image
+    move_uploaded_file($temp,"uploads/".$image);
+     $sql = "INSERT INTO eproduct (p_brand, p_name, p_price,image) VALUES ('$brand','$name','$price','$image')";
+    mysqli_query($conn,$sql);
     header("location: product.php"); 
 } 
 ?>
@@ -732,7 +734,7 @@ h1{
 
 
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
 
 
         <!-- BRAND -->
@@ -786,8 +788,8 @@ h1{
                 required>
 
         </div>
-
-
+         product image: 
+        <input type="file" name="image" required>
 
         <!-- BUTTON -->
 

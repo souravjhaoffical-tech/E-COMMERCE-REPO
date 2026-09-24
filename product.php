@@ -80,6 +80,7 @@ $product = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
         <tr>
             <th>ID</th>
+            <th>image </th>
             <th>Brand</th>
             <th>Name</th>
             <th>Price</th>
@@ -90,6 +91,17 @@ $product = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
         <tr>
             <td><?php echo $x['id']; ?></td>
+            
+            <td>
+
+            <img
+            src="uploads/<?php echo $x['image'];?>"
+            width = "100"
+            height = "70"
+
+            >
+
+            </td>
 
             <td><?php echo $x['p_brand']; ?></td>
 
