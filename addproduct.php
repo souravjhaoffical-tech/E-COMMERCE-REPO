@@ -69,8 +69,8 @@ body{
 
     color:white;
 
-    overflow:hidden;
-
+    overflow-y:auto;
+    overflow-x:hidden;
 }
 
 
@@ -677,6 +677,111 @@ h1{
     }
 
 }
+```css
+/* ================= IMAGE UPLOAD ================= */
+
+.image-upload{
+    width:100%;
+}
+
+
+/* Hide Default File Input */
+
+.image-upload input[type="file"]{
+    display:none;
+}
+
+
+/* Upload Box */
+
+.upload-box{
+
+    width:100%;
+
+    min-height:130px;
+
+    border:2px dashed rgba(0,234,255,.35);
+
+    border-radius:16px;
+
+    background:#0c1020;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    box-shadow:
+        inset 0 0 20px
+        rgba(0,234,255,.03);
+
+}
+
+
+/* Icon */
+
+.upload-icon{
+
+    font-size:32px;
+
+    margin-bottom:8px;
+
+}
+
+
+/* Main Text */
+
+.upload-text{
+
+    color:#00eaff;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+}
+
+
+/* Small Text */
+
+.upload-subtext{
+
+    color:#666;
+
+    font-size:12px;
+
+    margin-top:5px;
+
+}
+
+
+/* Hover */
+
+.upload-box:hover{
+
+    border-color:#00eaff;
+
+    background:#10162b;
+
+    transform:translateY(-2px);
+
+    box-shadow:
+
+        0 0 20px
+        rgba(0,234,255,.12),
+
+        inset 0 0 15px
+        rgba(0,234,255,.05);
+
+}
+
 
 </style>
 
@@ -788,8 +893,17 @@ h1{
                 required>
 
         </div>
-         product image: 
-        <input type="file" name="image" required>
+         <!-- PRODUCT IMAGE -->
+           <div class="form-group"> 
+            <label> Product Image </label> 
+            <div class="image-upload"> <input type="file" name="image" id="image" accept="image/*" required>
+            <label for="image" class="upload-box">
+                 <span class="upload-icon">📷</span> 
+                 <span class="upload-text"> Choose Product Image </span>
+                  <span class="upload-subtext"> JPG, PNG or JPEG </span> 
+                </label>
+             </div>
+             </div>
 
         <!-- BUTTON -->
 
