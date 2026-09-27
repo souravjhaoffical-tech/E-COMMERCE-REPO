@@ -1,11 +1,14 @@
 <?php
+
 $conn = mysqli_connect(
     "localhost",
     "root",
     "",
     "c"
 );
-if(!$conn) {
-    echo ("not connected");
+
+if (!$conn) {
+    die("Database connection failed: " . mysqli_connect_error());
 }
+
 ?>
