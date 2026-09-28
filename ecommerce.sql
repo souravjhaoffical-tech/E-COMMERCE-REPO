@@ -1,12 +1,20 @@
 
-USE c;
+USE K;
 
 CREATE TABLE  eproduct (
     id INT  AUTO_INCREMENT PRIMARY KEY, 
     p_brand VARCHAR (100),
     p_name VARCHAR (100),
-    p_price VARCHAR (100),
+    p_price INT (100),
     image  VARCHAR (250)
+);
+
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    p_name VARCHAR(100),
+    p_price INT, 
+    payment_method VARCHAR(50),
+    STATUS VARCHAR (50)
 );
 
 CREATE TABLE users (
@@ -16,13 +24,8 @@ CREATE TABLE users (
     password VARCHAR(255)
 );
 
-INSERT INTO users (name,email,password,role) VALUES('Sourav Jha','souravjha700377@gmail.com','1234','admin');
+INSERT INTO users (email,password) VALUES('souravjha700377@gmail.com','1234');
 
-ALTER TABLE users 
-ADD role VARCHAR(20) DEFAULT 'user';
-UPDATE users
-SET role = 'admin'
-WHERE email = 'souravjha700377@gmail.com';
 
 
 
