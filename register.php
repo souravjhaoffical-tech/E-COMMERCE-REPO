@@ -1,379 +1,302 @@
 <?php
 include "db.php";
 
-$message = "";
-$message_type = "";
-
 if (isset($_POST['register'])) {
-
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
+    $name = $_POST['name'];
+    $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Check email already exists
-    $check = "SELECT * FROM users WHERE email = ?";
-    $stmt = mysqli_prepare($conn, $check);
-    mysqli_stmt_bind_param($stmt, "s", $email);
-    mysqli_stmt_execute($stmt);
+    $sql = "INSERT INTO users (name,email,password)
+            VALUES ('$name','$email','$password')";
 
-    $result = mysqli_stmt_get_result($stmt);
+    mysqli_query($conn, $sql);
 
-    if (mysqli_num_rows($result) > 0) {
-
-        $message = "Email already registered!";
-        $message_type = "error";
-
-    } else {
-
-        // Secure password
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-        $sql = "INSERT INTO users (name, email, password, role)
-                VALUES (?, ?, ?, 'user')";
-
-        $stmt = mysqli_prepare($conn, $sql);
-
-        mysqli_stmt_bind_param(
-            $stmt,
-            "sss",
-            $name,
-            $email,
-            $hashed_password
-        );
-
-        if (mysqli_stmt_execute($stmt)) {
-
-            header("Location: user_login.php");
-            exit;
-
-        } else {
-
-            $message = "Registration failed. Please try again.";
-            $message_type = "error";
-        }
-    }
+    header("Location: login.php");
+    exit();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Create Account</title>
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #667eea,
-                    #764ba2
-                );
-
-            padding: 20px;
-        }
-
-        .register-container {
-            width: 100%;
-            max-width: 430px;
-        }
-
-        .register-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-
-            box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.2);
-
-            animation: slideUp 0.6s ease;
-        }
-
-        @keyframes slideUp {
-
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-        }
-
-        .logo {
-            width: 70px;
-            height: 70px;
-
-            margin: 0 auto 20px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 50%;
-
-            background: linear-gradient(
-                135deg,
-                #667eea,
-                #764ba2
-            );
-
-            color: white;
-
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        h2 {
-            text-align: center;
-            color: #222;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #777;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .input-group input {
-            width: 100%;
-
-            padding: 13px 15px;
-
-            border: 1px solid #ddd;
-            border-radius: 10px;
-
-            outline: none;
-
-            font-size: 15px;
-
-            transition: 0.3s;
-        }
-
-        .input-group input:focus {
-
-            border-color: #667eea;
-
-            box-shadow:
-                0 0 0 3px rgba(102, 126, 234, 0.15);
-        }
-
-        .register-btn {
-
-            width: 100%;
-
-            padding: 14px;
-
-            border: none;
-            border-radius: 10px;
-
-            background: linear-gradient(
-                135deg,
-                #667eea,
-                #764ba2
-            );
-
-            color: white;
-
-            font-size: 16px;
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.3s;
-        }
-
-        .register-btn:hover {
-
-            transform: translateY(-2px);
-
-            box-shadow:
-                0 8px 20px rgba(102, 126, 234, 0.35);
-        }
-
-        .login-text {
-
-            text-align: center;
-
-            margin-top: 22px;
-
-            font-size: 14px;
-
-            color: #666;
-        }
-
-        .login-text a {
-
-            color: #667eea;
-
-            text-decoration: none;
-
-            font-weight: bold;
-        }
-
-        .login-text a:hover {
-            text-decoration: underline;
-        }
-
-        .message {
-
-            padding: 12px;
-
-            border-radius: 8px;
-
-            margin-bottom: 20px;
-
-            text-align: center;
-
-            font-size: 14px;
-        }
-
-        .error {
-
-            background: #ffe5e5;
-            color: #d63031;
-        }
-
-        @media (max-width: 480px) {
-
-            .register-card {
-                padding: 30px 22px;
-            }
-
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopEase - Register</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #eef2fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* MAIN BOX */
+
+.container {
+    width: 850px;
+    height: 500px;
+    display: flex;
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+/* LEFT */
+
+.left {
+    width: 45%;
+    background: #182335;
+    color: white;
+    padding: 45px;
+    position: relative;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 65px;
+}
+
+.logo span {
+    color: #ff9d00;
+}
+
+.left h1 {
+    font-size: 34px;
+    margin-bottom: 15px;
+}
+
+.left p {
+    color: #cbd0d9;
+    line-height: 1.5;
+    font-size: 15px;
+}
+
+.tagline {
+    position: absolute;
+    bottom: 55px;
+    color: #ff9d00;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.cart {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+    font-size: 50px;
+}
+
+/* RIGHT */
+
+.right {
+    width: 55%;
+    padding: 45px 55px;
+}
+
+.right h2 {
+    font-size: 32px;
+    color: #182335;
+    margin-bottom: 7px;
+}
+
+.subtitle {
+    color: #737b8b;
+    font-size: 14px;
+    margin-bottom: 27px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    color: #374151;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 7px;
+}
+
+input {
+    width: 100%;
+    height: 43px;
+    padding: 0 15px;
+    border: 1px solid #d5d9e0;
+    border-radius: 10px;
+    outline: none;
+    font-size: 14px;
+}
+
+input:focus {
+    border-color: #ff9d00;
+}
+
+button {
+    width: 100%;
+    height: 45px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 10px;
+    background: #f99a05;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #e98900;
+}
+
+.bottom-text {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 13px;
+    color: #737b8b;
+}
+
+.bottom-text a {
+    color: #e88900;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.secure {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #8a919d;
+}
+
+/* MOBILE */
+
+@media(max-width: 750px) {
+
+    .container {
+        width: 92%;
+        height: auto;
+        flex-direction: column;
+    }
+
+    .left,
+    .right {
+        width: 100%;
+    }
+
+    .left {
+        padding: 30px;
+        min-height: 250px;
+    }
+
+    .logo {
+        margin-bottom: 35px;
+    }
+
+    .tagline {
+        bottom: 25px;
+    }
+
+    .cart {
+        bottom: 15px;
+    }
+
+    .right {
+        padding: 30px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<div class="register-container">
+<div class="container">
 
-    <div class="register-card">
+    <div class="left">
 
         <div class="logo">
-            🛒
+            Shop<span>Ease</span>
         </div>
+
+        <h1>Join Us!</h1>
+
+        <p>
+            Create your account and enjoy
+            easy shopping with amazing products
+            at great prices.
+        </p>
+
+        <div class="tagline">
+            🛍️ Simple. Smart. Shopping.
+        </div>
+
+        <div class="cart">🛒</div>
+
+    </div>
+
+
+    <div class="right">
 
         <h2>Create Account</h2>
 
         <p class="subtitle">
-            Join us and start shopping today
+            Register to start shopping with ShopEase
         </p>
-
-        <?php if ($message != "") { ?>
-
-            <div class="message <?php echo $message_type; ?>">
-                <?php echo $message; ?>
-            </div>
-
-        <?php } ?>
 
         <form method="post">
 
-            <div class="input-group">
-
+            <div class="form-group">
                 <label>Full Name</label>
-
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Enter your name"
-                    required
-                >
-
+                <input type="text"
+                       name="name"
+                       placeholder="Enter your name"
+                       required>
             </div>
 
-
-            <div class="input-group">
-
+            <div class="form-group">
                 <label>Email Address</label>
-
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    required
-                >
-
+                <input type="email"
+                       name="email"
+                       placeholder="Enter your email"
+                       required>
             </div>
 
-
-            <div class="input-group">
-
+            <div class="form-group">
                 <label>Password</label>
-
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Create a password"
-                    required
-                >
-
+                <input type="password"
+                       name="password"
+                       placeholder="Create a password"
+                       required>
             </div>
 
-
-            <button
-                type="submit"
-                name="register"
-                class="register-btn"
-            >
-                Create Account
+            <button type="submit" name="register">
+                Register
             </button>
 
         </form>
 
-
-        <p class="login-text">
-
+        <div class="bottom-text">
             Already have an account?
+            <a href="login.php">Login</a>
+        </div>
 
-            <a href="user_login.php">
-                Login
-            </a>
-
-        </p>
+        <div class="secure">
+            🔒 Secure registration
+        </div>
 
     </div>
 
 </div>
 
 </body>
-
 </html>

@@ -13,7 +13,7 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100),
     email VARCHAR(100) UNIQUE,
-    password VARCHAR(255),
+    password VARCHAR(255)
 );
 
 INSERT INTO users (name,email,password,role) VALUES('Sourav Jha','souravjha700377@gmail.com','1234','admin');
@@ -23,3 +23,6 @@ ADD role VARCHAR(20) DEFAULT 'user';
 UPDATE users
 SET role = 'admin'
 WHERE email = 'souravjha700377@gmail.com';
+
+
+
