@@ -1,7 +1,8 @@
 <?php
-session_start()
+session_start();
+
 $id = $_GET['id'];
-$_SESSION['cart'] [] =$id;
-header("location : cart.php")
+$_SESSION['cart'] [] = $id;
+header("Location: cart.php");
 
 ?>

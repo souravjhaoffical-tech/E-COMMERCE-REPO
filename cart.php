@@ -233,34 +233,36 @@ $total = 0;
 
                     <tbody>
 
-                        <?php foreach ($cart_items as $item): ?>
+                       <?php foreach ($cart_items as $item): ?>
 
-                            <tr>
+    <?php
+    $name = $item['name'] ?? 'Unknown Product';
+    $price = (float)($item['price'] ?? 0);
+    $quantity = (int)($item['quantity'] ?? 1);
+    $item_total = $price * $quantity;
 
-                                <td>
-                                    <?php echo htmlspecialchars($item['name']); ?>
-                                </td>
+    $total += $item_total;
+    ?>
 
-                                <td>
-                                    ₹<?php echo number_format($item['price'], 2); ?>
-                                </td>
+    <tr>
 
-                                <td>
-                                    <?php echo $item['quantity']; ?>
-                                </td>
+            <td>
+                <?php echo htmlspecialchars($name); ?>
+            </td>
 
-                                <td>
-                                    ₹<?php echo number_format(
-                                        $item['price'] * $item['quantity'],
-                                        2
-                                    ); ?>
-                                </td>
+            <td>
+                ₹<?php echo number_format($price, 2); ?>
+            </td>
 
-                            </tr>
+            <td>
+                <?php echo $quantity; ?>
+             </td>
 
-                            <?php
-                            $total += $item['price'] * $item['quantity'];
-                            ?>
+                <td>
+                    ₹<?php echo number_format($item_total, 2); ?>
+                </td>
+
+                    </tr>
 
                         <?php endforeach; ?>
 
