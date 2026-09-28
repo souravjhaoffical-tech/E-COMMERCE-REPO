@@ -11,7 +11,7 @@ if (isset($_POST['register'])) {
 
     mysqli_query($conn, $sql);
 
-    header("Location: login.php");
+    header("Location:login.php");
     exit();
 }
 ?>
@@ -21,7 +21,7 @@ if (isset($_POST['register'])) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShopEase - Register</title>
+<title>ShopVibe - Register</title>
 
 <style>
 * {
@@ -225,7 +225,7 @@ button:hover {
     <div class="left">
 
         <div class="logo">
-            Shop<span>Ease</span>
+            Shop<span>Vibe</span>
         </div>
 
         <h1>Join Us!</h1>
@@ -250,7 +250,7 @@ button:hover {
         <h2>Create Account</h2>
 
         <p class="subtitle">
-            Register to start shopping with ShopEase
+            Register to start shopping with ShopVibe
         </p>
 
         <form method="post">

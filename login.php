@@ -2,7 +2,7 @@
 <!DOCTYPE html> 
 <html> 
 <head> 
-    <title>ShopEase - Login</title> 
+    <title>ShopVibe - Login</title> 
  
     <style> 
 
@@ -521,7 +521,7 @@
     <div class="left-section"> 
 
         <div class="logo">
-            Shop<span>Ease</span>
+            Shop<span>Vibe</span>
         </div> 
  
         <h1>
@@ -549,11 +549,11 @@
     <div class="right-section"> 
  
         <h2>
-            Admin Login
+            Login
         </h2> 
  
         <p class="subtitle"> 
-            Sign in to manage your e-commerce store 
+            Sign in to follow the trends and get the best deals on ShopVibe
         </p> 
  
         <form method="post"> 
@@ -587,7 +587,7 @@
         </form> 
  
         <div class="bottom-text"> 
-            🔒 Secure access to your ShopEase dashboard
+            🔒 Secure access to your ShopVibe dashboard
         </div> 
  
     </div> 

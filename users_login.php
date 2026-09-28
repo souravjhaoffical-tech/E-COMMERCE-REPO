@@ -29,7 +29,7 @@ if (isset($_POST['login'])) {
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['role'] = $user['role'];
 
-            header("Location: user_home.php");
+            header("Location: users_home.php");
             exit;
 
         } else {
