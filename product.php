@@ -112,7 +112,7 @@ $product = mysqli_fetch_all($res, MYSQLI_ASSOC);
             <td>
                 <a href="editproduct.php" class="edit">Edit</a>
                 <a href="deleteproduct.php" class="delete">Delete</a>
-                <a href="cart.php id = <?php echo $x [id];?>">add to cart</a>
+                <a href="add_cart.php?id=<?php echo $x['id']; ?>">add to cart</a>
             </td>
         </tr>
 
@@ -121,4 +121,3 @@ $product = mysqli_fetch_all($res, MYSQLI_ASSOC);
     </table>
 
 </div>
-c

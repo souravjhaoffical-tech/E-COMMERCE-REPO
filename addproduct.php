@@ -1,20 +1,69 @@
-<?php 
-include "db.php"; 
- 
-if (isset($_POST['add'])) { 
-    $brand = $_POST['brand']; 
-    $name = $_POST['name']; 
-    $price = $_POST['price']; 
 
-    $image = $_FILES['image'] ['name'];
-    $temp = $_FILES['image']['tmp_name'];
+<?php
 
-    //upload image
-    move_uploaded_file($temp,"uploads/".$image);
-     $sql = "INSERT INTO eproduct (p_brand, p_name, p_price,image) VALUES ('$brand','$name','$price','$image')";
-    mysqli_query($conn,$sql);
-    header("location: product.php"); 
-} 
+include "db.php";
+
+$message = "";
+
+if (isset($_POST['add'])) {
+
+    $brand = trim($_POST['brand']);
+    $name = trim($_POST['name']);
+    $price = (int) $_POST['price'];
+
+    if (
+        isset($_FILES['image']) &&
+        $_FILES['image']['error'] === UPLOAD_ERR_OK
+    ) {
+
+        $temp = $_FILES['image']['tmp_name'];
+        $originalName = basename($_FILES['image']['name']);
+        $image = uniqid() . "_" . $originalName;
+
+        if (!is_dir("uploads")) {
+            mkdir("uploads", 0755, true);
+        }
+
+        if (move_uploaded_file($temp, "uploads/" . $image)) {
+
+            $query = "INSERT INTO eproduct
+                      (p_brand, p_name, p_price, image)
+                      VALUES (?, ?, ?, ?)";
+
+            $stmt = mysqli_prepare($conn, $query);
+
+            mysqli_stmt_bind_param(
+                $stmt,
+                "ssis",
+                $brand,
+                $name,
+                $price,
+                $image
+            );
+
+            if (mysqli_stmt_execute($stmt)) {
+
+                mysqli_stmt_close($stmt);
+
+                header("Location: product.php");
+                exit();
+
+            } else {
+
+                $message = "Product could not be saved.";
+            }
+
+        } else {
+
+            $message = "Image upload failed. Please try again.";
+        }
+
+    } else {
+
+        $message = "Please select a product image.";
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -22,921 +71,443 @@ if (isset($_POST['add'])) {
 
 <head>
 
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>ShopVibe - Add Product</title>
-
-
-<style>
-
-/* ================= RESET ================= */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
-
-
-/* ================= BODY ================= */
-
-body{
-
-    min-height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    background:
-        radial-gradient(
-            circle at top left,
-            rgba(0,234,255,.15),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at bottom right,
-            rgba(255,60,172,.15),
-            transparent 35%
-        ),
-        #080b16;
-
-    color:white;
-
-    overflow-y:auto;
-    overflow-x:hidden;
-}
-
-
-/* ================= BACKGROUND CIRCLES ================= */
-
-.bg-circle{
-
-    position:fixed;
-
-    border-radius:50%;
-
-    filter:blur(3px);
-
-    opacity:.25;
-
-    pointer-events:none;
-
-}
-
-
-.circle1{
-
-    width:300px;
-    height:300px;
-
-    background:#00eaff;
-
-    top:-100px;
-    left:-100px;
-
-    animation:
-        moveCircle1 7s ease-in-out infinite alternate;
-
-}
-
-
-.circle2{
-
-    width:350px;
-    height:350px;
-
-    background:#ff3cac;
-
-    bottom:-150px;
-    right:-100px;
-
-    animation:
-        moveCircle2 8s ease-in-out infinite alternate;
-
-}
-
-
-@keyframes moveCircle1{
-
-    from{
-        transform:translate(0,0);
-    }
-
-    to{
-        transform:translate(150px,120px);
-    }
-
-}
-
-
-@keyframes moveCircle2{
-
-    from{
-        transform:translate(0,0);
-    }
-
-    to{
-        transform:translate(-120px,-100px);
-    }
-
-}
-
-
-/* ================= MAIN CARD ================= */
-
-.container{
-
-    width:500px;
-
-    padding:40px;
-
-    border-radius:30px;
-
-    background:
-        rgba(17,21,39,.85);
-
-    backdrop-filter:blur(20px);
-
-    border:
-        1px solid rgba(255,255,255,.12);
-
-    box-shadow:
-
-        0 30px 80px rgba(0,0,0,.6),
-
-        0 0 40px rgba(0,234,255,.08),
-
-        inset 0 0 30px
-        rgba(255,255,255,.02);
-
-    transform-style:preserve-3d;
-
-    animation:
-        cardAppear 1s ease forwards;
-
-    position:relative;
-
-}
-
-
-/* ================= CARD ANIMATION ================= */
-
-@keyframes cardAppear{
-
-    from{
-
-        opacity:0;
-
-        transform:
-            translateY(80px)
-            rotateX(20deg)
-            scale(.9);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:
-            translateY(0)
-            rotateX(0)
-            scale(1);
-
-    }
-
-}
-
-
-/* ================= TOP GLOW ================= */
-
-.container::before{
-
-    content:"";
-
-    position:absolute;
-
-    top:-2px;
-    left:20%;
-
-    width:60%;
-    height:2px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            #00eaff,
-            #ff3cac,
-            transparent
-        );
-
-    box-shadow:
-        0 0 20px #00eaff;
-
-}
-
-
-/* ================= LOGO ================= */
-
-.logo{
-
-    text-align:center;
-
-    font-size:32px;
-
-    font-weight:bold;
-
-    margin-bottom:8px;
-
-    color:#00eaff;
-
-    text-shadow:
-        0 0 15px rgba(0,234,255,.5);
-
-    animation:
-        logoFloat 3s ease-in-out infinite;
-
-}
-
-
-.logo span{
-
-    color:#ff3cac;
-
-}
-
-
-@keyframes logoFloat{
-
-    0%,100%{
-        transform:translateY(0);
-    }
-
-    50%{
-        transform:translateY(-5px);
-    }
-
-}
-
-
-/* ================= HEADING ================= */
-
-h1{
-
-    text-align:center;
-
-    font-size:28px;
-
-    margin-top:15px;
-
-    margin-bottom:8px;
-
-}
-
-
-.subtitle{
-
-    text-align:center;
-
-    color:#888;
-
-    font-size:14px;
-
-    margin-bottom:30px;
-
-}
-
-
-/* ================= FORM ================= */
-
-.form-group{
-
-    margin-bottom:22px;
-
-}
-
-
-.form-group label{
-
-    display:block;
-
-    margin-bottom:8px;
-
-    color:#ccc;
-
-    font-size:14px;
-
-}
-
-
-/* ================= INPUT ================= */
-
-.form-group input{
-
-    width:100%;
-
-    padding:15px 18px;
-
-    border-radius:14px;
-
-    border:
-        1px solid rgba(255,255,255,.1);
-
-    outline:none;
-
-    background:#0c1020;
-
-    color:white;
-
-    font-size:15px;
-
-    transition:.3s;
-
-    box-shadow:
-        inset 0 0 15px
-        rgba(0,0,0,.25);
-
-}
-
-
-.form-group input::placeholder{
-
-    color:#666;
-
-}
-
-
-.form-group input:focus{
-
-    border-color:#00eaff;
-
-    box-shadow:
-
-        0 0 20px
-        rgba(0,234,255,.15),
-
-        inset 0 0 10px
-        rgba(0,234,255,.05);
-
-    transform:
-        translateZ(10px)
-        scale(1.01);
-
-}
-
-
-/* ================= ADD BUTTON ================= */
-
-.add-btn{
-
-    width:100%;
-
-    padding:15px;
-
-    margin-top:5px;
-
-    border:none;
-
-    border-radius:15px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #00eaff,
-            #0077ff,
-            #ff3cac
-        );
-
-    background-size:200% 200%;
-
-    color:white;
-
-    font-size:16px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    box-shadow:
-
-        0 7px 0 #075078,
-
-        0 15px 30px
-        rgba(0,234,255,.2);
-
-    transition:.3s;
-
-    animation:
-        gradientMove 4s ease infinite;
-
-}
-
-
-@keyframes gradientMove{
-
-    0%{
-        background-position:0% 50%;
-    }
-
-    50%{
-        background-position:100% 50%;
-    }
-
-    100%{
-        background-position:0% 50%;
-    }
-
-}
-
-
-.add-btn:hover{
-
-    transform:
-        translateY(-6px)
-        scale(1.02);
-
-    box-shadow:
-
-        0 12px 0 #075078,
-
-        0 25px 40px
-        rgba(0,234,255,.3);
-
-}
-
-
-.add-btn:active{
-
-    transform:translateY(3px);
-
-    box-shadow:
-
-        0 3px 0 #075078;
-
-}
-
-
-/* ================= BACK LINK ================= */
-
-.back-link{
-
-    display:block;
-
-    text-align:center;
-
-    margin-top:22px;
-
-    color:#00eaff;
-
-    text-decoration:none;
-
-    font-size:14px;
-
-    transition:.3s;
-
-}
-
-
-.back-link:hover{
-
-    color:#ff3cac;
-
-    transform:translateY(-2px);
-
-}
-
-
-/* ================= 3D FLOATING ICONS ================= */
-
-.icon{
-
-    position:fixed;
-
-    font-size:35px;
-
-    opacity:.15;
-
-    pointer-events:none;
-
-}
-
-
-.icon1{
-
-    top:20%;
-
-    left:12%;
-
-    animation:
-        iconFloat1 5s ease-in-out infinite;
-
-}
-
-
-.icon2{
-
-    top:65%;
-
-    left:8%;
-
-    animation:
-        iconFloat2 6s ease-in-out infinite;
-
-}
-
-
-.icon3{
-
-    top:20%;
-
-    right:10%;
-
-    animation:
-        iconFloat3 5s ease-in-out infinite;
-
-}
-
-
-.icon4{
-
-    bottom:15%;
-
-    right:12%;
-
-    animation:
-        iconFloat4 7s ease-in-out infinite;
-
-}
-
-
-@keyframes iconFloat1{
-
-    0%,100%{
-        transform:
-            translateY(0)
-            rotate(0deg);
-    }
-
-    50%{
-        transform:
-            translateY(-30px)
-            rotate(20deg);
-    }
-
-}
-
-
-@keyframes iconFloat2{
-
-    0%,100%{
-        transform:
-            translateY(0)
-            rotate(0deg);
-    }
-
-    50%{
-        transform:
-            translateY(25px)
-            rotate(-20deg);
-    }
-
-}
-
-
-@keyframes iconFloat3{
-
-    0%,100%{
-        transform:
-            translateY(0)
-            rotate(0deg);
-    }
-
-    50%{
-        transform:
-            translateY(-25px)
-            rotate(-15deg);
-    }
-
-}
-
-
-@keyframes iconFloat4{
-
-    0%,100%{
-        transform:
-            translateY(0)
-            rotate(0deg);
-    }
-
-    50%{
-        transform:
-            translateY(30px)
-            rotate(15deg);
-    }
-
-}
-
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:600px){
-
-    .container{
-
-        width:
-            calc(100% - 30px);
-
-        padding:30px 25px;
-
-    }
-
-    .logo{
-
-        font-size:27px;
-
-    }
-
-    h1{
-
-        font-size:24px;
-
-    }
-
-    .icon{
-
-        display:none;
-
-    }
-
-}
-
-/* ================= IMAGE UPLOAD ================= */
-
-.image-upload{
-    width:100%;
-}
-
-
-/* Hide Default File Input */
-
-.image-upload input[type="file"]{
-    display:none;
-}
-
-
-/* Upload Box */
-
-.upload-box{
-
-    width:100%;
-
-    min-height:130px;
-
-    border:2px dashed rgba(0,234,255,.35);
-
-    border-radius:16px;
-
-    background:#0c1020;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    cursor:pointer;
-
-    transition:.3s;
-
-    box-shadow:
-        inset 0 0 20px
-        rgba(0,234,255,.03);
-
-}
-
-
-/* Icon */
-
-.upload-icon{
-
-    font-size:32px;
-
-    margin-bottom:8px;
-
-}
-
-
-/* Main Text */
-
-.upload-text{
-
-    color:#00eaff;
-
-    font-size:15px;
-
-    font-weight:bold;
-
-}
-
-
-/* Small Text */
-
-.upload-subtext{
-
-    color:#666;
-
-    font-size:12px;
-
-    margin-top:5px;
-
-}
-
-
-/* Hover */
-
-.upload-box:hover{
-
-    border-color:#00eaff;
-
-    background:#10162b;
-
-    transform:translateY(-2px);
-
-    box-shadow:
-
-        0 0 20px
-        rgba(0,234,255,.12),
-
-        inset 0 0 15px
-        rgba(0,234,255,.05);
-
-}
-
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShopVibe - Add Product</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f5f6fa;
+            color: #172033;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            min-height: 75px;
+            padding: 15px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background: #172033;
+            border-bottom: 3px solid #f59e0b;
+        }
+
+        .logo {
+            color: white;
+            font-size: 29px;
+            font-weight: bold;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #ffad26;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 11px 18px;
+            border: 1px solid #566075;
+            border-radius: 8px;
+            transition: 0.25s;
+            font-size: 14px;
+        }
+
+        .nav-link:hover {
+            background: #f59e0b;
+            border-color: #f59e0b;
+            color: #172033;
+        }
+
+        /* MAIN CONTENT */
+
+        .main {
+            width: 88%;
+            max-width: 1150px;
+            margin: 55px auto;
+        }
+
+        .heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .heading h1 {
+            font-size: 34px;
+            color: #172033;
+            margin-bottom: 9px;
+        }
+
+        .heading p {
+            color: #737d90;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .heading-mark {
+            width: 58px;
+            height: 58px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff0d6;
+            color: #d97706;
+            border-radius: 16px;
+            font-size: 29px;
+        }
+
+        /* FORM AREA */
+
+        .form-area {
+            background: white;
+            padding: 32px;
+            border: 1px solid #e5e8ef;
+            border-radius: 14px;
+            box-shadow: 0 10px 35px rgba(23, 32, 51, 0.05);
+        }
+
+        .form-title {
+            color: #172033;
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+
+        .form-description {
+            color: #8991a1;
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px 30px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #30394b;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .form-group input {
+            width: 100%;
+            min-width: 0;
+            padding: 14px 15px;
+            border: 1px solid #dce1ea;
+            border-radius: 8px;
+            background: #fafbfe;
+            color: #172033;
+            font-size: 14px;
+            outline: none;
+            transition: 0.25s;
+        }
+
+        .form-group input:focus {
+            border-color: #f59e0b;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+        }
+
+        .form-group input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .form-group input[type="file"]::file-selector-button {
+            background: #fff0d6;
+            color: #9a5b00;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        /* FORM FOOTER */
+
+        .form-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #edf0f5;
+        }
+
+        .hint {
+            color: #8a93a3;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .add-button {
+            border: none;
+            border-radius: 8px;
+            padding: 14px 25px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #f9a11b, #ed7b12);
+            box-shadow: 0 4px 0 #c9610b;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .add-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 0 #c9610b;
+            background: linear-gradient(135deg, #ffb638, #f08018);
+        }
+
+        .add-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #c9610b;
+        }
+
+        .message {
+            padding: 13px 16px;
+            margin-bottom: 22px;
+            background: #fff1f0;
+            color: #b42318;
+            border-left: 4px solid #ef4444;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* BOTTOM */
+
+        .bottom {
+            margin-top: 25px;
+            text-align: center;
+            color: #939baa;
+            font-size: 13px;
+        }
+
+        .bottom span {
+            color: #e58a0b;
+            font-weight: bold;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                padding: 18px 5%;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .nav-link {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .main {
+                width: 92%;
+                margin: 35px auto;
+            }
+
+            .heading h1 {
+                font-size: 27px;
+            }
+
+            .heading-mark {
+                width: 45px;
+                height: 45px;
+                font-size: 23px;
+            }
+
+            .form-area {
+                padding: 23px 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .form-footer {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .add-button {
+                width: 100%;
+            }
+        }
+
+    </style>
 
 </head>
 
-
 <body>
 
+    <nav class="navbar">
 
-<!-- BACKGROUND -->
+        <div class="logo">
+            Shop<span>Vibe</span>
+        </div>
 
-<div class="bg-circle circle1"></div>
+        <a href="admin_dashboard.php" class="nav-link">
+            ← Admin Dashboard
+        </a>
 
-<div class="bg-circle circle2"></div>
-
-
-<!-- FLOATING ICONS -->
-
-<div class="icon icon1">
-    🛒
-</div>
-
-<div class="icon icon2">
-    📦
-</div>
-
-<div class="icon icon3">
-    💳
-</div>
-
-<div class="icon icon4">
-    🛍️
-</div>
+    </nav>
 
 
+    <main class="main">
 
-<!-- MAIN FORM -->
+        <div class="heading">
 
-<div class="container">
+            <div>
+                <h1>Add Product</h1>
 
+                <p>
+                    Add something new to your ShopVibe store.
+                    Fill in the details below.
+                </p>
+            </div>
 
-    <div class="logo">
-        shop<span> vibe</span>
-    </div>
-
-
-    <h1>
-        Add Product
-    </h1>
-
-
-    <p class="subtitle">
-        Add a new product to your ShopVibe store
-    </p>
-
-
-
-    <form method="post" enctype="multipart/form-data">
-
-
-        <!-- BRAND -->
-
-        <div class="form-group">
-
-            <label>
-                Product Brand
-            </label>
-
-            <input
-                type="text"
-                name="brand"
-                placeholder="Enter product brand"
-                required>
+            <div class="heading-mark">
+                +
+            </div>
 
         </div>
 
 
+        <section class="form-area">
 
-        <!-- PRODUCT NAME -->
+            <h2 class="form-title">
+                Product Information
+            </h2>
 
-        <div class="form-group">
+            <p class="form-description">
+                Enter the product details and upload its image.
+            </p>
 
-            <label>
-                Product Name
-            </label>
 
-            <input
-                type="text"
-                name="name"
-                placeholder="Enter product name"
-                required>
+            <?php if ($message != "") { ?>
 
+                <div class="message">
+                    <?php echo htmlspecialchars($message); ?>
+                </div>
+
+            <?php } ?>
+
+
+            <form method="post" enctype="multipart/form-data">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="brand">Product Brand</label>
+
+                        <input
+                            type="text"
+                            id="brand"
+                            name="brand"
+                            placeholder="e.g. Nike"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="name">Product Name</label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Enter product name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="price">Product Price (₹)</label>
+
+                        <input
+                            type="number"
+                            id="price"
+                            name="price"
+                            placeholder="Enter price"
+                            min="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="image">Product Image</label>
+
+                        <input
+                            type="file"
+                            id="image"
+                            name="image"
+                            accept="image/*"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-footer">
+
+                    <p class="hint">
+                        🛍️ Make sure the product details are correct.
+                    </p>
+
+                    <button type="submit" name="add" class="add-button">
+                        + &nbsp; Add Product
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <div class="bottom">
+            Made for <span>ShopVibe</span> · Manage your store with ease
         </div>
 
-
-
-        <!-- PRICE -->
-
-        <div class="form-group">
-
-            <label>
-                Product Price
-            </label>
-
-            <input
-                type="number"
-                name="price"
-                placeholder="Enter product price"
-                required>
-
-        </div>
-         <!-- PRODUCT IMAGE -->
-           <div class="form-group"> 
-            <label> Product Image </label> 
-            <div class="image-upload"> <input type="file" name="image" id="image" accept="image/*" required>
-            <label for="image" class="upload-box">
-                 <span class="upload-icon">📷</span> 
-                 <span class="upload-text"> Choose Product Image </span>
-                  <span class="upload-subtext"> JPG, PNG or JPEG </span> 
-                </label>
-             </div>
-             </div>
-
-        <!-- BUTTON -->
-
-        <button
-            type="submit"
-            name="add"
-            class="add-btn">
-
-            + Add Product
-
-        </button>
-
-
-    </form>
-
-
-
-    <!-- BACK -->
-
-    <a
-        href="product.php"
-        class="back-link">
-
-        ← View Products
-
-    </a>
-
-
-</div>
-
+    </main>
 
 </body>
 
 </html>
-
-

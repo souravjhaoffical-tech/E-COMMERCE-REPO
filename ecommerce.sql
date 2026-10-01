@@ -22,10 +22,14 @@ CREATE TABLE users (
     name VARCHAR(100),
     email VARCHAR(100) UNIQUE,
     password VARCHAR(255),
-    role Varchar(20) DEFAULT 'user'
-);
+    role VARCHAR(20) NOT NULL DEFAULT 'user');
 
-INSERT INTO users (email,password) VALUES('souravjha700377@gmail.com','1234');
+INSERT INTO users (name, email, password, role)
+VALUES ('Sourav', 'souravjha700377@gmail.com', '1234', 'admin');
+
+UPDATE users
+SET role = 'admin'
+WHERE email = 'souravjha700377@gmail.com'
 
 
 

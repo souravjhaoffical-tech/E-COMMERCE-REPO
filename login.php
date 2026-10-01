@@ -1,10 +1,61 @@
 
-<!DOCTYPE html> 
-<html> 
-<head> 
-    <title>ShopVibe - Login</title> 
- 
-    <style> 
+<?php
+
+session_start();
+
+include "db.php";
+
+$message = "";
+
+if (isset($_POST['login'])) {
+
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $role = $_POST['role'];
+
+    $query = "SELECT * FROM users 
+              WHERE email='$email' 
+              AND password='$password' 
+              AND role='$role'";
+
+    $result = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($result) == 1) {
+
+        $user = mysqli_fetch_assoc($result);
+
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['name'] = $user['name'];
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['role'] = $user['role'];
+
+        if ($user['role'] == 'admin') {
+
+            header("Location: dashboard.php");
+            exit();
+
+        } else {
+
+            header("Location: users_home.php");
+            exit();
+        }
+
+    } else {
+
+        $message = "Invalid email, password or login type!";
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>ShopVibe - Login</title>
+
+    <style>
 
         * {
             margin: 0;
@@ -12,8 +63,6 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
-
-        /* BODY */
 
         body {
             min-height: 100vh;
@@ -24,7 +73,6 @@
             overflow: hidden;
             perspective: 1200px;
         }
-
 
         /* ANIMATED BACKGROUND */
 
@@ -68,7 +116,6 @@
                 transform: translate(-30px, 80px) scale(0.9);
             }
         }
-
 
         /* MAIN 3D CONTAINER */
 
@@ -114,7 +161,6 @@
             }
         }
 
-
         /* LEFT SIDE */
 
         .left-section {
@@ -140,7 +186,6 @@
 
             overflow: hidden;
         }
-
 
         /* LIGHT EFFECT */
 
@@ -174,7 +219,6 @@
             }
         }
 
-
         /* LOGO */
 
         .logo {
@@ -204,7 +248,6 @@
             }
         }
 
-
         .left-section h1 {
 
             font-size: 42px;
@@ -215,7 +258,6 @@
 
             transform: translateZ(35px);
         }
-
 
         .left-section p {
 
@@ -231,7 +273,6 @@
 
             transform: translateZ(25px);
         }
-
 
         .shop-text {
 
@@ -260,167 +301,6 @@
                 transform: translateY(-5px) translateZ(45px);
             }
         }
-
-
-        /* RIGHT SECTION */
-
-        .right-section {
-
-            width: 50%;
-
-            padding: 55px;
-
-            display: flex;
-
-            flex-direction: column;
-
-            justify-content: center;
-
-            background: rgba(255,255,255,0.55);
-        }
-
-
-        .right-section h2 {
-
-            font-size: 32px;
-
-            color: #111827;
-
-            margin-bottom: 8px;
-        }
-
-
-        .subtitle {
-
-            color: #6b7280;
-
-            font-size: 14px;
-
-            margin-bottom: 30px;
-        }
-
-
-        /* INPUT */
-
-        label {
-
-            display: block;
-
-            margin-bottom: 7px;
-
-            color: #374151;
-
-            font-weight: bold;
-
-            font-size: 14px;
-        }
-
-
-        input {
-
-            width: 100%;
-
-            padding: 14px 16px;
-
-            border: 1px solid #d1d5db;
-
-            border-radius: 10px;
-
-            outline: none;
-
-            margin-bottom: 20px;
-
-            font-size: 14px;
-
-            background: rgba(255,255,255,0.9);
-
-            transition: 0.3s;
-
-            box-shadow:
-                0 5px 12px rgba(0,0,0,0.04);
-        }
-
-
-        input:focus {
-
-            border-color: #f59e0b;
-
-            transform: translateY(-2px);
-
-            box-shadow:
-                0 0 0 3px rgba(245,158,11,0.15),
-                0 8px 18px rgba(0,0,0,0.08);
-        }
-
-
-        /* 3D BUTTON */
-
-        button {
-
-            width: 100%;
-
-            padding: 15px;
-
-            background: linear-gradient(
-                135deg,
-                #f59e0b,
-                #d97706
-            );
-
-            border: none;
-
-            border-radius: 10px;
-
-            color: white;
-
-            font-size: 16px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.3s;
-
-            box-shadow:
-                0 7px 0 #a16207,
-                0 12px 25px rgba(245,158,11,0.25);
-        }
-
-
-        button:hover {
-
-            transform:
-                translateY(-5px)
-                scale(1.02);
-
-            box-shadow:
-                0 12px 0 #a16207,
-                0 20px 30px rgba(245,158,11,0.3);
-        }
-
-
-        button:active {
-
-            transform: translateY(3px);
-
-            box-shadow:
-                0 3px 0 #a16207;
-        }
-
-
-        /* BOTTOM TEXT */
-
-        .bottom-text {
-
-            text-align: center;
-
-            margin-top: 22px;
-
-            color: #6b7280;
-
-            font-size: 13px;
-        }
-
 
         /* FLOATING SHOP ICON */
 
@@ -458,6 +338,246 @@
             }
         }
 
+        /* RIGHT SECTION */
+
+        .right-section {
+
+            width: 50%;
+
+            padding: 55px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            background: rgba(255,255,255,0.55);
+        }
+
+        .right-section h2 {
+
+            font-size: 32px;
+
+            color: #111827;
+
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+
+            color: #6b7280;
+
+            font-size: 14px;
+
+            margin-bottom: 30px;
+        }
+
+        /* INPUT */
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #374151;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+
+            width: 100%;
+
+            padding: 14px 16px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+
+            background: rgba(255,255,255,0.9);
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 5px 12px rgba(0,0,0,0.04);
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+
+            border-color: #f59e0b;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 0 0 3px rgba(245,158,11,0.15),
+                0 8px 18px rgba(0,0,0,0.08);
+        }
+
+        /* USER / ADMIN */
+
+        .role-box {
+
+            margin-bottom: 22px;
+        }
+
+        .role-title {
+
+            display: block;
+
+            margin-bottom: 10px;
+
+            color: #374151;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+        .role-options {
+
+            display: flex;
+
+            gap: 15px;
+        }
+
+        .role-option {
+
+            flex: 1;
+
+            padding: 12px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 10px;
+
+            background: white;
+
+            cursor: pointer;
+
+            text-align: center;
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .role-option:hover {
+
+            transform: translateY(-3px);
+
+            border-color: #f59e0b;
+
+            box-shadow:
+                0 8px 18px rgba(0,0,0,0.1);
+        }
+
+        .role-option input {
+
+            width: auto;
+
+            margin: 0 6px 0 0;
+
+            accent-color: #f59e0b;
+        }
+
+        /* 3D BUTTON */
+
+        button {
+
+            width: 100%;
+
+            padding: 15px;
+
+            background: linear-gradient(
+                135deg,
+                #f59e0b,
+                #d97706
+            );
+
+            border: none;
+
+            border-radius: 10px;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 7px 0 #a16207,
+                0 12px 25px rgba(245,158,11,0.25);
+        }
+
+        button:hover {
+
+            transform:
+                translateY(-5px)
+                scale(1.02);
+
+            box-shadow:
+                0 12px 0 #a16207,
+                0 20px 30px rgba(245,158,11,0.3);
+        }
+
+        button:active {
+
+            transform: translateY(3px);
+
+            box-shadow:
+                0 3px 0 #a16207;
+        }
+
+        /* ERROR MESSAGE */
+
+        .error-message {
+
+            background: #fee2e2;
+
+            color: #b91c1c;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            margin-bottom: 18px;
+
+            text-align: center;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+        /* BOTTOM TEXT */
+
+        .bottom-text {
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
 
         /* RESPONSIVE */
 
@@ -502,11 +622,31 @@
                 display: none;
             }
         }
+        .create-account {
+    text-align: center;
+    margin-top: 18px;
+    color: #6b7280;
+    font-size: 14px;
+}
 
-    </style> 
-</head> 
- 
-<body> 
+.create-account a {
+    color: #f59e0b;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 5px;
+    transition: 0.3s;
+}
+
+.create-account a:hover {
+    color: #d97706;
+    text-decoration: underline;
+}
+
+    </style>
+
+</head>
+
+<body>
 
 <!-- Animated Background -->
 
@@ -514,50 +654,60 @@
 <div class="circle two"></div>
 
 
-<div class="login-container"> 
- 
+<div class="login-container">
+
     <!-- LEFT SIDE -->
 
-    <div class="left-section"> 
+    <div class="left-section">
 
         <div class="logo">
             Shop<span>Vibe</span>
-        </div> 
- 
+        </div>
+
         <h1>
             Welcome Back!
-        </h1> 
- 
-        <p> 
-            Login to your account and continue shopping 
-            your favourite products at the best prices. 
-        </p> 
- 
-        <div class="shop-text"> 
-            🛍️ Shop Smart. Shop Easy. 
+        </h1>
+
+        <p>
+            Login to your account and continue shopping
+            your favourite products at the best prices.
+        </p>
+
+        <div class="shop-text">
+            🛍️ Shop Smart. Shop Easy.
         </div>
 
         <div class="floating-icon">
             🛒
         </div>
 
-    </div> 
- 
- 
+    </div>
+
+
     <!-- RIGHT SIDE -->
 
-    <div class="right-section"> 
- 
+    <div class="right-section">
+
         <h2>
             Login
-        </h2> 
- 
-        <p class="subtitle"> 
+        </h2>
+
+        <p class="subtitle">
             Sign in to follow the trends and get the best deals on ShopVibe
-        </p> 
- 
-        <form method="post"> 
- 
+        </p>
+
+
+        <?php if ($message != "") { ?>
+
+            <div class="error-message">
+                <?php echo $message; ?>
+            </div>
+
+        <?php } ?>
+
+
+        <form method="post">
+
             <label>
                 Email Address
             </label>
@@ -567,8 +717,9 @@
                 name="email"
                 placeholder="Enter your email"
                 required
-            > 
- 
+            >
+
+
             <label>
                 Password
             </label>
@@ -578,22 +729,34 @@
                 name="password"
                 placeholder="Enter your password"
                 required
-            > 
- 
-            <button name="login">
-                Login
-            </button> 
- 
-        </form> 
- 
-        <div class="bottom-text"> 
-            🔒 Secure access to your ShopVibe dashboard
-        </div> 
- 
-    </div> 
- 
-</div> 
- 
-</body> 
-</html>
+            >
 
+
+            <!-- USER / ADMIN SELECTION -->
+            <div class="role-box">
+                <span class="role-title">
+                    Are you Admin or User?
+                </span>
+                <div class="role-options">
+                    <label class="role-option">
+                        <input
+                            type="radio" name="role" value="user" checked > 
+                        User
+                    </label>
+                    <label class="role-option">
+                        <input
+                            type="radio" name="role" value="admin">
+                        Admin
+                    </label>
+                </div>
+            </div>
+            <button name="login"> Login </button>
+            <div class="create-account">
+            <a href="register.php">Create an Account</a>
+            </div>
+        </form>
+        <div class="bottom-text"> 🔒 Secure access to your ShopVibe dashboard </div>
+    </div>
+</div>
+</body>
+</html>
