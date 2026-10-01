@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 
 session_start();
 $id = $_GET['id'];
@@ -10,3 +11,7 @@ if($key !== false){
 header("Location:cart.php");
 
 ?>
+=======
+session_start();
+$id = $_GET['id'];
+>>>>>>> 38005d9796521024370e2370deb8c0570a68be8a
