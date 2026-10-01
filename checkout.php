@@ -12,5 +12,5 @@ if(empty($_SESSION['cart'])) {
     <h3>Select Payment Method:</h3>
     <input type="radio" name="payment_method" value="COD" required>
     Cash on Delivery (COD)<br>
-    <button type="submit" name="order">Confirm Order</button>
+    <button type="submit" name="order">Confirm </button>
 </form>
