@@ -395,7 +395,7 @@
                     products available in your store.
                 </p>
 
-                <a href="productview.php">
+                <a href="product.php">
                     View Products
                 </a>
             </div>
