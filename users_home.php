@@ -277,7 +277,8 @@ body {
                 </div>
 
                 <button class="cart-btn">
-                    🛒 Add to Cart
+                     <img src="images/logo.shopvibe.png" alt="Shop Vibe">
+                      Add to Cart
                 </button>
 
             </div>
