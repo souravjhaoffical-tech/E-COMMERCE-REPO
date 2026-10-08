@@ -1,5 +1,5 @@
 
-USE c;
+USE K;
 
 CREATE TABLE  eproduct (
     id INT  AUTO_INCREMENT PRIMARY KEY, 
@@ -14,6 +14,8 @@ CREATE TABLE orders (
     p_name VARCHAR(100),
     p_price INT, 
     payment_method VARCHAR(50),
+    razorpay_order_id VARCHAR  (100),
+    razorpay_payment_id varchar(100),
     STATUS VARCHAR (50)
 );
 

@@ -4,7 +4,7 @@ $conn = mysqli_connect(
     "localhost",
     "root",
     "",
-    "c"
+    "K"
 );
 
 if (!$conn) {
