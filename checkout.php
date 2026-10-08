@@ -378,7 +378,6 @@ if(empty($_SESSION['cart'])) {
                         <span class="cod-text">
                             Cash on Delivery
                         </span>
-
                         <span class="cod-small">
                             Pay when your order arrives
                         </span>
@@ -387,6 +386,15 @@ if(empty($_SESSION['cart'])) {
 
                 </label>
 
+                 <input
+                        type="radio"
+                        name="payment_method"
+                        value="razorpay"
+                        required
+                    >
+                    online payment (Razorpay)
+                    <br><br>
+                    
             </div>
 
             <button type="submit" name="order">
