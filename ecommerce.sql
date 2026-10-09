@@ -1,5 +1,5 @@
 
-USE K;
+USE k;
 
 CREATE TABLE  eproduct (
     id INT  AUTO_INCREMENT PRIMARY KEY, 

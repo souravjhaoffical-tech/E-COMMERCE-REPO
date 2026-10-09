@@ -4,7 +4,7 @@ include "db.php";
 
 // Check user is logged in
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'user') {
-    header("Location: user_login.php");
+    header("Location: users_login.php");
     exit;
 }
 
@@ -206,29 +206,36 @@ body {
         🛒 Shop Vibe
     </div>
 
-    <div class="nav-right">
+    
+<div class="nav-right">
 
-        <span class="welcome">
-            Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>
-        </span>
+    <span class="welcome">
+        Welcome, <?php
+        echo htmlspecialchars(
+            $_SESSION['user_name'] ?? $_SESSION['name'] ?? 'User'
+        );
+        ?>
+    </span>
 
-        <a href="logout.php" class="logout">
-            Logout
-        </a>
+    <a href="logout.php" class="logout">
+        Logout
+    </a>
 
-    </div>
+</div>
 
 </nav>
-
 
 <!-- Hero -->
 
 <section class="hero">
 
-    <h1>
-        Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?> 👋
-    </h1>
-
+  <h1>
+    Welcome, <?php
+    echo htmlspecialchars(
+        $_SESSION['user_name'] ?? $_SESSION['name'] ?? 'User'
+    );
+    ?> 👋
+</h1>
     <p>
         Discover amazing products and start shopping today.
     </p>
