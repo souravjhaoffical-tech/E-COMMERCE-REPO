@@ -256,7 +256,7 @@ tr:hover {
     </div>
 
 
-    <a href="product.php" class="continue">
+    <a href="users_home.php" class="continue">
         ← Continue Shopping
     </a>
 

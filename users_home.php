@@ -112,13 +112,20 @@ body {
     color: #222;
 }
 
+
+
 .products {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    align-items: stretch;
 }
 
+
 .product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     background: white;
     border-radius: 15px;
     overflow: hidden;
@@ -126,25 +133,45 @@ body {
     transition: 0.3s;
 }
 
+
+
 .product-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0,0,0,0.12);
 }
 
+
 .product-image {
     width: 100%;
-    height: 220px;
-    object-fit: cover;
+    height: 160px;
+    object-fit: contain;
+    display: block;
+    background: white;
 }
 
+
+
+
 .product-info {
-    padding: 18px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .product-info h3 {
-    color: #222;
+    font-size: 16px;
     margin-bottom: 8px;
 }
+
+.product-info .price {
+    font-size: 17px;
+}
+
+.product-info .cart-btn {
+    margin-top: auto;
+}
+
 
 .description {
     color: #777;
@@ -160,7 +187,9 @@ body {
     margin-bottom: 15px;
 }
 
+
 .cart-btn {
+    display: block;
     width: 100%;
     padding: 11px;
     border: none;
@@ -168,6 +197,8 @@ body {
     background: #667eea;
     color: white;
     font-weight: bold;
+    text-align: center;
+    text-decoration: none;
     cursor: pointer;
 }
 
@@ -273,36 +304,38 @@ body {
 
         ?>
 
-        <div class="product-card">
+        
+<div class="product-card">
 
-            <img
-                src="<?php echo htmlspecialchars($product['image']); ?>"
-                class="product-image"
-                alt="Product"
-            >
+    <img
+        src="uploads/<?php echo htmlspecialchars($product['image'] ?? ''); ?>"
+        class="product-image"
+        alt="Product"
+    >
 
-            <div class="product-info">
+    <div class="product-info">
 
-                <h3>
-                    <?php echo htmlspecialchars($product['title']); ?>
-                </h3>
+        <h3>
+            <?php echo htmlspecialchars($product['p_name']); ?>
+        </h3>
 
-                <p class="description">
-                    <?php echo htmlspecialchars($product['description']); ?>
-                </p>
+        <p class="description">
+            <?php echo htmlspecialchars($product['p_brand']); ?>
+        </p>
 
-                <div class="price">
-                    $<?php echo htmlspecialchars($product['price']); ?>
-                </div>
+        <div class="price">
+            ₹<?php echo htmlspecialchars($product['p_price']); ?>
+         </div>
 
-                <button class="cart-btn">
-                     <img src="images/logo.shopvibe.png" alt="Shop Vibe">
-                      Add to Cart
-                </button>
+            <a href="add_cart.php?id=<?php echo urlencode($product['id']); ?>"
+                class="cart-btn">
+                Add to Cart
+            </a>
 
-            </div>
+    </div>
 
-        </div>
+</div>
+
 
         <?php
 
