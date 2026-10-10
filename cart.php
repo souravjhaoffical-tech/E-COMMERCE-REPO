@@ -21,8 +21,6 @@ $total = 0;
     <title>Shopping Cart - ShopVibe</title>
 
     <style>
-
-      ```css
 * {
     margin: 0;
     padding: 0;
@@ -241,7 +239,6 @@ tr:hover {
         text-align: center;
     }
 }
-```
     </style>
 
 </head>
