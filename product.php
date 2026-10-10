@@ -222,10 +222,6 @@ tbody tr:last-child td {
         <a href="addproduct.php" class="add-btn">
             + Add New Product
         </a>
-
-        <a href="add_cart.php" class="add-btn">
-            + Add CART
-        </a>
     </div>
 
     <div class="table-wrapper">
