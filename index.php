@@ -1177,7 +1177,7 @@ footer{
     </div>
     <ul>
         <li>
-            <a href="#home">Home</a>
+            <a href="users_home.php">Home</a>
         </li>
         <li>
             <a href="product.php">Products</a>

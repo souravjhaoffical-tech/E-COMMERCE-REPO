@@ -4,7 +4,7 @@ include "db.php";
 
 // Check user is logged in
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'user') {
-    header("Location: users_login.php");
+    header("Location:login.php");
     exit;
 }
 
@@ -64,6 +64,14 @@ body {
 }
 
 .logout {
+    text-decoration: none;
+    background: #667eea;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+.cart {
     text-decoration: none;
     background: #667eea;
     color: white;
@@ -216,6 +224,10 @@ body {
         );
         ?>
     </span>
+
+    <a href="cart.php" class="cart">
+        Cart
+    </a>
 
     <a href="logout.php" class="logout">
         Logout

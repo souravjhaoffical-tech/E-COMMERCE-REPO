@@ -1,19 +1,21 @@
-<?php 
-session_start(); 
-if(empty($_SESSION['cart'])) { 
-    header("Location: cart.php"); 
-    exit(); 
-} 
-?> 
+<?php
+session_start();
+
+if (empty($_SESSION['cart'])) {
+    header("Location: cart.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - ShopVibe</title>
+
+    <title>Checkout - Shop Vibe</title>
 
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -23,105 +25,36 @@ if(empty($_SESSION['cart'])) {
 
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #07111f, #102a43, #07111f);
+            background: #f5f6fa;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            overflow: hidden;
-        }
-
-        /* Background glow */
-
-        body::before {
-            content: "";
-            position: fixed;
-            width: 350px;
-            height: 350px;
-            background: #ff7a00;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.18;
-            top: -100px;
-            left: -100px;
-            animation: glow1 6s infinite alternate;
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            background: #0077ff;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.18;
-            bottom: -100px;
-            right: -100px;
-            animation: glow2 7s infinite alternate;
-        }
-
-        @keyframes glow1 {
-
-            from {
-                transform: translate(0, 0);
-            }
-
-            to {
-                transform: translate(130px, 100px);
-            }
-
-        }
-
-        @keyframes glow2 {
-
-            from {
-                transform: translate(0, 0);
-            }
-
-            to {
-                transform: translate(-120px, -80px);
-            }
-
+            padding: 25px 15px;
+            color: #222;
         }
 
         /* Checkout Card */
 
         .checkout-card {
-
-            position: relative;
-            z-index: 2;
-
-            width: 430px;
-            padding: 40px;
-
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(18px);
-
-            border: 1px solid rgba(255, 255, 255, 0.15);
-
-            border-radius: 22px;
-
-            box-shadow:
-                0 30px 60px rgba(0, 0, 0, 0.55),
-                inset 0 1px rgba(255, 255, 255, 0.15);
-
-            animation: cardIn 0.8s ease;
-
+            width: 100%;
+            max-width: 450px;
+            padding: 35px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            animation: cardIn 0.6s ease;
         }
 
         @keyframes cardIn {
-
             from {
                 opacity: 0;
-                transform: translateY(50px) rotateX(10deg);
+                transform: translateY(25px);
             }
-
             to {
                 opacity: 1;
-                transform: translateY(0) rotateX(0);
+                transform: translateY(0);
             }
-
         }
 
         /* Logo */
@@ -130,229 +63,158 @@ if(empty($_SESSION['cart'])) {
             text-align: center;
             font-size: 30px;
             font-weight: bold;
+            color: #667eea;
             margin-bottom: 8px;
-        }
-
-        .logo span {
-            color: #ff7a00;
         }
 
         .subtitle {
             text-align: center;
-            color: #b8c4d4;
-            margin-bottom: 30px;
+            color: #777;
+            margin-bottom: 28px;
         }
-
-        /* Heading */
 
         h2 {
             text-align: center;
-            margin-bottom: 8px;
-            font-size: 27px;
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #222;
         }
 
         h3 {
-            margin-bottom: 18px;
             font-size: 17px;
-            color: #dbe4ef;
+            color: #333;
+            margin-bottom: 17px;
         }
 
         /* Payment Box */
 
         .payment-box {
-
-            background: rgba(0, 0, 0, 0.18);
-
-            border: 1px solid rgba(255, 255, 255, 0.1);
-
-            border-radius: 15px;
-
+            background: #f8f9ff;
+            border: 1px solid #e8eaff;
+            border-radius: 14px;
             padding: 20px;
-
             margin-bottom: 25px;
-
-            transition: 0.3s;
-
-        }
-
-        .payment-box:hover {
-
-            transform: translateY(-3px);
-
-            box-shadow:
-                0 12px 25px rgba(0, 0, 0, 0.25);
-
         }
 
         .payment-option {
-
             display: flex;
             align-items: center;
             gap: 12px;
-
             padding: 15px;
-
-            background: rgba(255, 255, 255, 0.06);
-
+            margin-bottom: 12px;
+            background: #fff;
+            border: 1px solid #e5e7f2;
             border-radius: 10px;
-
             cursor: pointer;
+            transition: 0.25s;
+        }
 
-            transition: 0.3s;
-
+        .payment-option:last-child {
+            margin-bottom: 0;
         }
 
         .payment-option:hover {
-
-            background: rgba(255, 122, 0, 0.12);
-
-            transform: translateX(4px);
-
+            border-color: #667eea;
+            background: #f5f6ff;
+            transform: translateY(-2px);
         }
 
         input[type="radio"] {
-
-            width: 19px;
-            height: 19px;
-
-            accent-color: #ff7a00;
-
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            accent-color: #667eea;
             cursor: pointer;
-
         }
 
-        .cod-icon {
-
-            font-size: 24px;
-
+        .payment-icon {
+            font-size: 23px;
         }
 
-        .cod-text {
-
+        .payment-name {
+            display: block;
+            color: #333;
             font-weight: bold;
-
         }
 
-        .cod-small {
-
+        .payment-description {
             display: block;
             font-size: 12px;
-            color: #9eacbd;
-            margin-top: 3px;
-
+            color: #777;
+            margin-top: 5px;
+            line-height: 1.4;
         }
 
         /* Confirm Button */
 
-        button {
-
+        .confirm-btn {
             width: 100%;
-
-            padding: 15px;
-
+            padding: 14px;
             border: none;
-
-            border-radius: 11px;
-
-            background: linear-gradient(
-                135deg,
-                #ff7a00,
-                #ff9d3d
-            );
-
+            border-radius: 9px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-
-            font-size: 17px;
-
+            font-size: 16px;
             font-weight: bold;
-
             cursor: pointer;
-
-            box-shadow:
-                0 8px 0 #b94f00,
-                0 15px 25px rgba(255, 122, 0, 0.25);
-
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
             transition: 0.3s;
-
         }
 
-        button:hover {
-
-            transform: translateY(-5px);
-
-            box-shadow:
-                0 13px 0 #b94f00,
-                0 20px 35px rgba(255, 122, 0, 0.35);
-
+        .confirm-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
         }
 
-        button:active {
-
-            transform: translateY(2px);
-
-            box-shadow:
-                0 4px 0 #b94f00;
-
+        .confirm-btn:active {
+            transform: translateY(0);
         }
 
-        /* Back */
+        /* Back to Cart */
 
         .back {
-
             display: block;
-
             text-align: center;
-
             margin-top: 22px;
-
-            color: #b8c4d4;
-
+            color: #667eea;
             text-decoration: none;
-
-            transition: 0.3s;
-
+            font-size: 14px;
+            transition: 0.2s;
         }
 
         .back:hover {
-
-            color: #ff7a00;
-
+            color: #764ba2;
         }
 
         /* Mobile */
 
-        @media(max-width: 500px) {
-
+        @media (max-width: 500px) {
             .checkout-card {
-
-                width: 90%;
-                padding: 28px 22px;
-
+                padding: 27px 20px;
             }
 
             .logo {
-
-                font-size: 26px;
-
+                font-size: 27px;
             }
 
+            h2 {
+                font-size: 25px;
+            }
+
+            .payment-box {
+                padding: 15px;
+            }
         }
-
     </style>
-
 </head>
 
 <body>
 
     <div class="checkout-card">
 
-        <div class="logo">
-            <span>Shop</span>Vibe
-        </div>
+        <div class="logo">🛒 Shop Vibe</div>
 
-        <p class="subtitle">
-            Secure Checkout
-        </p>
+        <p class="subtitle">Secure Checkout</p>
 
         <h2>Checkout</h2>
 
@@ -363,7 +225,6 @@ if(empty($_SESSION['cart'])) {
                 <h3>Select Payment Method</h3>
 
                 <label class="payment-option">
-
                     <input
                         type="radio"
                         name="payment_method"
@@ -371,33 +232,45 @@ if(empty($_SESSION['cart'])) {
                         required
                     >
 
-                    <span class="cod-icon">💵</span>
+                    <span class="payment-icon">💵</span>
 
                     <span>
-
-                        <span class="cod-text">
+                        <span class="payment-name">
                             Cash on Delivery
                         </span>
-                        <span class="cod-small">
+                        <span class="payment-description">
                             Pay when your order arrives
                         </span>
-
                     </span>
-
                 </label>
 
-                 <input
+                <label class="payment-option">
+                    <input
                         type="radio"
                         name="payment_method"
                         value="razorpay"
                         required
                     >
-                    online payment (Razorpay)
-                    <br><br>
-                    
+
+                    <span class="payment-icon">💳</span>
+
+                    <span>
+                        <span class="payment-name">
+                            Online Payment
+                        </span>
+                        <span class="payment-description">
+                            Pay online using Razorpay
+                        </span>
+                    </span>
+                </label>
+
             </div>
 
-            <button type="submit" name="order">
+            <button
+                type="submit"
+                name="order"
+                class="confirm-btn"
+            >
                 Confirm Order →
             </button>
 
@@ -410,5 +283,4 @@ if(empty($_SESSION['cart'])) {
     </div>
 
 </body>
-
 </html>
