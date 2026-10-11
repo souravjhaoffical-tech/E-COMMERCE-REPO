@@ -95,11 +95,16 @@ nav{
 }
 
 .logo{
-    font-size:28px;
-    font-weight:bold;
-    color:#00eaff;
-    text-shadow:0 0 15px rgba(0,234,255,.5);
-    animation:logoGlow 2s ease-in-out infinite alternate;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 45px;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
 }
 
 .logo span{
@@ -1172,9 +1177,9 @@ footer{
 <!-- ================= NAVBAR ================= -->
 
 <nav>
-    <div class="logo">
-        shop<span> vibe</span>
-    </div>
+    <a href="index.php" class="logo">
+        <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
+    </a>
     <ul>
         <li>
             <a href="users_home.php">Home</a>
