@@ -102,9 +102,10 @@ nav{
 
 .logo img {
     height: 45px;
-    width: auto;
-    max-width: 150px;
-    object-fit: contain;
+    width: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    display:block;
 }
 
 .logo span{
