@@ -104,9 +104,15 @@ body {
 }
 
 .logo {
-    color: #667eea;
-    font-size: 27px;
-    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+}
+    .logo img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
 }
 
 .logo span {
@@ -361,10 +367,10 @@ body {
 <body>
 
     <nav class="navbar">
+        <a href="index.php" class="logo">
+            <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
+        </a>
 
-        <div class="logo">
-            Shop<span>Vibe</span>
-        </div>
 
         <a href="dashboard.php" class="nav-link">
             ← Admin Dashboard
