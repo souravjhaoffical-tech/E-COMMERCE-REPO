@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-<?php
-session_start();
-include "db.php";
-
-if(!insert($SESSION['user'])){
-    header("location: login.php";)
-=======
 <?php 
 session_start();
 include "db.php";
@@ -29,5 +21,4 @@ if(isset($_POST['order'])){
 
         $sql = "INSERT INTO orders (user, product_name, product_price, payment_method) VALUES ('$user', '$name', '$price', '$payment')";
     }
->>>>>>> 7741a92292f6ef88ad181ec32565f256681f8513
 }
