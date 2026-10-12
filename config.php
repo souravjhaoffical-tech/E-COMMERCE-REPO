@@ -1,9 +1,10 @@
 <?php
 
-require "vendor/autolaod.php";
-$key = getenv("RAZORPAY_KEY_ID");
-$secret = getenv("RAZORPAY_KEY_SECRET");
+require "vendor/autoload.php";
 
-$api = new Razorpay\Api\Api($key, $secret);
+$key ="rzp_test_TlIV5ibunkx8dt";
+$secret ="TTZtrHbDi3Evxsh3ef3WXqOZ";
+
+$api = new Razorpay\Api\Api($key,$secret);
 
 ?>
