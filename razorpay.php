@@ -17,13 +17,13 @@ foreach(array_unique($_SESSION['cart']) as $id){
     $id = (int)$id;
 
     $result = mysqli_query($conn,
-        "SELECT * FROM courses WHERE id=$id"
+        "SELECT * FROM eprodust WHERE id=$id"
     );
 
     $row = mysqli_fetch_assoc($result);
 
     if(!$row || $row['price'] <= 0){
-        die("Invalid course");
+        die("Invalid product");
     }
 
     $total += $row['price'];
