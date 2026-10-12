@@ -360,6 +360,78 @@ body {
         width: 100%;
     }
 }
+
+/* Extra small mobile screens */
+@media (max-width: 400px) {
+    .navbar {
+        padding: 12px 4%;
+        gap: 10px;
+    }
+
+    .logo img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .nav-link {
+        padding: 9px 10px;
+        font-size: 12px;
+        white-space: normal;
+        text-align: center;
+    }
+
+    .main {
+        width: 94%;
+        margin: 22px auto;
+    }
+
+    .heading {
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .heading h1 {
+        font-size: 24px;
+        overflow-wrap: anywhere;
+    }
+
+    .heading p {
+        font-size: 13px;
+    }
+
+    .heading-mark {
+        width: 38px;
+        height: 38px;
+        font-size: 20px;
+    }
+
+    .form-area {
+        padding: 18px 14px;
+    }
+
+    .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .form-group input {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .form-group input[type="file"] {
+        font-size: 12px;
+    }
+
+    .form-footer {
+        gap: 14px;
+    }
+
+    .add-button {
+        width: 100%;
+        padding: 13px;
+    }
+}
+
     </style>
 
 </head>

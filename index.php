@@ -1170,6 +1170,95 @@ footer{
     }
 }
 
+/* Extra small mobile screens */
+@media (max-width: 480px) {
+    nav {
+        padding: 12px 4%;
+        gap: 10px;
+    }
+
+    .logo img {
+        width: 38px;
+        height: 38px;
+    }
+
+    .login-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .hero {
+        padding: 35px 5%;
+        gap: 25px;
+        min-height: auto;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(30px, 9vw, 40px);
+    }
+
+    .hero-text p {
+        font-size: 14px;
+    }
+
+    .hero-product {
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+    }
+
+    .product-3d {
+        width: min(260px, 85vw);
+        height: 300px;
+    }
+
+    .product-icon {
+        width: min(180px, 65vw);
+        height: 180px;
+    }
+
+    .products {
+        padding: 35px 4%;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .card {
+        padding: 12px;
+        min-width: 0;
+    }
+
+    .card-img {
+        height: 130px;
+        font-size: 55px;
+    }
+
+    .card h3 {
+        font-size: 16px;
+        overflow-wrap: anywhere;
+    }
+
+    .price {
+        font-size: 18px;
+    }
+
+    .section-title h2 {
+        font-size: 27px;
+    }
+
+    .search-box input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    footer {
+        padding: 25px 12px;
+    }
+}
+
 </style>
 </head>
 
