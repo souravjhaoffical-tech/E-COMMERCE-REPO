@@ -52,7 +52,8 @@ if (isset($_POST['login'])) {
 <html>
 
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShopVibe - Login</title>
     
 <style>
@@ -465,6 +466,55 @@ button:active {
         font-size: 13px;
     }
 }
+
+/* Extra small mobile screens */
+@media (max-width: 480px) {
+    body {
+        padding: 12px 0;
+    }
+
+    .login-container {
+        width: calc(100% - 24px);
+        max-width: 100%;
+        margin: 0 auto;
+        border-radius: 14px;
+    }
+
+    .left-section,
+    .right-section {
+        padding: 25px 18px;
+    }
+
+    .left-section h1 {
+        font-size: 26px;
+    }
+
+    .right-section h2 {
+        font-size: 25px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        min-width: 0;
+        font-size: 16px;
+    }
+
+    .role-options {
+        gap: 8px;
+    }
+
+    .role-option {
+        min-width: 0;
+        padding: 10px 5px;
+        overflow-wrap: anywhere;
+    }
+}
+
 </style>
 </head>
 

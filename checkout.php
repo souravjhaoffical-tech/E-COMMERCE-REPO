@@ -205,6 +205,40 @@ if (empty($_SESSION['cart'])) {
                 padding: 15px;
             }
         }
+        /* Mobile screen */
+@media screen and (max-width: 500px) {
+    body {
+        padding: 15px 10px;
+        align-items: flex-start;
+    }
+
+    .checkout-card {
+        width: 100%;
+        max-width: 450px;
+        padding: 22px 15px;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 23px;
+    }
+
+    .payment-box {
+        padding: 12px;
+    }
+
+    .payment-option {
+        padding: 12px 10px;
+        gap: 9px;
+    }
+
+    .confirm-btn {
+        width: 100%;
+    }
+}
     </style>
 </head>
 
