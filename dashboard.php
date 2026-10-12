@@ -83,9 +83,15 @@
         }
 
         .logo {
-            font-size: 29px;
-            font-weight: bold;
-            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
         }
 
         .logo span {
@@ -325,11 +331,9 @@
 
     <!-- Navbar -->
     <div class="navbar">
-
-        <div class="logo">
-            Shop<span>Vibe</span>
-        </div>
-
+        <a href="index.php" class="logo">
+            <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
+        </a>
         <div class="admin">
             🛡️ Admin Panel
         </div>
@@ -395,7 +399,7 @@
                     products available in your store.
                 </p>
 
-                <a href="productview.php">
+                <a href="product.php">
                     View Products
                 </a>
             </div>

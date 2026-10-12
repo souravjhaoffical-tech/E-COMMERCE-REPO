@@ -1,5 +1,5 @@
 
-USE c;
+USE k;
 
 CREATE TABLE  eproduct (
     id INT  AUTO_INCREMENT PRIMARY KEY, 
@@ -14,6 +14,8 @@ CREATE TABLE orders (
     p_name VARCHAR(100),
     p_price INT, 
     payment_method VARCHAR(50),
+    razorpay_order_id VARCHAR  (100),
+    razorpay_payment_id varchar(100),
     STATUS VARCHAR (50)
 );
 
@@ -22,10 +24,14 @@ CREATE TABLE users (
     name VARCHAR(100),
     email VARCHAR(100) UNIQUE,
     password VARCHAR(255),
-    role Varchar(20) DEFAULT 'user'
-);
+    role VARCHAR(20) NOT NULL DEFAULT 'user');
 
-INSERT INTO users (email,password) VALUES('souravjha700377@gmail.com','1234');
+INSERT INTO users (name, email, password, role)
+VALUES ('Sourav', 'souravjha700377@gmail.com', '1234', 'admin');
+
+UPDATE users
+SET role = 'admin'
+WHERE email = 'souravjha700377@gmail.com'
 
 
 
