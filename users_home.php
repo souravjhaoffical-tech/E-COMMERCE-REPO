@@ -369,6 +369,7 @@ footer {
     <div class="feature"><strong>🎁 Festive Deals</strong>Discover your favourites</div>
 </section>
 
+
 <section class="products-section" id="products">
     <div class="section-heading">
         <div>
@@ -377,41 +378,9 @@ footer {
         </div>
     </div>
 
-    <div class="products">
-    <?php if ($result && mysqli_num_rows($result) > 0): ?>
-        <?php while ($product = mysqli_fetch_assoc($result)): ?>
-            <article class="product-card">
-                <img
-                    src="uploads/<?php echo rawurlencode(basename($product['image'] ?? '')); ?>"
-                    class="product-image"
-                    alt="<?php echo htmlspecialchars($product['p_name'] ?? 'Product', ENT_QUOTES, 'UTF-8'); ?>"
-                    loading="lazy"
-                    onerror="this.style.visibility='hidden';"
-                >
-
-                <div class="product-info">
-                    <h3><?php echo htmlspecialchars($product['p_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></h3>
-
-                    <p class="brand">
-                        <?php echo htmlspecialchars($product['p_brand'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                    </p>
-
-                    <div class="price">
-                        ₹<?php echo htmlspecialchars((string)($product['p_price'] ?? '0'), ENT_QUOTES, 'UTF-8'); ?>
-                    </div>
-
-                    <a
-                        href="add_cart.php?id=<?php echo urlencode((string)$product['id']); ?>"
-                        class="cart-btn"
-                    >🛒 Add to Cart</a>
-                </div>
-            </article>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <p class="empty">No products available right now. Please check back soon!</p>
-    <?php endif; ?>
-    </div>
+    <div id="products-root"></div>
 </section>
+
 
 <div class="deal-strip">
     <div>
@@ -427,60 +396,26 @@ footer {
     <p style="margin-top:10px;">© 2026 Shop Vibe. All rights reserved.</p>
 </footer>
 
-<!-- React for the countdown only; PHP still renders products -->
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<?php
+$manifestPath = __DIR__ . '/frontend/dist/.vite/manifest.json';
 
-<script type="text/babel">
-const saleEnd = new Date("2026-10-20T23:59:59+05:30");
+if (file_exists($manifestPath)) {
+    $manifest = json_decode(file_get_contents($manifestPath), true);
+    $entry = $manifest['index.html'] ?? null;
 
-function SaleCountdown() {
-    const [remaining, setRemaining] = React.useState(
-        Math.max(0, saleEnd.getTime() - Date.now())
-    );
+    if ($entry) {
+        foreach ($entry['css'] ?? [] as $cssFile) {
+            echo '<link rel="stylesheet" href="frontend/dist/' .
+                htmlspecialchars($cssFile, ENT_QUOTES, 'UTF-8') . '">' . PHP_EOL;
+        }
 
-    React.useEffect(() => {
-        const timer = setInterval(() => {
-            setRemaining(Math.max(0, saleEnd.getTime() - Date.now()));
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, []);
-
-    const totalSeconds = Math.floor(remaining / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    const units = [
-        [days, "Days"],
-        [hours, "Hours"],
-        [minutes, "Minutes"],
-        [seconds, "Seconds"]
-    ];
-
-    return (
-        <div className="countdown" aria-live="polite">
-            {units.map(([value, label]) => (
-                <div className="time-box" key={label}>
-                    <strong>{String(value).padStart(2, "0")}</strong>
-                    <small>{label}</small>
-                </div>
-            ))}
-        </div>
-    );
+        if (!empty($entry['file'])) {
+            echo '<script type="module" src="frontend/dist/' .
+                htmlspecialchars($entry['file'], ENT_QUOTES, 'UTF-8') .
+                '"></script>' . PHP_EOL;
+        }
+    }
 }
-
-const root = document.querySelector("#sale-app");
-if (root) {
-    const countdownMount = document.createElement("div");
-    const oldCountdown = root.querySelector(".countdown");
-    if (oldCountdown) oldCountdown.replaceWith(countdownMount);
-    ReactDOM.createRoot(countdownMount).render(<SaleCountdown />);
-}
-</script>
-
+?>
 </body>
 </html>
