@@ -59,6 +59,14 @@ a { text-decoration: none; }
     color: #667eea;
 }
 
+.logo img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
 .nav-right {
     display: flex;
     align-items: center;
@@ -339,7 +347,12 @@ footer {
 <body>
 
 <nav class="navbar">
-    <div class="logo">🛒 Shop Vibe</div>
+    <div class="logo">
+        <a href="index.php" class="logo-image">
+            <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
+        </a>
+        🛒 Shop Vibe
+    </div>
 
     <div class="nav-right">
         <span class="welcome">Welcome, <?php echo $userName; ?></span>
