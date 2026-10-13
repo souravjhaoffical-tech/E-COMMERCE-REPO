@@ -8,7 +8,7 @@ if (empty($_SESSION['cart'])) {
 
     if (isset($_POST['order'])) {
         if ($_POST['payment_method'] == 'COD') {
-            header("Location: sucess.php");
+            header("Location: place_order.php");
             exit();
         } elseif ($_POST['payment_method'] == 'razorpay') {
             header("Location: razorpay.php");
