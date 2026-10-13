@@ -5,6 +5,16 @@ if (empty($_SESSION['cart'])) {
     header("Location: cart.php");
     exit();
 }
+
+    if (isset($_POST['order'])) {
+        if ($_POST['payment_method'] == 'COD') {
+            header("Location: sucess.php");
+            exit();
+        } elseif ($_POST['payment_method'] == 'razorpay') {
+            header("Location: razorpay.php");
+             exit();
+        }
+}
 ?>
 
 <!DOCTYPE html>
@@ -252,7 +262,7 @@ if (empty($_SESSION['cart'])) {
 
         <h2>Checkout</h2>
 
-        <form action="place_order.php" method="POST">
+        <form action="" method="POST">
 
             <div class="payment-box">
 

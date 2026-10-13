@@ -19,11 +19,11 @@ foreach(array_unique($_SESSION['cart'] ?? []) as $id){
 
     $row = mysqli_fetch_assoc($result);
 
-    if(!$row || $row['price'] <= 0){
+    if(!$row || $row['p_price'] <= 0){
         die("Invalid product");
     }
 
-    $total += $row['price'];
+    $total += $row['p_price'];
     $courses[] = $row;
 }
 
@@ -36,7 +36,7 @@ try {
         "currency" => "INR"
     ]);
 
-} catch(error){
+} catch(\Throwable $e){
     die("Payment setup failed");
 }
 
