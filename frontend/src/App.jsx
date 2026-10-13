@@ -1,11 +1,13 @@
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
 function App() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [search, setSearch] = useState('')
+  const [selectedBrand, setSelectedBrand] = useState('All')
 
   useEffect(() => {
     fetch('/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php')
@@ -26,6 +28,33 @@ function App() {
       })
   }, [])
 
+  const brands = useMemo(() => {
+    return [
+      'All',
+      ...new Set(
+        products
+          .map((product) => product.brand)
+          .filter(Boolean)
+      ),
+    ]
+  }, [products])
+
+  const filteredProducts = useMemo(() => {
+    const searchText = search.trim().toLowerCase()
+
+    return products.filter((product) => {
+      const matchesSearch =
+        (product.name || '').toLowerCase().includes(searchText) ||
+        (product.brand || '').toLowerCase().includes(searchText)
+
+      const matchesBrand =
+        selectedBrand === 'All' ||
+        product.brand === selectedBrand
+
+      return matchesSearch && matchesBrand
+    })
+  }, [products, search, selectedBrand])
+
   if (loading) {
     return <p className="react-message">Loading products...</p>
   }
@@ -34,35 +63,67 @@ function App() {
     return <p className="react-message">{error}</p>
   }
 
-  if (products.length === 0) {
-    return <p className="react-message">No products available right now.</p>
-  }
-
   return (
-    <div className="react-products">
-      {products.map((product) => (
-        <article className="product-card" key={product.id}>
-          <img
-            className="product-image"
-            src={product.image}
-            alt={product.name || 'Product'}
-            loading="lazy"
-          />
+    <div className="react-shop">
+      <div className="product-toolbar">
+        <input
+          type="search"
+          className="product-search"
+          placeholder="🔍 Search products or brands..."
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          aria-label="Search products or brands"
+        />
 
-          <div className="product-info">
-            <h3>{product.name}</h3>
-            <p className="brand">{product.brand}</p>
-            <div className="price">₹{product.price}</div>
+        <select
+          className="brand-filter"
+          value={selectedBrand}
+          onChange={(event) => setSelectedBrand(event.target.value)}
+          aria-label="Filter by brand"
+        >
+          {brands.map((brand) => (
+            <option key={brand} value={brand}>
+              {brand === 'All' ? 'All Brands' : brand}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            <a
-              className="cart-btn"
-              href={`add_cart.php?id=${encodeURIComponent(product.id)}`}
-            >
-              🛒 Add to Cart
-            </a>
-          </div>
-        </article>
-      ))}
+      <p className="product-count">
+        Showing {filteredProducts.length} of {products.length} products
+      </p>
+
+      {filteredProducts.length === 0 ? (
+        <p className="react-message">
+          No matching products found. Try another search.
+        </p>
+      ) : (
+        <div className="react-products">
+          {filteredProducts.map((product) => (
+            <article className="product-card" key={product.id}>
+              <img
+                className="product-image"
+                src={product.image}
+                alt={product.name || 'Product'}
+                loading="lazy"
+              />
+
+              <div className="product-info">
+                <h3>{product.name}</h3>
+                <p className="brand">{product.brand}</p>
+                <div className="price">₹{product.price}</div>
+
+                <a
+                  className="cart-btn"
+                  href={`add_cart.php?id=${encodeURIComponent(product.id)}`}
+                >
+                  🛒 Add to Cart
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

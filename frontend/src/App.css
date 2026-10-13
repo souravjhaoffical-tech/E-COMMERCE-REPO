@@ -1,12 +1,112 @@
 
+.react-shop {
+  width: 100%;
+}
+
+.product-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.product-search {
+  flex: 1;
+  min-width: 200px;
+  padding: 13px 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+}
+
+.product-search:focus,
+.brand-filter:focus {
+  border-color: #e85d04;
+}
+
+.brand-filter {
+  min-width: 150px;
+  padding: 13px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  font-size: 14px;
+}
+
+.product-count {
+  color: #666;
+  font-size: 14px;
+  margin: 10px 0 18px;
+}
+
 .react-products {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
 }
 
+.product-card {
+  min-width: 0;
+  overflow: hidden;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.12);
+}
+
+.product-image {
+  width: 100%;
+  height: 190px;
+  object-fit: contain;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.product-info {
+  padding: 14px;
+}
+
+.product-info h3 {
+  font-size: 16px;
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+}
+
+.brand {
+  color: #777;
+  font-size: 13px;
+  margin: 0 0 10px;
+}
+
+.price {
+  color: #e85d04;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.cart-btn {
+  display: block;
+  padding: 11px;
+  border-radius: 8px;
+  background: #e85d04;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 600;
+}
+
+.cart-btn:hover {
+  background: #c94d00;
+}
+
 .react-message {
-  grid-column: 1 / -1;
   padding: 24px;
   background: white;
   border-radius: 12px;
@@ -24,10 +124,22 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
+
+  .product-image {
+    height: 150px;
+  }
+
+  .product-info {
+    padding: 10px;
+  }
 }
 
 @media (max-width: 350px) {
   .react-products {
     grid-template-columns: 1fr;
+  }
+
+  .product-toolbar {
+    flex-direction: column;
   }
 }
