@@ -9,7 +9,7 @@ include "config.php";
 $total = 0;
 $courses = [];
 
-foreach(array_unique($_SESSION['cart'] ?? []) as $id){
+foreach(($_SESSION['cart'] ?? []) as $id){
 
     $id = (int)$id;
 

@@ -1,103 +1,177 @@
+
 <?php
-
 session_start();
+require_once "db.php";
+require_once "config.php";
 
-include "db.php";
-include "config.php";
 
-if(!isset($_SESSION['user']) ||
-   !isset($_SESSION['rzp_order'])){
-    die("Invalid session");
+if (
+    !isset($_SESSION['user_id']) ||
+    !isset($_SESSION['role']) ||
+    $_SESSION['role'] !== 'user' ||
+    empty($_SESSION['rzp_order']) ||
+    empty($_SESSION['rzp_amount']) ||
+    empty($_SESSION['rzp_product']) ||
+    empty($_SESSION['checkout_customer']) ||
+    !isset($_SESSION['checkout_total'])
+) {
+    http_response_code(400);
+    exit("Invalid checkout session. Please restart checkout.");
 }
 
-$orderId = $_SESSION['rzp_order'];
-$amount = $_SESSION['rzp_amount'];
-$courses = $_SESSION['rzp_courses'];
 
-$paymentId = $_POST['payment_id'] ?? "";
-$signature = $_POST['signature'] ?? "";
+$orderId = $_SESSION['rzp_order'];
+$amount = (int) $_SESSION['rzp_amount'];
+$products = $_SESSION['rzp_product'];
+$customer = $_SESSION['checkout_customer'];
+$total = (float) $_SESSION['checkout_total'];
+
+$paymentId = trim($_POST['payment_id'] ?? '');
+$signature = trim($_POST['signature'] ?? '');
+
+if ($paymentId === '' || $signature === '') {
+    http_response_code(400);
+    exit("Missing payment details.");
+}
 
 try {
-
+    // Verify the Razorpay payment signature.
     $api->utility->verifyPaymentSignature([
         "razorpay_order_id" => $orderId,
         "razorpay_payment_id" => $paymentId,
         "razorpay_signature" => $signature
     ]);
 
+    // Confirm payment details directly with Razorpay.
     $payment = $api->payment->fetch($paymentId);
 
-    if(
-        $payment['status'] != "captured" ||
-        $payment['order_id'] != $orderId ||
-        $payment['amount'] != $amount ||
-        $payment['currency'] != "INR"
-    ){
-        die("Payment not completed");
+    if (
+        $payment['status'] !== 'captured' ||
+        $payment['order_id'] !== $orderId ||
+        (int)$payment['amount'] !== $amount ||
+        $payment['currency'] !== 'INR'
+    ) {
+        http_response_code(400);
+        exit("Payment is not confirmed as captured.");
     }
 
-    $user = $_SESSION['user'];
+    $userId = (int) $_SESSION['user_id'];
 
-    // Avoid saving the same order again
-    $stmt = mysqli_prepare($conn,
-        "SELECT id FROM orders WHERE razorpay_order_id=? LIMIT 1"
+$name = $customer['customer_name'];
+$phone = $customer['phone'];
+$address = $customer['address'];
+$city = $customer['city'];
+$pincode = $customer['pincode'];
+$paymentMethod = 'Razorpay';
+
+    // Prevent saving the same Razorpay order twice.
+    mysqli_begin_transaction($conn);
+
+    $check = mysqli_prepare(
+        $conn,
+        "SELECT id FROM orders
+         WHERE razorpay_order_id = ?
+         LIMIT 1
+         FOR UPDATE"
     );
 
-    mysqli_stmt_bind_param($stmt,"s",$orderId);
-    mysqli_stmt_execute($stmt);
+    if (!$check) {
+        throw new Exception("Could not prepare duplicate-order check.");
+    }
 
-    $existing = mysqli_stmt_get_result($stmt);
+    mysqli_stmt_bind_param($check, "s", $orderId);
+    mysqli_stmt_execute($check);
+    $existing = mysqli_stmt_get_result($check);
+    $alreadySaved = mysqli_num_rows($existing) > 0;
+    mysqli_stmt_close($check);
 
-    if(mysqli_num_rows($existing) == 0){
+    if (!$alreadySaved) {
+        $reference = bin2hex(random_bytes(16));
 
-        mysqli_begin_transaction($conn);
+        $insert = mysqli_prepare(
+            $conn,
+            "INSERT INTO orders
+            (user_id, p_name, p_price, payment_method,
+             razorpay_order_id, razorpay_payment_id,
+             `STATUS`, customer_name, phone, address,
+             city, pincode, total_amount, order_reference)
+            VALUES (?, ?, ?, 'Razorpay', ?, ?, 'Paid',
+                    ?, ?, ?, ?, ?, ?, ?)"
+        );
 
-        try {
+        if (!$insert) {
+            throw new Exception("Could not prepare order insert.");
+        }
 
-            foreach($eproduct as $eproduct){
+        $firstItem = true;
 
-                $name = $course['course_name'];
-                $price = $course['price'];
-
-                $stmt = mysqli_prepare($conn,
-                    "INSERT INTO orders
-                    (user_name,course_name,price,
-                     payment_method,status,
-                     razorpay_order_id,razorpay_payment_id)
-                    VALUES (?, ?, ?, 'Razorpay', 'Paid', ?, ?)"
-                );
-
-                mysqli_stmt_bind_param(
-                    $stmt,"ssiss",
-                    $user,$name,$price,$orderId,$paymentId
-                );
-
-                if(!mysqli_stmt_execute($stmt)){
-                    throw new Exception("Order save failed");
-                }
+        foreach ($products as $product) {
+            if (
+                !isset($product['p_name'], $product['p_price']) ||
+                !is_numeric($product['p_price']) ||
+                (float)$product['p_price'] < 0
+            ) {
+                throw new Exception("Invalid product data in checkout.");
             }
 
-            mysqli_commit($conn);
+            $productName = (string)$product['p_name'];
+            $price = (float)$product['p_price'];
 
-        } catch(Exception $e){
+            // Store the full order total on only the first item row.
+            $rowTotal = $firstItem ? round($total, 2) : null;
 
-            mysqli_rollback($conn);
-            throw $e;
+            
+
+mysqli_stmt_bind_param(
+    $insert,
+    "isdsssssssds",
+    $userId,
+    $productName,
+    $price,
+    $orderId,
+    $paymentId,
+    $name,
+    $phone,
+    $address,
+    $city,
+    $pincode,
+    $rowTotal,
+    $reference
+);
+
+
+
+
+            if (!mysqli_stmt_execute($insert)) {
+                throw new Exception("Could not save order item.");
+            }
+
+            $firstItem = false;
         }
+
+        mysqli_stmt_close($insert);
     }
+
+    mysqli_commit($conn);
 
     unset($_SESSION['cart']);
     unset($_SESSION['rzp_order']);
     unset($_SESSION['rzp_amount']);
-    unset($_SESSION['rzp_courses']);
+    unset($_SESSION['rzp_product']);
+    unset($_SESSION['checkout_customer']);
+    unset($_SESSION['checkout_total']);
 
     header("Location: success.php");
     exit();
 
-} catch(Exception $e){
+} catch (Throwable $e) {
+    if ($conn->errno === 0 || mysqli_ping($conn)) {
+        mysqli_rollback($conn);
+    }
 
-    echo "Payment verification failed. Check order status before retrying.";
+    error_log("Shop Vibe Razorpay verification error: " . $e->getMessage());
 
+    http_response_code(400);
+    echo "Payment verification or order saving failed. Do not pay again immediately; check your Razorpay dashboard and orders table first.";
 }
-
 ?>

@@ -367,12 +367,7 @@ footer {
     <span class="sale-label">FESTIVE SPECIAL</span>
     <h1>Durga Puja <span>Sale</span> 🪔</h1>
     <p>IS LIVE! &nbsp; | &nbsp; Big Discounts &nbsp; | &nbsp; Best Deals</p>
-    <div class="countdown">
-        <div class="time-box"><strong>--</strong><small>Days</small></div>
-        <div class="time-box"><strong>--</strong><small>Hours</small></div>
-        <div class="time-box"><strong>--</strong><small>Minutes</small></div>
-        <div class="time-box"><strong>--</strong><small>Seconds</small></div>
-    </div>
+    <div id="countdown-root"></div>
     <a href="#products" class="shop-btn">Shop Now →</a>
 </section>
 

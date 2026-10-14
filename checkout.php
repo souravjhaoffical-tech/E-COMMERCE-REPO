@@ -1,330 +1,307 @@
 <?php
 session_start();
+require_once "db.php";
 
-if (empty($_SESSION['cart'])) {
+$cart = $_SESSION['cart'] ?? [];
+$products = [];
+$total = 0;
+
+// Empty cart check
+if (empty($cart)) {
     header("Location: cart.php");
     exit();
 }
 
-    if (isset($_POST['order'])) {
-        if ($_POST['payment_method'] == 'COD') {
-            header("Location: place_order.php");
-            exit();
-        } elseif ($_POST['payment_method'] == 'razorpay') {
-            header("Location: razorpay.php");
-             exit();
-        }
+// Fetch each cart item safely
+$stmt = mysqli_prepare(
+    $conn,
+    "SELECT id, p_name, p_price FROM eproduct WHERE id = ?"
+);
+
+if (!$stmt) {
+    die("Unable to prepare checkout.");
+}
+
+foreach ($cart as $cartId) {
+    $id = filter_var($cartId, FILTER_VALIDATE_INT);
+
+    if ($id === false || $id === null || $id <= 0) {
+        continue;
+    }
+
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+    $product = mysqli_fetch_assoc($result);
+
+    if ($product) {
+        $product['p_price'] = (float) $product['p_price'];
+        $products[] = $product;
+        $total += $product['p_price'];
+    }
+}
+
+mysqli_stmt_close($stmt);
+
+if (empty($products)) {
+    header("Location: cart.php");
+    exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Checkout - Shop Vibe</title>
 
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
 
         body {
-            min-height: 100vh;
-            background: #f5f6fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 25px 15px;
+            background: #f4f6fb;
             color: #222;
+            padding: 30px 15px;
         }
 
-        /* Checkout Card */
-
-        .checkout-card {
-            width: 100%;
-            max-width: 450px;
-            padding: 35px;
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 20px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-            animation: cardIn 0.6s ease;
+        .checkout-container {
+            max-width: 1000px;
+            margin: auto;
         }
 
-        @keyframes cardIn {
-            from {
-                opacity: 0;
-                transform: translateY(25px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Logo */
-
-        .logo {
+        .heading {
             text-align: center;
-            font-size: 30px;
-            font-weight: bold;
-            color: #667eea;
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 32px;
             margin-bottom: 8px;
         }
 
-        .subtitle {
-            text-align: center;
-            color: #777;
-            margin-bottom: 28px;
+        .heading span {
+            color: #667eea;
+        }
+
+        .heading p {
+            color: #666;
+        }
+
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 25px;
+        }
+
+        .checkout-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.06);
         }
 
         h2 {
-            text-align: center;
-            font-size: 28px;
-            margin-bottom: 25px;
-            color: #222;
+            font-size: 21px;
+            margin-bottom: 20px;
         }
 
-        h3 {
-            font-size: 17px;
-            color: #333;
+        .form-group {
             margin-bottom: 17px;
         }
 
-        /* Payment Box */
-
-        .payment-box {
-            background: #f8f9ff;
-            border: 1px solid #e8eaff;
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .payment-option {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
-            background: #fff;
-            border: 1px solid #e5e7f2;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.25s;
-        }
-
-        .payment-option:last-child {
-            margin-bottom: 0;
-        }
-
-        .payment-option:hover {
-            border-color: #667eea;
-            background: #f5f6ff;
-            transform: translateY(-2px);
-        }
-
-        input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            flex-shrink: 0;
-            accent-color: #667eea;
-            cursor: pointer;
-        }
-
-        .payment-icon {
-            font-size: 23px;
-        }
-
-        .payment-name {
+        label {
             display: block;
-            color: #333;
             font-weight: bold;
-        }
-
-        .payment-description {
-            display: block;
-            font-size: 12px;
-            color: #777;
-            margin-top: 5px;
-            line-height: 1.4;
-        }
-
-        /* Confirm Button */
-
-        .confirm-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 9px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-            transition: 0.3s;
-        }
-
-        .confirm-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .confirm-btn:active {
-            transform: translateY(0);
-        }
-
-        /* Back to Cart */
-
-        .back {
-            display: block;
-            text-align: center;
-            margin-top: 22px;
-            color: #667eea;
-            text-decoration: none;
+            margin-bottom: 7px;
             font-size: 14px;
-            transition: 0.2s;
         }
 
-        .back:hover {
-            color: #764ba2;
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5d8e0;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
         }
 
-        /* Mobile */
+        input:focus,
+        textarea:focus {
+            border-color: #667eea;
+        }
 
-        @media (max-width: 500px) {
-            .checkout-card {
-                padding: 27px 20px;
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .product-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 13px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-name {
+            overflow-wrap: anywhere;
+        }
+
+        .product-price {
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #eee;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .total-amount {
+            color: #667eea;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 22px;
+            color: #5266d8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .notice {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #fff4dc;
+            color: #795500;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 700px) {
+            .checkout-layout {
+                grid-template-columns: 1fr;
             }
 
-            .logo {
+            .heading h1 {
                 font-size: 27px;
             }
 
-            h2 {
-                font-size: 25px;
-            }
-
-            .payment-box {
-                padding: 15px;
+            .checkout-card {
+                padding: 20px;
             }
         }
-        /* Mobile screen */
-@media screen and (max-width: 500px) {
-    body {
-        padding: 15px 10px;
-        align-items: flex-start;
-    }
-
-    .checkout-card {
-        width: 100%;
-        max-width: 450px;
-        padding: 22px 15px;
-    }
-
-    .logo {
-        font-size: 24px;
-    }
-
-    h2 {
-        font-size: 23px;
-    }
-
-    .payment-box {
-        padding: 12px;
-    }
-
-    .payment-option {
-        padding: 12px 10px;
-        gap: 9px;
-    }
-
-    .confirm-btn {
-        width: 100%;
-    }
-}
     </style>
 </head>
 
 <body>
+<div class="checkout-container">
 
-    <div class="checkout-card">
+    <header class="heading">
+        <h1>🛍️ Shop <span>Vibe</span> Checkout</h1>
+        <p>Review your order and enter your delivery details.</p>
+    </header>
 
-        <div class="logo">🛒 Shop Vibe</div>
+    <div class="checkout-layout">
 
-        <p class="subtitle">Secure Checkout</p>
+        <section class="checkout-card">
+            <h2>📦 Delivery Details</h2>
+            
+<form action="place_order.php" method="POST">
 
-        <h2>Checkout</h2>
+    <label for="customer_name">Full Name</label>
+    <input type="text" id="customer_name" name="customer_name"
+           required maxlength="100">
 
-        <form action="" method="POST">
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" name="phone"
+           required maxlength="15" pattern="[0-9+ -]{10,15}">
 
-            <div class="payment-box">
+    <label for="address">Full Address</label>
+    <textarea id="address" name="address"
+              required maxlength="500"></textarea>
 
-                <h3>Select Payment Method</h3>
+    <label for="city">City</label>
+    <input type="text" id="city" name="city"
+           required maxlength="100">
 
-                <label class="payment-option">
-                    <input
-                        type="radio"
-                        name="payment_method"
-                        value="COD"
-                        required
-                    >
+    <label for="pincode">PIN Code</label>
+    <input type="text" id="pincode" name="pincode"
+           required pattern="[0-9]{6}" maxlength="6">
 
-                    <span class="payment-icon">💵</span>
+    <h3>Select Payment Method</h3>
 
-                    <span>
-                        <span class="payment-name">
-                            Cash on Delivery
-                        </span>
-                        <span class="payment-description">
-                            Pay when your order arrives
-                        </span>
+    <label>
+        <input type="radio" name="payment_method"
+               value="COD" required>
+        Cash on Delivery
+    </label>
+
+    <br>
+
+    <label>
+        <input type="radio" name="payment_method"
+               value="Razorpay" required>
+        Pay Online with Razorpay
+    </label>
+
+    <br><br>
+
+    <button type="submit" name="order" value="1">
+        Confirm Order →
+    </button>
+
+</form>
+
+
+            <a class="back-link" href="cart.php">
+                ← Back to Cart
+            </a>
+        </section>
+
+        <section class="checkout-card">
+            <h2>🛒 Order Summary</h2>
+
+            <?php foreach ($products as $product): ?>
+                <div class="product-row">
+                    <span class="product-name">
+                        <?= htmlspecialchars(
+                            $product['p_name'],
+                            ENT_QUOTES,
+                            'UTF-8'
+                        ) ?>
                     </span>
-                </label>
 
-                <label class="payment-option">
-                    <input
-                        type="radio"
-                        name="payment_method"
-                        value="razorpay"
-                        required
-                    >
-
-                    <span class="payment-icon">💳</span>
-
-                    <span>
-                        <span class="payment-name">
-                            Online Payment
-                        </span>
-                        <span class="payment-description">
-                            Pay online using Razorpay
-                        </span>
+                    <span class="product-price">
+                        ₹<?= number_format($product['p_price'], 2) ?>
                     </span>
-                </label>
+                </div>
+            <?php endforeach; ?>
 
+            <div class="total-row">
+                <span>Total</span>
+                <span class="total-amount">
+                    ₹<?= number_format($total, 2) ?>
+                </span>
             </div>
-
-            <button
-                type="submit"
-                name="order"
-                class="confirm-btn"
-            >
-                Confirm Order →
-            </button>
-
-        </form>
-
-        <a href="cart.php" class="back">
-            ← Back to Cart
-        </a>
+        </section>
 
     </div>
-
+</div>
 </body>
 </html>
