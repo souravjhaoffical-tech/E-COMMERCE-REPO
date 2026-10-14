@@ -8,6 +8,7 @@ function App() {
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
   const [selectedBrand, setSelectedBrand] = useState('All')
+  const [selectedCategory, setSelectedCategory] = useState('All')
 
   useEffect(() => {
     fetch('/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php')
@@ -38,6 +39,17 @@ function App() {
       ),
     ]
   }, [products])
+  const categories = useMemo(() => {
+  return [
+    'All',
+    ...new Set(
+      products
+        .map((product) => product.category)
+        .filter(Boolean)
+    ),
+  ]
+}, [products])
+
 
   const filteredProducts = useMemo(() => {
     const searchText = search.trim().toLowerCase()
@@ -51,9 +63,13 @@ function App() {
         selectedBrand === 'All' ||
         product.brand === selectedBrand
 
-      return matchesSearch && matchesBrand
+      const matchesCategory =
+        selectedCategory === 'All' ||
+        product.category === selectedCategory
+
+      return matchesSearch && matchesBrand && matchesCategory
     })
-  }, [products, search, selectedBrand])
+  }, [products, search, selectedBrand, selectedCategory])
 
   if (loading) {
     return <p className="react-message">Loading products...</p>
@@ -84,6 +100,19 @@ function App() {
           {brands.map((brand) => (
             <option key={brand} value={brand}>
               {brand === 'All' ? 'All Brands' : brand}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="category-filter"
+          value={selectedCategory}
+          onChange={(event) => setSelectedCategory(event.target.value)}
+          aria-label="Filter by category"
+        >
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category === 'All' ? 'All Categories' : category}
             </option>
           ))}
         </select>
