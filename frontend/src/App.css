@@ -218,3 +218,37 @@
 .product-search::placeholder {
   color: #6b7280;
 }
+
+/* Shop Vibe Wishlist */
+.wishlist-btn {
+  display: block;
+  margin: 0 12px 8px auto;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.wishlist-btn:hover {
+  transform: scale(1.08);
+}
+
+.wishlist-toggle {
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wishlist-toggle.active {
+  background: #e85d04;
+  border-color: #e85d04;
+  color: #fff;
+}
