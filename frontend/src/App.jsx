@@ -44,7 +44,10 @@ function App() {
 
   // Fetch products from PHP API
   useEffect(() => {
-    fetch('/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php')
+    
+      
+fetch('http://localhost/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php')
+
       .then((response) => {
         if (!response.ok) {
           throw new Error('Could not load products')
