@@ -10,6 +10,7 @@ if (isset($_POST['add'])) {
     $brand = trim($_POST['brand']);
     $name = trim($_POST['name']);
     $price = (int) $_POST['price'];
+    $category = trim($_POST['category']);
 
     if (
         isset($_FILES['image']) &&
@@ -27,8 +28,8 @@ if (isset($_POST['add'])) {
         if (move_uploaded_file($temp, "uploads/" . $image)) {
 
             $query = "INSERT INTO eproduct
-                      (p_brand, p_name, p_price, image)
-                      VALUES (?, ?, ?, ?)";
+                      (p_brand, p_name, p_price, image, category)
+                      VALUES (?, ?, ?, ?, ?)";
 
             $stmt = mysqli_prepare($conn, $query);
 
@@ -38,7 +39,8 @@ if (isset($_POST['add'])) {
                 $brand,
                 $name,
                 $price,
-                $image
+                $image,
+                $category
             );
 
             if (mysqli_stmt_execute($stmt)) {
@@ -283,6 +285,22 @@ body {
 
 .add-button:active {
     transform: translateY(0);
+}
+.form-group select {
+    width: 100%;
+    min-width: 0;
+    padding: 14px 15px;
+    border: 1px solid #dce1ea;
+    border-radius: 8px;
+    background: #fafbfe;
+    color: #222;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-group select:focus {
+    border-color: #667eea;
+    background: white;
 }
 
 /* Error Message */
@@ -539,6 +557,21 @@ body {
                         >
 
                     </div>
+                    <div class="form-group">
+    <label for="category">Product Category</label>
+
+    <select id="category" name="category" required>
+        <option value="">Select Category</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Footwear">Footwear</option>
+        <option value="Accessories">Accessories</option>
+        <option value="Beauty">Beauty</option>
+        <option value="Sports">Sports</option>
+        <option value="watch">Watch</option>
+        <option value="Home">Home</option>
+    </select>
+</div>
 
 
                     <div class="form-group">

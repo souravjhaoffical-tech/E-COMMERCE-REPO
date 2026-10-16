@@ -11,36 +11,74 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [sortOrder, setSortOrder] = useState('default')
 
-  // Wishlist state
-  const [wishlist, setWishlist] = useState(() => {
-    try {
-      const saved = JSON.parse(
-        localStorage.getItem('shopVibeWishlist') || '[]'
-      )
-      return Array.isArray(saved) ? saved : []
-    } catch {
-      return []
+
+// Wishlist state: data comes from PHP + MySQL
+const [wishlist, setWishlist] = useState([])
+const [showWishlist, setShowWishlist] = useState(false)
+const [wishlistMessage, setWishlistMessage] = useState('')
+
+// Load logged-in user's wishlist from database
+useEffect(() => {
+  fetch(
+    '/E-COMMERCE-SITE/E-COMMERCE-REPO/wishlist_api.php?action=list',
+    { credentials: 'include' }
+  )
+    .then(async (response) => {
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Please log in first.')
+      }
+
+      return data
+    })
+    .then((data) => {
+      if (data.success) {
+        setWishlist((data.wishlist || []).map(Number))
+      }
+    })
+    .catch((err) => {
+      setWishlistMessage(err.message)
+    })
+}, [])
+
+// Add/remove wishlist item in database
+const toggleWishlist = async (productId) => {
+  setWishlistMessage('')
+
+  try {
+    const response = await fetch(
+      '/E-COMMERCE-SITE/E-COMMERCE-REPO/wishlist_api.php?action=toggle',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_id: Number(productId),
+        }),
+      }
+    )
+
+    const data = await response.json()
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || 'Wishlist update failed.')
     }
-  })
 
-  const [showWishlist, setShowWishlist] = useState(false)
+    setWishlist((current) => {
+      const id = Number(productId)
 
-  // Save wishlist in browser storage
-  useEffect(() => {
-    localStorage.setItem(
-      'shopVibeWishlist',
-      JSON.stringify(wishlist)
-    )
-  }, [wishlist])
-
-  // Add or remove a product from wishlist
-  const toggleWishlist = (productId) => {
-    setWishlist((current) =>
-      current.includes(productId)
-        ? current.filter((id) => id !== productId)
-        : [...current, productId]
-    )
+      return data.added
+        ? [...new Set([...current, id])]
+        : current.filter((item) => item !== id)
+    })
+  } catch (err) {
+    setWishlistMessage(err.message)
   }
+}
+
 
   // Fetch products from PHP API
   useEffect(() => {
@@ -111,7 +149,8 @@ function App() {
         product.category === selectedCategory
 
       const matchesWishlist =
-        !showWishlist || wishlist.includes(product.id)
+  !showWishlist || wishlist.includes(Number(product.id))
+        
 
       return (
         matchesSearch &&
@@ -227,6 +266,11 @@ function App() {
           ❤️ Wishlist ({wishlist.length})
         </button>
       </div>
+      {wishlistMessage && (
+  <p className="react-message" role="status">
+    {wishlistMessage}
+  </p>
+)}
 
       <p className="product-count">
         {showWishlist ? 'Wishlist: ' : 'Showing '}
@@ -243,59 +287,60 @@ function App() {
       ) : (
         <div className="react-products">
           {filteredProducts.map((product) => {
-            const isWishlisted = wishlist.includes(product.id)
+            const isWishlisted = wishlist.includes(Number(product.id))
 
-            return (
-              <article className="product-card" key={product.id}>
-                <img
-                  className="product-image"
-                  src={product.image}
-                  alt={product.name || 'Product'}
-                  loading="lazy"
-                />
+           
+return (
+  <article className="product-card" key={product.id}>
+    <div className="product-image-wrap">
+      <img
+        className="product-image"
+        src={product.image}
+        alt={product.name || 'Product'}
+        loading="lazy"
+      />
 
-                {/* Wishlist heart button */}
-                <button
-                  type="button"
-                  className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
-                  onClick={() => toggleWishlist(product.id)}
-                  aria-label={
-                    isWishlisted
-                      ? 'Remove from wishlist'
-                      : 'Add to wishlist'
-                  }
-                  aria-pressed={isWishlisted}
-                >
-                  {isWishlisted ? '❤️' : '🤍'}
-                </button>
+      <span className="product-badge">SHOP VIBE</span>
 
-                <div className="product-info">
-                  <h3>
-                    <a
-                      className="product-title-link"
-                      href={`product_details.php?id=${encodeURIComponent(product.id)}`}
-                    >
-                      {product.name}
-                    </a>
-                  </h3>
+      <button
+        type="button"
+        className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
+        onClick={() => toggleWishlist(product.id)}
+        aria-label={
+          isWishlisted
+            ? 'Remove from wishlist'
+            : 'Add to wishlist'
+        }
+        aria-pressed={isWishlisted}
+      >
+        {isWishlisted ? '❤️' : '🤍'}
+      </button>
+    </div>
 
-                  <p className="brand">
-                    {product.brand}
-                  </p>
+    <div className="product-info">
+      <p className="brand">{product.brand || 'Shop Vibe'}</p>
 
-                  <div className="price">
-                    ₹{product.price}
-                  </div>
+      <h3>
+        <a
+          className="product-title-link"
+          href={`product_details.php?id=${encodeURIComponent(product.id)}`}
+        >
+          {product.name || 'Untitled Product'}
+        </a>
+      </h3>
 
-                  <a
-                    className="cart-btn"
-                    href={`add_cart.php?id=${encodeURIComponent(product.id)}`}
-                  >
-                    🛒 Add to Cart
-                  </a>
-                </div>
-              </article>
-            )
+      <div className="price">₹{product.price}</div>
+
+      <a
+        className="cart-btn"
+        href={`add_cart.php?id=${encodeURIComponent(product.id)}`}
+      >
+        <span>🛒</span> Add to Cart
+      </a>
+    </div>
+  </article>
+)
+
           })}
         </div>
       )}

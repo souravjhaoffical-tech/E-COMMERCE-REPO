@@ -252,3 +252,597 @@
   border-color: #e85d04;
   color: #fff;
 }
+/* Shop Vibe - Wishlist Heart Button Fix */
+.product-card {
+  position: relative;
+}
+
+.wishlist-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+  margin: 0;
+  padding: 0;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #e11d48;
+
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 1;
+  visibility: visible;
+}
+
+.wishlist-btn:hover {
+  transform: scale(1.08);
+}
+
+.wishlist-btn.active {
+  color: #e11d48;
+}
+
+/* =====================================
+   SHOP VIBE - RESPONSIVE IMPROVEMENTS
+   ===================================== */
+
+/* Prevent horizontal overflow */
+.react-shop,
+.product-toolbar,
+.react-products,
+.product-card {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.react-shop {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Toolbar controls behave consistently */
+.product-toolbar {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.product-search,
+.brand-filter,
+.category-filter,
+.sort-filter {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 44px;
+}
+
+.product-search {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.brand-filter,
+.category-filter,
+.sort-filter {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+/* Product cards */
+.react-products {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.product-image {
+  display: block;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.product-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow-wrap: anywhere;
+}
+
+.product-info h3 {
+  line-height: 1.4;
+}
+
+.price {
+  overflow-wrap: anywhere;
+}
+
+/* Keep cart buttons easy to tap */
+.cart-btn {
+  min-height: 44px;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Wishlist heart stays above the product image */
+.wishlist-btn {
+  top: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  z-index: 2;
+  touch-action: manipulation;
+}
+
+/* Tablet */
+@media (max-width: 950px) {
+  .react-products {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .product-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .product-search,
+  .brand-filter,
+  .category-filter,
+  .sort-filter {
+    width: 100%;
+    min-width: 0;
+    font-size: 16px;
+  }
+
+  .react-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .product-image {
+    height: 145px;
+    padding: 8px;
+  }
+
+  .product-info {
+    padding: 10px;
+  }
+
+  .product-info h3 {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .brand {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .price {
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
+
+  .cart-btn {
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+
+  .wishlist-btn {
+    width: 36px;
+    height: 36px;
+    top: 7px;
+    right: 7px;
+    font-size: 21px;
+  }
+
+  .wishlist-toggle {
+    min-height: 44px;
+    max-width: 100%;
+  }
+
+  .product-count {
+    line-height: 1.5;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width: 350px) {
+  .react-products {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .product-image {
+    height: 190px;
+  }
+
+  .product-info h3 {
+    font-size: 16px;
+  }
+
+  .cart-btn {
+    font-size: 14px;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .wishlist-btn {
+    transition: none;
+  }
+
+  .product-card:hover,
+  .wishlist-btn:hover {
+    transform: none;
+  }
+}
+
+/* ===================================
+   SHOP VIBE - PREMIUM UI POLISH
+   =================================== */
+
+/* Smoother controls */
+.product-search,
+.brand-filter,
+.category-filter,
+.sort-filter {
+  transition: border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              background-color 0.2s ease;
+}
+
+.product-search:focus,
+.brand-filter:focus,
+.category-filter:focus,
+.sort-filter:focus {
+  border-color: #e85d04;
+  box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.12);
+}
+
+/* Premium product cards */
+.product-card {
+  border: 1px solid #f0f0f0;
+  border-radius: 16px;
+  background: #fff;
+  transition: transform 0.25s ease,
+              box-shadow 0.25s ease,
+              border-color 0.25s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  border-color: #f5c6a5;
+  box-shadow: 0 12px 28px rgba(31, 41, 55, 0.12);
+}
+
+/* Product image area */
+.product-image {
+  background: linear-gradient(180deg, #fafafa, #fff);
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.025);
+}
+
+/* Product names */
+.product-info h3 {
+  color: #1f2937;
+  font-weight: 600;
+  line-height: 1.45;
+  transition: color 0.2s ease;
+}
+
+.product-title-link:hover {
+  color: #e85d04;
+}
+
+/* Price styling */
+.price {
+  color: #e85d04;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+/* Add to cart button */
+.cart-btn {
+  border: 1px solid #667eea;
+  background: #667eea;
+  border-radius: 10px;
+  transition: background-color 0.2s ease,
+              border-color 0.2s ease,
+              transform 0.2s ease;
+}
+
+.cart-btn:hover {
+  background: #4f46e5;
+  border-color: #4f46e5;
+}
+
+.cart-btn:active {
+  transform: scale(0.98);
+}
+
+/* Floating wishlist heart */
+.wishlist-btn {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease,
+              background-color 0.2s ease;
+}
+
+.wishlist-btn:hover {
+  background: #fff1f2;
+}
+
+.wishlist-btn:focus-visible,
+.cart-btn:focus-visible,
+.wishlist-toggle:focus-visible {
+  outline: 3px solid rgba(232, 93, 4, 0.45);
+  outline-offset: 3px;
+}
+
+/* Empty states and messages */
+.react-message {
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 16px rgba(31, 41, 55, 0.04);
+  line-height: 1.6;
+}
+
+/* Mobile: avoid hover movement while tapping */
+@media (max-width: 650px) {
+  .product-card:hover {
+    transform: none;
+  }
+
+  .product-card:hover .product-image {
+    transform: none;
+  }
+}
+
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .product-image,
+  .product-search,
+  .brand-filter,
+  .category-filter,
+  .sort-filter,
+  .cart-btn,
+  .wishlist-btn {
+    transition: none;
+  }
+}
+
+/* Shop Vibe - Premium Product Card */
+
+.product-image-wrap {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, #fff7ed, #ffffff 65%);
+}
+
+.product-image-wrap .product-image {
+  display: block;
+  width: 100%;
+  height: 200px;
+  padding: 14px;
+  object-fit: contain;
+  transition: transform 0.35s ease;
+}
+
+.product-card:hover .product-image-wrap .product-image {
+  transform: scale(1.06);
+}
+
+.product-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: #fff0e5;
+  color: #c2410c;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+}
+
+.product-image-wrap .wishlist-btn {
+  top: 10px;
+  right: 10px;
+}
+
+.product-info .brand {
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+}
+
+.product-info h3 {
+  min-height: 44px;
+}
+
+.product-title-link {
+  line-height: 1.4;
+}
+
+.product-info .price {
+  margin-top: 4px;
+}
+
+.product-info .cart-btn {
+  gap: 7px;
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.18);
+}
+
+@media (max-width: 650px) {
+  .product-image-wrap .product-image {
+    height: 150px;
+    padding: 8px;
+  }
+
+  .product-badge {
+    top: 8px;
+    left: 8px;
+    padding: 5px 6px;
+    font-size: 9px;
+  }
+
+  .product-image-wrap .wishlist-btn {
+    top: 7px;
+    right: 7px;
+  }
+
+  .product-info h3 {
+    min-height: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card:hover .product-image-wrap .product-image {
+    transform: none;
+  }
+}
+
+/* ===== Shop Vibe Search Header Polish ===== */
+
+.product-toolbar {
+  gap: 12px;
+  align-items: stretch;
+  margin-bottom: 18px;
+}
+
+.product-search {
+  min-height: 48px;
+  padding: 13px 17px;
+  border: 1px solid #e0e5f5;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1f2937;
+  box-shadow: 0 3px 12px rgba(102, 126, 234, 0.05);
+  transition: border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.product-search::placeholder {
+  color: #9ca3af;
+}
+
+.product-search:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.13);
+}
+
+.brand-filter,
+.category-filter,
+.sort-filter {
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid #e0e5f5;
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  transition: border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.brand-filter option,
+.category-filter option,
+.sort-filter option {
+  background: #ffffff;
+  color: #1f2937;
+}
+
+.brand-filter:focus,
+.category-filter:focus,
+.sort-filter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12);
+}
+
+.wishlist-toggle {
+  min-height: 48px;
+  border: 1px solid #dbe2ff;
+  border-radius: 12px;
+  background: #f5f7ff;
+  color: #667eea;
+  font-weight: 700;
+  transition: background 0.2s ease,
+              color 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.wishlist-toggle:hover {
+  border-color: #667eea;
+  background: #eef1ff;
+}
+
+.wishlist-toggle.active {
+  border-color: #667eea;
+  background: #667eea;
+  color: #ffffff;
+}
+
+.product-count {
+  margin: 12px 0 18px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+@media (max-width: 650px) {
+  .product-toolbar {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .product-search,
+  .brand-filter,
+  .category-filter,
+  .sort-filter,
+  .wishlist-toggle {
+    width: 100%;
+    min-height: 46px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-search,
+  .brand-filter,
+  .category-filter,
+  .sort-filter,
+  .wishlist-toggle {
+    transition: none;
+  }
+}
+
