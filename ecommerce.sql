@@ -6,7 +6,8 @@ CREATE TABLE  eproduct (
     p_brand VARCHAR (100),
     p_name VARCHAR (100),
     p_price INT (100),
-    image  VARCHAR (250)
+    image  VARCHAR (250),
+    stock_quantity INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE orders (
