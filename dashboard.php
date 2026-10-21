@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Shop Vibe - Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         * {
@@ -298,32 +299,109 @@
         .logout:hover {
             box-shadow: 0 11px 0 #b91c1c !important;
         }
-
-        /* Responsive */
+        
+    /* Responsive */
         @media (max-width: 800px) {
-
-            .navbar {
-                padding: 0 20px;
-            }
-
-            .container {
-                padding: 30px 20px;
-            }
-
-            .cards,
-            .options {
-                flex-direction: column;
-            }
-
-            .card,
-            .option {
-                width: 100%;
-            }
-
-            .welcome h1 {
-                font-size: 30px;
-            }
+        .navbar {
+            height: auto;
+            min-height: 65px;
+            padding: 12px 18px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
+
+        .logo img {
+            width: 38px;
+            height: 38px;
+        }
+
+        .admin {
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .container {
+            width: 100%;
+            padding: 25px 16px;
+        }
+
+    .welcome {
+        margin-bottom: 25px;
+    }
+
+    .welcome h1 {
+        font-size: 28px;
+        line-height: 1.3;
+    }
+
+    .welcome p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .cards,
+    .options {
+        flex-direction: column;
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .card,
+    .option {
+        width: 100%;
+        min-width: 0;
+        padding: 22px;
+    }
+
+    .card {
+        min-height: auto;
+    }
+
+    .card-icon {
+        font-size: 34px;
+        margin-bottom: 12px;
+    }
+
+    .section-title {
+        font-size: 21px;
+    }
+
+    .option h2 {
+        font-size: 19px;
+    }
+
+    .option a {
+        padding: 12px 18px;
+    }
+}
+
+@media (max-width: 420px) {
+    .container {
+        padding: 20px 12px;
+    }
+
+    .card,
+    .option {
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .welcome h1 {
+        font-size: 25px;
+    }
+
+    .section-title {
+        font-size: 19px;
+    }
+
+    .option a {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+       
     </style>
 </head>
 

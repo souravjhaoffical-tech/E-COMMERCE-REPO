@@ -46,7 +46,7 @@ function App() {
   useEffect(() => {
     
       
-fetch('http://localhost/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php')
+fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php`)
 
       .then((response) => {
         if (!response.ok) {
@@ -252,7 +252,14 @@ fetch('http://localhost/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php')
               <article className="product-card" key={product.id}>
                 <img
                   className="product-image"
-                  src={product.image}
+                  src={product.image?.startsWith('http')
+                      ? product.image
+                      : `${window.location.origin}/E-COMMERCE-SITE/E-COMMERCE-REPO/${
+                          String(product.image || '').replace(/^\/+/, '').startsWith('uploads/')
+                        ? String(product.image).replace(/^\/+/, '')
+                      : 'uploads/' + String(product.image || '')
+                  }`
+}
                   alt={product.name || 'Product'}
                   loading="lazy"
                 />

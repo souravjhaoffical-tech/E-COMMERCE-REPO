@@ -1258,6 +1258,14 @@ footer{
         padding: 25px 12px;
     }
 }
+.cart-icon {
+    text-decoration: none;
+    font-size: 28px;
+    background: transparent;
+    color: white;
+    border: none;
+    padding: 0;
+}
 
 </style>
 </head>
@@ -1272,12 +1280,16 @@ footer{
     <a href="index.php" class="logo">
         <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
     </a>
+
+   
+    <a href="cart.php" class="cart-icon">🛒</a>
+
     <ul>
         <li>
-            <a href="login.php">Home</a>
+            <a href="index.php">Home</a>
         </li>
         <li>
-            <a href="product.php">Products</a>
+            <a href="#product">Products</a>
         </li>
         <li>
             <a href="#">About</a>
@@ -1328,6 +1340,22 @@ footer{
 
     </div>
 
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+
+<section class="products-section" id="products">
+    <div class="section-heading">
+        <div>
+            <h2>Our Products 🛍️</h2>
+            <p>Discover amazing products and start shopping today.</p>
+        </div>
+    </div>
+
+    <div id="products-root"></div>
+</section>
+
+
 <!-- ================= FOOTER ================= -->
 
 <footer>
@@ -1336,6 +1364,28 @@ footer{
     Future of Shopping
 
 </footer>
+
+<?php
+$manifestPath = __DIR__ . '/frontend/dist/.vite/manifest.json';
+
+if (file_exists($manifestPath)) {
+    $manifest = json_decode(file_get_contents($manifestPath), true);
+    $entry = $manifest['index.html'] ?? null;
+
+    if ($entry) {
+        foreach ($entry['css'] ?? [] as $cssFile) {
+            echo '<link rel="stylesheet" href="frontend/dist/' .
+                htmlspecialchars($cssFile, ENT_QUOTES, 'UTF-8') . '">' . PHP_EOL;
+        }
+
+        if (!empty($entry['file'])) {
+            echo '<script type="module" src="frontend/dist/' .
+                htmlspecialchars($entry['file'], ENT_QUOTES, 'UTF-8') .
+                '"></script>' . PHP_EOL;
+        }
+    }
+}
+?>
 
 </body>
 </html>

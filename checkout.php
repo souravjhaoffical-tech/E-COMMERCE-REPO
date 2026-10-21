@@ -12,6 +12,17 @@ if (empty($cart)) {
     exit();
 }
 
+ // Login check
+if (
+    !isset($_SESSION['user_id']) ||
+    !isset($_SESSION['role']) ||
+    $_SESSION['role'] !== 'user'
+) {
+    $_SESSION['redirect_after_login'] = 'checkout.php';
+    header("Location: login.php");
+    exit();
+}
+
 // Fetch each cart item safely
 $stmt = mysqli_prepare(
     $conn,
