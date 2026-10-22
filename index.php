@@ -1292,7 +1292,7 @@ footer{
             <a href="#product">Products</a>
         </li>
         <li>
-            <a href="#">About</a>
+            <a href="about.php">About</a>
         </li>
     </ul>
         <!-- CONNECTED TO login.php -->
