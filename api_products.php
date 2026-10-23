@@ -47,7 +47,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         "brand" => $row["p_brand"] ?? "",
         "price" => (float) $row["p_price"],
         "image" => $imageName !== ""
-        ? "http://localhost/E-COMMERCE-SITE/E-COMMERCE-REPO/uploads/" . rawurlencode($imageName)
+        ? "http://" . $_SERVER['HTTP_HOST'] . "/E-COMMERCE-SITE/E-COMMERCE-REPO/uploads/" . rawurlencode($imageName)
         : null
 
         

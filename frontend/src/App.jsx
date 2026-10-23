@@ -84,7 +84,7 @@ const toggleWishlist = async (productId) => {
   useEffect(() => {
     
       
-fetch('http://localhost/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php')
+fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php`)
 
       .then((response) => {
         if (!response.ok) {
@@ -184,14 +184,34 @@ fetch('http://localhost/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php')
     wishlist,
   ])
 
-  // Loading state
+  
+  // Premium product loading skeleton
   if (loading) {
     return (
-      <p className="react-message">
-        Loading products...
-      </p>
+      <div className="react-shop">
+        <div className="product-toolbar sv-skeleton-toolbar">
+          <div className="sv-skeleton sv-skeleton-filter" />
+          <div className="sv-skeleton sv-skeleton-filter" />
+          <div className="sv-skeleton sv-skeleton-filter" />
+          <div className="sv-skeleton sv-skeleton-filter" />
+        </div>
+
+        <div className="sv-skeleton-grid" aria-label="Loading products" role="status">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div className="sv-skeleton-card" key={index}>
+              <div className="sv-skeleton sv-skeleton-image" />
+              <div className="sv-skeleton sv-skeleton-line short" />
+              <div className="sv-skeleton sv-skeleton-line" />
+              <div className="sv-skeleton sv-skeleton-line short" />
+              <div className="sv-skeleton sv-skeleton-button" />
+            </div>
+          ))}
+          <span className="sv-sr-only">Loading products, please wait...</span>
+        </div>
+      </div>
     )
   }
+
 
   // Error state
   if (error) {

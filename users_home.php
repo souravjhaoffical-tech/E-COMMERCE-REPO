@@ -715,6 +715,265 @@ footer h3 {
     }
 }
 
+/* =========================================
+   SHOP VIBE — PREMIUM HOMEPAGE ANIMATIONS
+   ========================================= */
+
+/* Smooth entrance for the hero banner */
+@keyframes svHeroEnter {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero {
+    animation: svHeroEnter 0.85s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.hero .sale-label {
+    animation: svHeroEnter 0.65s ease-out 0.1s both;
+}
+
+.hero h1 {
+    animation: svHeroEnter 0.75s ease-out 0.2s both;
+}
+
+.hero p {
+    animation: svHeroEnter 0.75s ease-out 0.3s both;
+}
+
+.hero .countdown {
+    animation: svHeroEnter 0.75s ease-out 0.4s both;
+}
+
+.hero .shop-btn {
+    animation: svHeroEnter 0.75s ease-out 0.5s both;
+}
+
+/* Floating decorative elements */
+@keyframes svFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-12px) rotate(5deg);
+    }
+}
+
+.hero-decoration span:nth-child(1) {
+    animation: svFloat 4s ease-in-out infinite;
+}
+
+.hero-decoration span:nth-child(2) {
+    animation: svFloat 5s ease-in-out 0.5s infinite;
+}
+
+.hero-decoration span:nth-child(3) {
+    animation: svFloat 4.5s ease-in-out 1s infinite;
+}
+
+/* Countdown boxes */
+.time-box {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.time-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 24px rgba(102, 126, 234, 0.18);
+}
+
+/* Features: subtle lift */
+.feature {
+    border-radius: 12px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.feature:hover {
+    background: #f5f7ff;
+    transform: translateY(-4px);
+}
+
+/* Product cards: staggered entrance */
+@keyframes svCardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.products > .product-card {
+    animation: svCardEnter 0.65s ease both;
+}
+
+.products > .product-card:nth-child(1)  { animation-delay: 0.05s; }
+.products > .product-card:nth-child(2)  { animation-delay: 0.10s; }
+.products > .product-card:nth-child(3)  { animation-delay: 0.15s; }
+.products > .product-card:nth-child(4)  { animation-delay: 0.20s; }
+.products > .product-card:nth-child(5)  { animation-delay: 0.25s; }
+.products > .product-card:nth-child(6)  { animation-delay: 0.30s; }
+.products > .product-card:nth-child(7)  { animation-delay: 0.35s; }
+.products > .product-card:nth-child(8)  { animation-delay: 0.40s; }
+
+/* Premium card hover */
+.product-card {
+    transition:
+        transform 0.3s cubic-bezier(.2, .7, .2, 1),
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-7px);
+    border-color: #cbd4ff;
+    box-shadow: 0 16px 32px rgba(70, 88, 200, 0.14);
+}
+
+.product-card .product-image {
+    transition: transform 0.45s cubic-bezier(.2, .7, .2, 1);
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.045);
+}
+
+/* Section heading accent */
+.section-heading h2 {
+    transition: color 0.25s ease;
+}
+
+.section-heading:hover h2 {
+    color: var(--primary-dark);
+}
+
+/* Buttons: smooth interaction */
+.shop-btn,
+.cart-btn,
+.navbar .nav-btn {
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.shop-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(102, 126, 234, 0.3);
+}
+
+.cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(102, 126, 234, 0.2);
+}
+
+.navbar .nav-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Deal strip entrance */
+.deal-strip {
+    animation: svHeroEnter 0.75s ease-out both;
+}
+
+/* Keyboard accessibility */
+.shop-btn:focus-visible,
+.cart-btn:focus-visible,
+.navbar .nav-btn:focus-visible {
+    outline: 3px solid rgba(102, 126, 234, 0.45);
+    outline-offset: 3px;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .hero,
+    .hero .sale-label,
+    .hero h1,
+    .hero p,
+    .hero .countdown,
+    .hero .shop-btn,
+    .hero-decoration span,
+    .products > .product-card,
+    .deal-strip {
+        animation: none !important;
+    }
+
+    .product-card,
+    .product-card .product-image,
+    .feature,
+    .time-box,
+    .shop-btn,
+    .cart-btn,
+    .navbar .nav-btn {
+        transition: none !important;
+    }
+
+    .product-card:hover,
+    .product-card:hover .product-image,
+    .feature:hover,
+    .time-box:hover {
+        transform: none;
+    }
+}
+
+/* Scroll-triggered reveal */
+.sv-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s cubic-bezier(.2, .7, .2, 1);
+}
+
+.sv-reveal.sv-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Prevent hidden sections if motion is disabled */
+@media (prefers-reduced-motion: reduce) {
+    .sv-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* Premium sticky navbar */
+.navbar {
+    transition: box-shadow 0.3s ease,
+                background-color 0.3s ease,
+                border-color 0.3s ease;
+}
+
+.navbar.sv-scrolled {
+    box-shadow: 0 8px 28px rgba(70, 88, 200, 0.16);
+    border-bottom-color: rgba(102, 126, 234, 0.25);
+}
+
+/* Premium button press */
+.shop-btn,
+.cart-btn,
+.navbar .nav-btn {
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.shop-btn:active,
+.cart-btn:active,
+.navbar .nav-btn:active {
+    transform: scale(0.97);
+}
+
 </style>
 </head>
 
@@ -833,5 +1092,108 @@ if (file_exists($manifestPath)) {
     }
 }
 ?>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const sections = document.querySelectorAll(
+        ".features, .products-section, .deal-strip, footer"
+    );
+
+    if (reducedMotion || !("IntersectionObserver" in window)) {
+        return;
+    }
+
+    sections.forEach(function (section) {
+        section.classList.add("sv-reveal");
+    });
+
+    const observer = new IntersectionObserver(
+        function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("sv-visible");
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.12,
+            rootMargin: "0px 0px -35px 0px"
+        }
+    );
+
+    sections.forEach(function (section) {
+        observer.observe(section);
+    });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const navbar = document.querySelector(".navbar");
+
+    if (!navbar) return;
+
+    function updateNavbar() {
+        navbar.classList.toggle("sv-scrolled", window.scrollY > 10);
+    }
+
+    updateNavbar();
+    window.addEventListener("scroll", updateNavbar, { passive: true });
+});
+</script>
+
+<script>
+document.addEventListener("click", function (event) {
+    const button = event.target.closest(
+        ".shop-btn, .cart-btn, .navbar .nav-btn"
+    );
+
+    if (!button || button.disabled) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+    }
+
+    const rect = button.getBoundingClientRect();
+    const ripple = document.createElement("span");
+
+    const size = Math.max(rect.width, rect.height);
+
+    ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${event.clientX - rect.left - size / 2}px;
+        top: ${event.clientY - rect.top - size / 2}px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: svRipple 0.55s ease-out forwards;
+        pointer-events: none;
+    `;
+
+    button.appendChild(ripple);
+
+    ripple.addEventListener("animationend", function () {
+        ripple.remove();
+    }, { once: true });
+});
+</script>
+
+<style>
+@keyframes svRipple {
+    to {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+</style>
+
+
+
 </body>
 </html>

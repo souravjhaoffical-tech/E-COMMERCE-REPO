@@ -34,11 +34,21 @@ if (isset($_POST['login'])) {
             header("Location: dashboard.php");
             exit();
 
-        } else {
-
-            header("Location: users_home.php");
+        
+    } else {
+        if (
+            isset($_SESSION['redirect_after_login']) &&
+            $_SESSION['redirect_after_login'] === 'checkout.php'
+        ) {
+            unset($_SESSION['redirect_after_login']);
+            header("Location: checkout.php");
             exit();
-        }
+    }
+
+    header("Location: users_home.php");
+    exit();
+}
+
 
     } else {
 

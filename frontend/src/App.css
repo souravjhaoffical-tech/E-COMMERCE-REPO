@@ -846,3 +846,510 @@
   }
 }
 
+/* ==========================================
+   SHOP VIBE — PREMIUM PRODUCT CARD OVERRIDES
+   Theme: Blue + White
+========================================== */
+
+:root {
+    --sv-blue: #667eea;
+    --sv-blue-hover: #5a6fd6;
+    --sv-blue-dark: #4658c8;
+    --sv-light: #f5f7ff;
+    --sv-border: #e3e8ff;
+    --sv-text: #1f2937;
+    --sv-muted: #6b7280;
+}
+
+/* Product grid */
+.react-shop {
+    width: 100%;
+    max-width: 100%;
+}
+
+.react-products {
+    align-items: stretch;
+    gap: 20px;
+}
+
+/* Premium card */
+.react-products .product-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--sv-border);
+    border-radius: 18px;
+    box-shadow: 0 5px 18px rgba(49, 67, 130, 0.07);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.react-products .product-card:hover {
+    transform: translateY(-5px);
+    border-color: #c5ceff;
+    box-shadow: 0 14px 30px rgba(70, 88, 200, 0.14);
+}
+
+/* Product image background */
+.react-products .product-image-wrap {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(145deg, #f5f7ff, #fff 75%);
+    border-bottom: 1px solid #f0f2ff;
+}
+
+.react-products .product-image-wrap .product-image {
+    display: block;
+    width: 100%;
+    height: 205px;
+    padding: 15px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.react-products .product-card:hover .product-image-wrap .product-image {
+    transform: scale(1.045);
+}
+
+/* Shop Vibe badge */
+.react-products .product-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 6px 9px;
+    border: 1px solid #dbe2ff;
+    border-radius: 7px;
+    background: #fff;
+    color: var(--sv-blue-dark);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+}
+
+/* Floating wishlist button */
+.react-products .product-image-wrap .wishlist-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--sv-border);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 3px 10px rgba(31, 41, 55, 0.10);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.react-products .wishlist-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 5px 14px rgba(70, 88, 200, 0.16);
+}
+
+.react-products .wishlist-btn:focus-visible,
+.react-products .cart-btn:focus-visible {
+    outline: 3px solid rgba(102, 126, 234, 0.4);
+    outline-offset: 3px;
+}
+
+/* Product information */
+.react-products .product-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    padding: 16px;
+}
+
+.react-products .product-info .brand {
+    margin: 0 0 8px;
+    color: var(--sv-blue-dark);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+}
+
+.react-products .product-info h3 {
+    min-height: 44px;
+    margin: 0 0 10px;
+    color: var(--sv-text);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.react-products .product-title-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.react-products .product-title-link:hover {
+    color: var(--sv-blue-dark);
+}
+
+/* Price */
+.react-products .product-info .price {
+    margin: 0 0 16px;
+    color: var(--sv-blue-dark);
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+}
+
+/* Add to cart */
+.react-products .product-info .cart-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 45px;
+    margin-top: auto;
+    padding: 11px 12px;
+    border: 1px solid var(--sv-blue);
+    border-radius: 11px;
+    background: var(--sv-blue);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(102, 126, 234, 0.18);
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.react-products .product-info .cart-btn:hover {
+    background: var(--sv-blue-hover);
+    border-color: var(--sv-blue-hover);
+    box-shadow: 0 6px 14px rgba(102, 126, 234, 0.25);
+}
+
+.react-products .product-info .cart-btn:active {
+    transform: scale(0.98);
+}
+
+/* Search, dropdowns and wishlist filter */
+.product-search,
+.brand-filter,
+.category-filter,
+.sort-filter {
+    border-color: var(--sv-border);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--sv-text);
+}
+
+.product-search:focus,
+.brand-filter:focus,
+.category-filter:focus,
+.sort-filter:focus {
+    border-color: var(--sv-blue);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.13);
+    outline: none;
+}
+
+.product-title-link:hover {
+    color: var(--sv-blue-dark);
+}
+
+.wishlist-toggle.active {
+    background: var(--sv-blue);
+    border-color: var(--sv-blue);
+    color: #fff;
+}
+
+/* Tablet */
+@media (max-width: 950px) {
+    .react-products {
+        gap: 16px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+    .react-products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .react-products .product-image-wrap .product-image {
+        height: 155px;
+        padding: 9px;
+    }
+
+    .react-products .product-info {
+        padding: 11px;
+    }
+
+    .react-products .product-info h3 {
+        min-height: 38px;
+        font-size: 14px;
+    }
+
+    .react-products .product-info .brand {
+        font-size: 10px;
+    }
+
+    .react-products .product-info .price {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .react-products .product-info .cart-btn {
+        min-height: 43px;
+        padding: 10px 5px;
+        font-size: 12px;
+    }
+
+    .react-products .product-badge {
+        top: 8px;
+        left: 8px;
+        padding: 5px 6px;
+        font-size: 9px;
+    }
+
+    .react-products .product-image-wrap .wishlist-btn {
+        top: 7px;
+        right: 7px;
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+
+    .react-products .product-card:hover {
+        transform: none;
+    }
+
+    .react-products .product-card:hover .product-image-wrap .product-image {
+        transform: none;
+    }
+}
+
+/* Very narrow phones */
+@media (max-width: 350px) {
+    .react-products {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .react-products .product-image-wrap .product-image {
+        height: 200px;
+    }
+
+    .react-products .product-info h3 {
+        font-size: 16px;
+    }
+
+    .react-products .product-info .cart-btn {
+        font-size: 14px;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .react-products .product-card,
+    .react-products .product-image,
+    .react-products .wishlist-btn,
+    .react-products .cart-btn {
+        transition: none;
+    }
+}
+
+/* Shop Vibe premium loading skeleton */
+.sv-skeleton-card {
+    overflow: hidden;
+    padding: 12px;
+    border: 1px solid #edf0ff;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(31, 41, 55, 0.06);
+}
+
+.sv-skeleton {
+    position: relative;
+    overflow: hidden;
+    background: #edf0ff;
+    border-radius: 8px;
+}
+
+.sv-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.85),
+        transparent
+    );
+    animation: svShimmer 1.4s infinite;
+}
+
+@keyframes svShimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.sv-skeleton-image {
+    height: 180px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+}
+
+.sv-skeleton-line {
+    height: 13px;
+    margin: 12px 0;
+}
+
+.sv-skeleton-line.short {
+    width: 55%;
+}
+
+.sv-skeleton-button {
+    height: 40px;
+    margin-top: 18px;
+    border-radius: 9px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sv-skeleton::after {
+        animation: none;
+        transform: none;
+    }
+}
+
+/* Skeleton grid matching the real product layout */
+.sv-skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.sv-skeleton-toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.sv-skeleton-filter {
+    height: 42px;
+    flex: 1;
+}
+
+.sv-skeleton-card {
+    min-width: 0;
+}
+
+.sv-skeleton-image {
+    height: 190px;
+}
+
+.sv-skeleton-line {
+    width: 85%;
+}
+
+.sv-skeleton-button {
+    margin-top: 18px;
+}
+
+.sv-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 950px) {
+    .sv-skeleton-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .sv-skeleton-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .sv-skeleton-image {
+        height: 145px;
+    }
+
+    .sv-skeleton-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .sv-skeleton-filter {
+        flex: 1 1 40%;
+    }
+}
+
+@media (max-width: 350px) {
+    .sv-skeleton-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Shop Vibe — Product Card Entrance Animation */
+
+@keyframes svProductEnter {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.react-products .product-card {
+    animation: svProductEnter 0.45s ease both;
+}
+
+.react-products .product-card:nth-child(4n + 2) {
+    animation-delay: 0.06s;
+}
+
+.react-products .product-card:nth-child(4n + 3) {
+    animation-delay: 0.12s;
+}
+
+.react-products .product-card:nth-child(4n + 4) {
+    animation-delay: 0.18s;
+}
+
+/* Accessibility: respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .react-products .product-card {
+        animation: none;
+    }
+}
+
