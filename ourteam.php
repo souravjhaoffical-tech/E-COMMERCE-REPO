@@ -258,14 +258,14 @@ footer span {
         ShopVibe
     </a>
 
-    <ul>
-        <li><a href="index.php">Home</a></li>
-        <li><a href="about.php">About Us</a></li>
-        <li><a href="mission.php">Our Mission</a></li>
-        <li><a href="why-choose-us.php">Why Choose Us</a></li>
-        <li><a href="ourteam.php" class="active">Our Team</a></li>
-        <li><a href="contact.php">Contact Us</a></li>
-        <li><a href="faq.php">FAQ</a></li>
+   <ul>
+    <li><a href="index.php">Home</a></li>
+    <li><a href="about.php">About Us</a></li>
+    <li><a href="mission.php" class="active">Our Mission</a></li>
+    <li><a href="why_chosse_us.php">Why Choose Us</a></li>
+    <li><a href="ourteam.php">Our Team</a></li>
+    <li><a href="contact.php">Contact Us</a></li>
+    <li><a href="faq.php">FAQ</a></li>
     </ul>
 </nav>
 
@@ -348,17 +348,17 @@ const teammates = {
 
     2: {
         name: "Ritika varma",
-        link: "member2.php"
+        link: "ritika.php"
     },
 
     3: {
         name: "sourav kumar jha",
-        link: "member3.php"
+        link: "sourav.php"
     },
 
     4: {
         name: "santosh verma",
-        link: "member4.php"
+        link: "santosh.php"
     }
 };
 
