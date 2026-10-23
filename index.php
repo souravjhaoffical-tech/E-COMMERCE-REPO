@@ -1267,6 +1267,39 @@ footer{
     padding: 0;
 }
 
+/* Navbar alignment */
+nav {
+    gap: 24px;
+}
+
+.logo {
+    order: 1;
+}
+
+nav ul {
+    order: 2;
+    margin-left: auto;
+}
+
+.cart-icon {
+    order: 3;
+    margin-left: 20px;
+    font-size: 26px;
+    text-decoration: none;
+    filter: none;
+    transition: transform 0.3s ease;
+}
+
+.cart-icon:hover {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 6px rgba(0, 234, 255, 0.35));
+}
+
+.login-btn {
+    order: 4;
+    margin-left: 0;
+}
+
 </style>
 </head>
 
