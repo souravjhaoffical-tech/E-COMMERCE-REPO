@@ -356,7 +356,8 @@ nav ul li a:hover::after{
 
     background-size:200%;
 
-    -webkit-background-clip:text;
+    -webkit-background-clip: text;
+    background-clip: text;
     color:transparent;
 
     animation:textGradient 4s linear infinite;
@@ -592,6 +593,7 @@ nav ul li a:hover::after{
     background-size:200%;
 
     -webkit-background-clip:text;
+    background-clip:text;
     color:transparent;
 
     animation:textGradient 4s linear infinite;

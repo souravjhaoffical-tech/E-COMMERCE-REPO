@@ -5,19 +5,16 @@ session_start();
 include "db.php";
 include "config.php";
 
-if(!isset($_SESSION['user']) || empty($_SESSION['cart'])){
-    die("Invalid cart");
-}
 
 $total = 0;
 $courses = [];
 
-foreach(array_unique($_SESSION['cart']) as $id){
+foreach(array_unique($_SESSION['cart'] ?? []) as $id){
 
     $id = (int)$id;
 
     $result = mysqli_query($conn,
-        "SELECT * FROM eprodust WHERE id=$id"
+        "SELECT * FROM courses WHERE id=$id"
     );
 
     $row = mysqli_fetch_assoc($result);
@@ -39,13 +36,13 @@ try {
         "currency" => "INR"
     ]);
 
-} catch(Exception $e){
+} catch(error){
     die("Payment setup failed");
 }
 
 $_SESSION['rzp_order'] = $order['id'];
 $_SESSION['rzp_amount'] = $amount;
-$_SESSION['rzp_courses'] = $courses;
+$_SESSION['rzp_product'] = $courses;
 
 ?>
 
@@ -67,7 +64,7 @@ var options = {
 
     currency: "INR",
 
-    name: "Ardent E-Learning",
+    name: "Ardent E-Product",
 
     order_id: <?php echo json_encode($order['id']); ?>,
 
