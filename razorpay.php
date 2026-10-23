@@ -14,7 +14,7 @@ foreach(($_SESSION['cart'] ?? []) as $id){
     $id = (int)$id;
 
     $result = mysqli_query($conn,
-        "SELECT * FROM eproduct WHERE id=$id"
+        "SELECT * FROM courses WHERE id=$id"
     );
 
     $row = mysqli_fetch_assoc($result);
