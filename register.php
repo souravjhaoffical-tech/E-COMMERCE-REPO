@@ -110,6 +110,15 @@ body {
     animation: logoFloat 3s infinite ease-in-out;
 }
 
+.logo img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+
 .logo span {
     color: #e0e7ff;
 }
@@ -363,10 +372,9 @@ button:active {
 <div class="container">
 
     <div class="left">
-
-        <div class="logo">
-            Shop<span>Vibe</span>
-        </div>
+        <a href="index.php" class="logo">
+            <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
+        </a>
 
         <h1>Join Us!</h1>
 

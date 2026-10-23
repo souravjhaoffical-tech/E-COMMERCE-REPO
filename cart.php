@@ -239,6 +239,46 @@ tr:hover {
         text-align: center;
     }
 }
+/* Desktop: Default CSS upar rahega */
+
+/* Mobile screen */
+@media screen and (max-width: 600px) {
+    .cart-container {
+        width: 100%;
+        padding: 15px 10px;
+    }
+
+    .cart-title h1 {
+        font-size: 24px;
+    }
+
+    .table-box {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 400px;
+    }
+
+    th, td {
+        padding: 10px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .total-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .order-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+}
     </style>
 
 </head>
@@ -256,7 +296,7 @@ tr:hover {
     </div>
 
 
-    <a href="users_home.php" class="continue">
+    <a href="index.php" class="continue">
         ← Continue Shopping
     </a>
 

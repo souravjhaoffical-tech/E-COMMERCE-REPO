@@ -1170,6 +1170,103 @@ footer{
     }
 }
 
+/* Extra small mobile screens */
+@media (max-width: 480px) {
+    nav {
+        padding: 12px 4%;
+        gap: 10px;
+    }
+
+    .logo img {
+        width: 38px;
+        height: 38px;
+    }
+
+    .login-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .hero {
+        padding: 35px 5%;
+        gap: 25px;
+        min-height: auto;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(30px, 9vw, 40px);
+    }
+
+    .hero-text p {
+        font-size: 14px;
+    }
+
+    .hero-product {
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+    }
+
+    .product-3d {
+        width: min(260px, 85vw);
+        height: 300px;
+    }
+
+    .product-icon {
+        width: min(180px, 65vw);
+        height: 180px;
+    }
+
+    .products {
+        padding: 35px 4%;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .card {
+        padding: 12px;
+        min-width: 0;
+    }
+
+    .card-img {
+        height: 130px;
+        font-size: 55px;
+    }
+
+    .card h3 {
+        font-size: 16px;
+        overflow-wrap: anywhere;
+    }
+
+    .price {
+        font-size: 18px;
+    }
+
+    .section-title h2 {
+        font-size: 27px;
+    }
+
+    .search-box input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    footer {
+        padding: 25px 12px;
+    }
+}
+.cart-icon {
+    text-decoration: none;
+    font-size: 28px;
+    background: transparent;
+    color: white;
+    border: none;
+    padding: 0;
+}
+
 </style>
 </head>
 
@@ -1183,15 +1280,19 @@ footer{
     <a href="index.php" class="logo">
         <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
     </a>
+
+   
+    <a href="cart.php" class="cart-icon">🛒</a>
+
     <ul>
         <li>
-            <a href="login.php">Home</a>
+            <a href="index.php">Home</a>
         </li>
         <li>
-            <a href="product.php">Products</a>
+            <a href="#product">Products</a>
         </li>
         <li>
-            <a href="#">About</a>
+            <a href="about.php">About</a>
         </li>
     </ul>
         <!-- CONNECTED TO login.php -->
@@ -1239,6 +1340,22 @@ footer{
 
     </div>
 
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+
+<section class="products-section" id="products">
+    <div class="section-heading">
+        <div>
+            <h2>Our Products 🛍️</h2>
+            <p>Discover amazing products and start shopping today.</p>
+        </div>
+    </div>
+
+    <div id="products-root"></div>
+</section>
+
+
 <!-- ================= FOOTER ================= -->
 
 <footer>
@@ -1247,6 +1364,28 @@ footer{
     Future of Shopping
 
 </footer>
+
+<?php
+$manifestPath = __DIR__ . '/frontend/dist/.vite/manifest.json';
+
+if (file_exists($manifestPath)) {
+    $manifest = json_decode(file_get_contents($manifestPath), true);
+    $entry = $manifest['index.html'] ?? null;
+
+    if ($entry) {
+        foreach ($entry['css'] ?? [] as $cssFile) {
+            echo '<link rel="stylesheet" href="frontend/dist/' .
+                htmlspecialchars($cssFile, ENT_QUOTES, 'UTF-8') . '">' . PHP_EOL;
+        }
+
+        if (!empty($entry['file'])) {
+            echo '<script type="module" src="frontend/dist/' .
+                htmlspecialchars($entry['file'], ENT_QUOTES, 'UTF-8') .
+                '"></script>' . PHP_EOL;
+        }
+    }
+}
+?>
 
 </body>
 </html>

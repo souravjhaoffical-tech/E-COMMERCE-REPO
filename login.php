@@ -34,11 +34,21 @@ if (isset($_POST['login'])) {
             header("Location: dashboard.php");
             exit();
 
-        } else {
-
-            header("Location: users_home.php");
+        
+    } else {
+        if (
+            isset($_SESSION['redirect_after_login']) &&
+            $_SESSION['redirect_after_login'] === 'checkout.php'
+        ) {
+            unset($_SESSION['redirect_after_login']);
+            header("Location: checkout.php");
             exit();
-        }
+    }
+
+    header("Location: users_home.php");
+    exit();
+}
+
 
     } else {
 
@@ -52,7 +62,8 @@ if (isset($_POST['login'])) {
 <html>
 
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShopVibe - Login</title>
     
 <style>
@@ -178,6 +189,14 @@ body {
     z-index: 1;
     animation: logoFloat 3s infinite ease-in-out;
 }
+.logo img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
 
 .logo span {
     color: #e0e7ff;
@@ -465,6 +484,55 @@ button:active {
         font-size: 13px;
     }
 }
+
+/* Extra small mobile screens */
+@media (max-width: 480px) {
+    body {
+        padding: 12px 0;
+    }
+
+    .login-container {
+        width: calc(100% - 24px);
+        max-width: 100%;
+        margin: 0 auto;
+        border-radius: 14px;
+    }
+
+    .left-section,
+    .right-section {
+        padding: 25px 18px;
+    }
+
+    .left-section h1 {
+        font-size: 26px;
+    }
+
+    .right-section h2 {
+        font-size: 25px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        min-width: 0;
+        font-size: 16px;
+    }
+
+    .role-options {
+        gap: 8px;
+    }
+
+    .role-option {
+        min-width: 0;
+        padding: 10px 5px;
+        overflow-wrap: anywhere;
+    }
+}
+
 </style>
 </head>
 
@@ -481,10 +549,10 @@ button:active {
     <!-- LEFT SIDE -->
 
     <div class="left-section">
+        <a href="index.php" class="logo">
+            <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
+        </a>
 
-        <div class="logo">
-            Shop<span>Vibe</span>
-        </div>
 
         <h1>
             Welcome Back!
