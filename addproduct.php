@@ -35,7 +35,7 @@ if (isset($_POST['add'])) {
 
             mysqli_stmt_bind_param(
                 $stmt,
-                "ssis",
+                "ssiss",
                 $brand,
                 $name,
                 $price,
