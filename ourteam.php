@@ -30,19 +30,20 @@ nav {
 }
 
 .logo {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    color: #ff9800;
-    font-size: 25px;
-    font-weight: bold;
-    text-decoration: none;
 }
 
 .logo img {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.logo span {
+    color: #f59e0b;
 }
 
 nav ul {
@@ -254,7 +255,7 @@ footer span {
 <!-- NAVBAR -->
 <nav>
     <a href="index.php" class="logo">
-        <img src="Assets/LOGO.jpeg" alt="ShopVibe Logo">
+        <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
         ShopVibe
     </a>
 

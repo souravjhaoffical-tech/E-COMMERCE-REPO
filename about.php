@@ -31,19 +31,19 @@
         }
 
         .logo {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            font-size: 25px;
-            font-weight: bold;
-            color: #ff9800;
-            text-decoration: none;
         }
-
         .logo img {
             width: 45px;
             height: 45px;
-            object-fit: contain;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .logo span {
+            color: #f59e0b;
         }
 
         nav ul {
