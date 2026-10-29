@@ -302,10 +302,10 @@ footer {
 
         <div class="social-icons">
             <!-- Apne real social media links yahan add karna -->
-            <a href="#contact" aria-label="LinkedIn">in</a>
-            <a href="#contact" aria-label="GitHub">G</a>
+            <a href="https://www.linkedin.com/in/ritika-varma-667b71374/?isSelfProfile=true" aria-label="LinkedIn">in</a>
+            <a href="https://github.com/ritikavarma235" aria-label="GitHub">G</a>
             <a href="#contact" aria-label="X">X</a>
-            <a href="#contact" aria-label="Instagram">IG</a>
+            <a href="https://www.instagram.com/_.imritika23._/" aria-label="Instagram">IG</a>
         </div>
 
         <a href="#contact" class="btn">Hire me</a>
@@ -382,16 +382,22 @@ footer {
     <div class="section-content">
         <h3>My Academic Journey</h3>
         <p>
-            <strong>Course:</strong> Apna course yahan likho
+            <strong>Course:</strong> Bachelor of computer applications (BCA)
         </p>
         <p>
-            <strong>Institution:</strong> Apne college ya school ka naam likho
+            <strong>Institution:</strong> The Calcutta Anglo Gujarati College
         </p>
         <p>
-            <strong>Year:</strong> Apna academic year likho
+            <strong>Year:</strong> 2024 - 2028
         </p>
         <p>
-            Yahan apni education aur achievements ki details likho.
+            <strong>Education:</strong> Bachelor of Computer Applications (BCA) - The Calcutta Anglo Gujarati College (Currently Pursuing)
+        </p>
+        <p>
+            <strong>Higher Secondary:</strong> Class 12 - H.M.Education Centre (Completed)
+        </p>
+        <p>
+            <strong>Secondary Education:</strong> Class 10 - H.M.Education Centre (Completed)
         </p>
     </div>
 </section>
@@ -403,14 +409,44 @@ footer {
     <div class="section-content">
         <h3>Projects and Experience</h3>
         <p>
-            Yahan apne projects, internship, teamwork aur
-            development experience ki details likho.
+            I am an aspiring web developer with hands-on, project-based experience in building and developing web applications. I enjoy designing user-friendly interfaces, implementing functional features, working with databases, and solving programming problems. Through collaborative development, I have gained practical experience in frontend design, backend development, database integration, debugging, and version control.<br>
+            
+            Project: ShopVibe – E-Commerce Website
+            ShopVibe is a collaborative e-commerce web application developed as part of a team project. I have contributed to website design, PHP development, MySQL database integration, user-facing pages, and shopping-related functionality. I have also worked on improving the website interface and developing an inventory management feature to track product quantities and availability.<br><br>
+            
+            <h4>Technologies Used</h4>
+            <br>
+            - HTML5 and CSS3: Website structure, styling, responsive layouts, and UI improvements.<br>
+            - JavaScript: Interactive website functionality.<br>
+            - PHP: Server-side scripting and backend functionality.<br>
+            - MySQL: Database management and product data handling.<br>
+            - React.js: Basic frontend development and integration.<br>
+            - Git and GitHub: Version control, committing changes, pushing updates, and collaborating with teammates.<br>
+            - XAMPP: Local development and testing environment.<br><br>
+
+            <h4> Key Contributions </h4>
+            <br>
+            - Designed and improved website pages with a clean, user-friendly interface.<br>
+            - Contributed to product listing, shopping cart, and user authentication features.<br>
+            - Worked with PHP and MySQL for backend functionality and database management.<br>
+            - Developed an initial inventory management page to track product quantities and stock availability.<br>
+            - Updated the product database schema and integrated stock management into the admin dashboard.<br>
+            - Used Git and GitHub for version control and team collaboration.<br>
+            - Tested and debugged the application using XAMPP.
+            <br><br>
+
+            
         </p>
 
         <h3>ShopVibe E-Commerce Project</h3>
         <p>
-            Apne ShopVibe project mein kiye gaye kaam,
-            technologies aur responsibilities yahan describe karo.
+            Experience & Skills
+            <br>
+            Through working on ShopVibe, I have developed practical experience in collaborative web development, database integration, debugging, and maintaining code using version control. I am continuing to improve my skills in building responsive interfaces, developing backend functionality, and integrating frontend and database components.
+
+
+            <br>
+            Technical Skills: HTML5, CSS3, JavaScript, PHP, MySQL, Database Management, Git, GitHub, XAMPP, and Basic React.js.
         </p>
     </div>
 </section>
@@ -424,20 +460,23 @@ footer {
 
         <p>
             Email:
-            <a href="mailto:yourmail@example.com">
-                yourmail@example.com
+            <a href="mailto:varmaritika712@gmail.com">
+                varmaritika712@gmail.com
             </a>
         </p>
 
         <p>
             GitHub:
-            <a href="https://github.com/">
+            <a href="https://github.com/ritikavarma235">
                 Visit GitHub
             </a>
         </p>
 
         <p>
-            Yahan apna contact number ya doosri contact details add karo.
+            Phone:
+            <a href="tel:+91 9830446890">
+                +91 9830446890
+            </a>
         </p>
     </div>
 </section>

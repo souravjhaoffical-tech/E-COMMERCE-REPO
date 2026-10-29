@@ -484,6 +484,17 @@
 
 
             <div class="option">
+                <h2>📦 Manage Stock</h2>
+                <p>
+                    Check product quantities, monitor stock availability,and manage inventory for your store.
+                </p>
+                <a href="deleteproduct.php">
+                    Manage Stock
+                </a>
+            </div>
+
+
+            <div class="option">
                 <h2>🚪 Logout</h2>
                 <p>
                     Logout safely from your

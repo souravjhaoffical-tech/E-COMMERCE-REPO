@@ -8,8 +8,9 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
 body{background:#f5f7fb;color:#222}
 nav{background:#111827;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:10px;color:#ff9800;font-size:25px;font-weight:bold;text-decoration:none}
-.logo img{width:42px;height:42px;object-fit:contain}
+.logo {display: inline-flex;align-items: center;}
+.logo img {width: 45px;height: 45px;border-radius: 50%;object-fit: cover;display: block;}
+.logo span {color: #f59e0b;}
 nav ul{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
 nav ul a{color:white;text-decoration:none;font-size:14px}
 nav ul a:hover,.active{color:#ff9800}

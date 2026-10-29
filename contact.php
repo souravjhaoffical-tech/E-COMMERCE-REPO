@@ -29,19 +29,19 @@ nav {
 }
 
 .logo {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    color: #ff9800;
-    font-size: 25px;
-    font-weight: bold;
-    text-decoration: none;
+}
+.logo img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
 }
 
-.logo img {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
+.logo span {
+    color: #f59e0b;
 }
 
 nav ul {
