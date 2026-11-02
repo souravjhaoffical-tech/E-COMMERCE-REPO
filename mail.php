@@ -10,17 +10,17 @@ $mail->Host = "smtp.gmail.com";
 $mail->SMTPAuth = true;
 
 //own gmail id 
-$mail->username = "souravjha700377@gmail.com";
+$mail->Username = "souravjha700377@gmail.com";
 //own gmail app password
-$mail->password = "ljrerwgfbvamftps";
+$mail->Password= "ljrerwgfbvamftps";
 
 //SMTP SECURITY
 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-$mail->port = 587;
+$mail->Port = 587;
 
 //sender
-$mail->setForm (
-  $mail->username,
+$mail->setFrom (
+  $mail->Username,
   "ardent e-learning"
 );
 ?>
