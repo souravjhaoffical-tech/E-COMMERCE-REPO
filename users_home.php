@@ -1015,7 +1015,7 @@ footer h3 {
         <span class="sale-label">✨ FESTIVE SPECIAL</span>
 
         <h1>
-            Celebrate Durga Puja
+            Celebrate Diwali
             <span>with Amazing Deals!</span>
         </h1>
 
