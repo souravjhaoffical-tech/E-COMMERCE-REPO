@@ -975,6 +975,8 @@ footer h3 {
 }
 
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -1194,6 +1196,6 @@ document.addEventListener("click", function (event) {
 </style>
 
 
-
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>
