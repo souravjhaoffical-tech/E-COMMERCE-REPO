@@ -22,7 +22,7 @@ $userName = htmlspecialchars(
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shop Vibe | Durga Puja Sale</title>
+<title>Shop Vibe | Diwali Puja Sale</title>
 
 <style>
 
@@ -1017,7 +1017,7 @@ footer h3 {
         <span class="sale-label">✨ FESTIVE SPECIAL</span>
 
         <h1>
-            Celebrate Durga Puja
+            Celebrate Diwali Puja
             <span>with Amazing Deals!</span>
         </h1>
 
