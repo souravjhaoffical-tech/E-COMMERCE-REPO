@@ -1,18 +1,21 @@
+
 <?php
 include "db.php";
 
 if (isset($_POST['register'])) {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    $sql = "INSERT INTO users (name,email,password)
-            VALUES ('$name','$email','$password')";
+    $sql = "INSERT INTO users (name, email, password)
+            VALUES ('$name', '$email', '$password')";
 
-    mysqli_query($conn, $sql);
-
-    header("Location:login.php");
-    exit();
+    if (mysqli_query($conn, $sql)) {
+        header("Location: login.php");
+        exit();
+    } else {
+        $error = "Registration failed. Please try again.";
+    }
 }
 ?>
 
@@ -37,14 +40,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 25px 0;
+    padding: 25px 15px;
     overflow-x: hidden;
 }
 
 /* MAIN CONTAINER */
 .container {
     width: 850px;
-    max-width: 92%;
+    max-width: 100%;
     min-height: 520px;
     display: flex;
     background: #ffffff;
@@ -102,8 +105,8 @@ body {
 }
 
 .logo {
-    font-size: 30px;
-    font-weight: bold;
+    display: inline-flex;
+    width: fit-content;
     margin-bottom: 65px;
     position: relative;
     z-index: 1;
@@ -116,11 +119,6 @@ body {
     border-radius: 50%;
     object-fit: cover;
     display: block;
-}
-
-
-.logo span {
-    color: #e0e7ff;
 }
 
 @keyframes logoFloat {
@@ -178,6 +176,7 @@ body {
 /* RIGHT SECTION */
 .right {
     width: 55%;
+    min-width: 0;
     padding: 45px 50px;
     display: flex;
     flex-direction: column;
@@ -234,11 +233,58 @@ input::placeholder {
     color: #a0a5b5;
 }
 
+/* GOOGLE BUTTON */
+.google-btn {
+    width: 100%;
+    min-height: 47px;
+    border: 1px solid #dfe2ed;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #252b45;
+    font-size: 15px;
+    font-weight: bold;
+    background: #ffffff;
+    transition: 0.3s;
+    margin-top: 2px;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.google-btn:hover {
+    background: #f5f6fa;
+    border-color: #667eea;
+}
+
+.or-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #999;
+    font-size: 13px;
+    margin: 17px 0;
+}
+
+.or-divider::before,
+.or-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e5e7ef;
+}
+
 /* REGISTER BUTTON */
 button {
     width: 100%;
     height: 47px;
-    margin-top: 5px;
+    margin-top: 0;
     border: none;
     border-radius: 10px;
     background: linear-gradient(135deg, #667eea, #764ba2);
@@ -289,8 +335,15 @@ button:active {
     color: #8b90a3;
 }
 
+.error-message {
+    color: #d93025;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
 /* MOBILE RESPONSIVE */
 @media (max-width: 750px) {
+
     body {
         padding: 20px 0;
     }
@@ -351,6 +404,7 @@ button:active {
 }
 
 @media (max-width: 380px) {
+
     .left {
         padding: 25px 22px;
     }
@@ -371,7 +425,9 @@ button:active {
 
 <div class="container">
 
+    <!-- LEFT SECTION -->
     <div class="left">
+
         <a href="index.php" class="logo">
             <img src="Assets/LOGO.jpg" alt="ShopVibe Logo">
         </a>
@@ -392,7 +448,7 @@ button:active {
 
     </div>
 
-
+    <!-- RIGHT SECTION -->
     <div class="right">
 
         <h2>Create Account</h2>
@@ -401,8 +457,15 @@ button:active {
             Register to start shopping with ShopVibe
         </p>
 
+        <?php if (isset($error)) { ?>
+            <p class="error-message">
+                <?php echo htmlspecialchars($error); ?>
+            </p>
+        <?php } ?>
+
         <form method="post">
 
+            <!-- FULL NAME -->
             <div class="form-group">
                 <label>Full Name</label>
                 <input type="text"
@@ -411,6 +474,7 @@ button:active {
                        required>
             </div>
 
+            <!-- EMAIL -->
             <div class="form-group">
                 <label>Email Address</label>
                 <input type="email"
@@ -419,6 +483,7 @@ button:active {
                        required>
             </div>
 
+            <!-- PASSWORD -->
             <div class="form-group">
                 <label>Password</label>
                 <input type="password"
@@ -427,6 +492,15 @@ button:active {
                        required>
             </div>
 
+            <!-- GOOGLE BUTTON -->
+            <a href="glogin.php" class="google-btn">
+                <img src="https://www.google.com/favicon.ico" alt="Google">
+                Continue with Google
+            </a>
+
+            <div class="or-divider">OR</div>
+
+            <!-- REGISTER BUTTON -->
             <button type="submit" name="register">
                 Register
             </button>
