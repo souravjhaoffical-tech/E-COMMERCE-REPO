@@ -488,7 +488,7 @@
                 <p>
                     Check product quantities, monitor stock availability,and manage inventory for your store.
                 </p>
-                <a href="deleteproduct.php">
+                <a href="inventory.php">
                     Manage Stock
                 </a>
             </div>
