@@ -81,6 +81,8 @@ if (!$result) {
         }
     </style>
 
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -170,5 +172,6 @@ if (!$result) {
 
     </div>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

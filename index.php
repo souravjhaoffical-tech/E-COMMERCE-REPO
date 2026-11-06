@@ -1,5 +1,10 @@
+<?php
+session_start();
+
+$cartCount = count($_SESSION['cart'] ?? []);
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html data-native="dark" lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1300,10 +1305,44 @@ nav ul {
     margin-left: 0;
 }
 
+.cart-icon {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -10px;
+    right: -12px;
+
+    background: #ff3cac;
+    color: white;
+
+    min-width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+}
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+    font-family: 'Inter', sans-serif;
+}
+</style>
 <body>
 
 
@@ -1332,8 +1371,16 @@ nav ul {
         <a href="login.php" class="login-btn">
             Login
         </a>
-          <a href="cart.php" class="cart-icon">🛒</a>
+         <a href="cart.php" class="cart-icon">
+    🛒
 
+    <?php if ($cartCount > 0) { ?>
+        <span class="cart-count">
+            <?php echo $cartCount; ?>
+        </span>
+    <?php } ?>
+
+</a>
 </nav>
 
 
@@ -1420,5 +1467,7 @@ if (file_exists($manifestPath)) {
 }
 ?>
 
+<script src="darkmode/darkmode.js"></script>
+<script src="diwali.js"></script>
 </body>
 </html>

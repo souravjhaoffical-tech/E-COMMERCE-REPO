@@ -210,6 +210,8 @@ tbody tr:last-child td {
     }
 }
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -307,5 +309,6 @@ tbody tr:last-child td {
 
 </div>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

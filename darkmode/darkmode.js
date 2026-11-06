@@ -3,16 +3,28 @@
   var KEY = 'shopvibe-theme';
   var root = document.documentElement;
 
+  var NATIVE = root.getAttribute('data-native') || 'light';
   function getTheme() {
-    return root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    var t = root.getAttribute('data-theme');
+    return t === 'dark' || t === 'light' ? t : NATIVE;
+  }
+  function applyInvert(t) {
+    var themed = false, cur = root.getAttribute('data-theme');
+    try {
+      root.removeAttribute('data-theme');
+      themed = getComputedStyle(root).getPropertyValue('--page-bg').trim() !== '';
+    } catch (e) {}
+    root.setAttribute('data-theme', cur || t);
+    root.classList.toggle('dm-themed', themed);
+    root.classList.toggle('dm-invert', !themed && t !== NATIVE);
   }
   function setTheme(t) {
     root.setAttribute('data-theme', t);
+    applyInvert(t);
     try { localStorage.setItem(KEY, t); } catch (e) {}
     if (cord) cord.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
   }
 
-  /* ---------- build the cord ---------- */
   var REST = 70, MAX_PULL = 90, TRIGGER = 35, W = 60, AX = W / 2;
   var NS = 'http://www.w3.org/2000/svg';
 
@@ -35,17 +47,19 @@
   svg.appendChild(knob);
   cord.appendChild(svg);
 
-    var tip = document.createElement('div');
+  var tip = document.createElement('div');
   tip.className = 'cord-tip';
   cord.appendChild(tip);
+  function tipText(pulledEnough) {
+    if (pulledEnough) return 'Now release! ✨';
+    return getTheme() === 'dark' ? 'Drag it down for light mode ☀️' : 'Drag it down for dark mode 🌙';
+  }
   function showTip(pulledEnough) {
-    tip.textContent = pulledEnough ? 'Now release! ✨'
-      : (getTheme() === 'dark' ? 'Drag it down for light mode ☀️' : 'Drag it down for dark mode 🌙');
+    tip.textContent = tipText(pulledEnough);
     tip.classList.add('show');
   }
   function hideTip() { tip.classList.remove('show'); }
 
-  /* x,y = knob position (relative to the anchor) */
   function draw(x, y) {
     var cx = AX + (x - AX) * 0.35;
     path.setAttribute('d', 'M' + AX + ',0 Q' + cx + ',' + (y * 0.55) + ' ' + x + ',' + y);
@@ -55,7 +69,6 @@
   }
   draw(AX, REST);
 
-  /* ---------- theme switch with circular reveal ---------- */
   function toggleTheme() {
     var next = getTheme() === 'dark' ? 'light' : 'dark';
     var r = knob.getBoundingClientRect();
@@ -75,7 +88,6 @@
     }
   }
 
-  /* ---------- spring (rope bounce) ---------- */
   var raf = null;
   function spring(fromX, fromY) {
     cancelAnimationFrame(raf);
@@ -91,7 +103,6 @@
     })();
   }
 
-  /* ---------- drag ---------- */
   var dragging = false, moved = false, cur = { x: AX, y: REST };
   function pos(e) {
     var b = svg.getBoundingClientRect();
@@ -104,6 +115,7 @@
     cancelAnimationFrame(raf);
     cord.setPointerCapture(e.pointerId);
     cord.classList.add('dragging');
+    showTip(false);
     e.preventDefault();
   });
   cord.addEventListener('pointermove', function (e) {
@@ -115,22 +127,23 @@
     if (!dragging) return;
     dragging = false;
     cord.classList.remove('dragging');
+    hideTip();
     var pulled = cur.y - REST;
-    if (pulled > TRIGGER || !moved) toggleTheme();   /* tap also works */
+    if (pulled > TRIGGER || !moved) toggleTheme();
     spring(cur.x, cur.y);
     cur = { x: AX, y: REST };
   }
-    cord.addEventListener('pointerup', release);
-    cord.addEventListener('pointercancel', release);
-    cord.addEventListener('pointerenter', function () { if (!dragging) showTip(false); });
-    cord.addEventListener('pointerleave', function () { if (!dragging) hideTip(); });
+  cord.addEventListener('pointerenter', function () { if (!dragging) showTip(false); });
+  cord.addEventListener('pointerleave', function () { if (!dragging) hideTip(); });
+  cord.addEventListener('pointerup', release);
+  cord.addEventListener('pointercancel', release);
 
-  /* keyboard accessibility */
   cord.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault(); toggleTheme(); spring(AX, REST + 40);
     }
   });
 
+  applyInvert(getTheme());
   document.body.appendChild(cord);
 })();

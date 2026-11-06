@@ -635,6 +635,8 @@ input:focus {
 
 </style>
 
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -774,5 +776,6 @@ function togglePassword() {
 
 </script>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

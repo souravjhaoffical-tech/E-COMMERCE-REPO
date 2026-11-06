@@ -534,6 +534,8 @@ button:active {
 }
 
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -648,5 +650,6 @@ button:active {
         <div class="bottom-text"> 🔒 Secure access to your ShopVibe dashboard </div>
     </div>
 </div>
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

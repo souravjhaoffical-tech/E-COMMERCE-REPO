@@ -281,6 +281,8 @@
             }
         }
     </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -396,5 +398,6 @@
         </p>
     </footer>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

@@ -266,6 +266,8 @@ footer {
     }
 }
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -493,5 +495,6 @@ Completed
     &copy; 2026 Sourav | My Portfolio
 </footer>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

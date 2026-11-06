@@ -1,6 +1,5 @@
-/* ============ ShopVibe dark mode ============ */
 
-/* ---- 1. the pull cord ---- */
+
 #theme-cord {
   position: fixed; top: 0; right: clamp(14px, 4vw, 56px);
   width: 60px; z-index: 10000;
@@ -18,19 +17,16 @@ html[data-theme="dark"] #theme-cord .cord-line { stroke: #9ca3af; }
 html[data-theme="dark"] #theme-cord .cord-knob { fill: #ffd166; stroke: #f4a261;
   filter: drop-shadow(0 0 8px #ffd166); }
 
-/* ---- 2. circular reveal (View Transitions API) ---- */
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 ::view-transition-new(root) { animation: vt-reveal .7s ease-in-out both; }
 @keyframes vt-reveal {
   from { clip-path: circle(0 at var(--vt-x, 95%) var(--vt-y, 0)); }
   to   { clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 95%) var(--vt-y, 0)); }
 }
-/* fallback for browsers without View Transitions */
 html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
   transition: background-color .4s, color .4s, border-color .4s, box-shadow .4s !important;
 }
 
-/* ---- 3. dark colours: PHP pages that use the CSS variables ---- */
 html[data-theme="dark"] {
   color-scheme: dark;
   --primary: #8b9cff;
@@ -44,9 +40,8 @@ html[data-theme="dark"] {
   --border: #2b3260;
   --shadow: 0 5px 20px rgba(0, 0, 0, .5);
 }
-html[data-theme="dark"] body { background: var(--page-bg); color: var(--text); }
+html.dm-themed[data-theme="dark"] body { background: var(--page-bg); color: var(--text); }
 
-/* ---- 4. dark colours: React product grid ---- */
 html[data-theme="dark"] .product-search,
 html[data-theme="dark"] .brand-filter,
 html[data-theme="dark"] .category-filter,
@@ -66,7 +61,6 @@ html[data-theme="dark"] .wishlist-btn,
 html[data-theme="dark"] .wishlist-toggle { background: #1d2243; color: #e5e7eb; border-color: #2b3260; }
 html[data-theme="dark"] .react-message { background: #171b2e; color: #9ca3af; }
 
-/* ---- 5. fixes for fixed colours inside users_home.php ---- */
 html[data-theme="dark"] .navbar { border-bottom-color: #2b3260; }
 html[data-theme="dark"] .hero {
   background:
@@ -93,3 +87,10 @@ html[data-theme="dark"] .feature { border-color: #2b3260; }
 #theme-cord .cord-tip.show { opacity: 1; transform: translateX(0); }
 html[data-theme="dark"] #theme-cord .cord-tip { background: #ffd166; color: #1f2937; }
 html[data-theme="dark"] #theme-cord .cord-tip::after { border-left-color: #ffd166; }
+
+html.dm-invert { filter: invert(1) hue-rotate(180deg); background: #fff; }
+html.dm-invert[data-native="dark"] { background: #000; }
+html.dm-invert img, html.dm-invert video, html.dm-invert picture,
+html.dm-invert canvas, html.dm-invert iframe, html.dm-invert #theme-cord {
+  filter: invert(1) hue-rotate(180deg);
+}
