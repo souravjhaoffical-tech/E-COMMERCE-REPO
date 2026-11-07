@@ -45,8 +45,12 @@ $userName = htmlspecialchars(
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
 
 <title>Shop Vibe | Durga Puja Sale</title>
+=======
+<title>Shop Vibe | Diwali Puja Sale</title>
+>>>>>>> ea4156374bbb34fc89446e7526fc9936c4a98b62
 
 
 
@@ -2045,7 +2049,12 @@ body.sv-swarm-running .sv-swarm-target.sv-swarm-built {
 }
 
 </style>
+<<<<<<< HEAD
 
+=======
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
+>>>>>>> ea4156374bbb34fc89446e7526fc9936c4a98b62
 </head>
 
 
@@ -2125,9 +2134,13 @@ body.sv-swarm-running .sv-swarm-target.sv-swarm-built {
 
 
         <h1>
+<<<<<<< HEAD
 
             Celebrate Diwali
 
+=======
+            Celebrate Diwali Puja
+>>>>>>> ea4156374bbb34fc89446e7526fc9936c4a98b62
             <span>with Amazing Deals!</span>
 
         </h1>
@@ -2481,6 +2494,7 @@ document.addEventListener("click", function (event) {
 </style>
 
 
+<<<<<<< HEAD
 
 
 
@@ -2556,6 +2570,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+=======
+<script src="darkmode/darkmode.js"></script>
+>>>>>>> ea4156374bbb34fc89446e7526fc9936c4a98b62
 </body>
 
 </html>

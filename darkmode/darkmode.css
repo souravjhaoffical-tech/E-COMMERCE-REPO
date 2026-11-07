@@ -1,0 +1,96 @@
+
+
+#theme-cord {
+  position: fixed; top: 0; right: clamp(14px, 4vw, 56px);
+  width: 60px; z-index: 10000;
+  cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
+  outline: none;
+}
+#theme-cord.dragging { cursor: grabbing; }
+#theme-cord svg { display: block; overflow: visible; }
+#theme-cord .cord-line { fill: none; stroke: #6b7280; stroke-width: 2.5; stroke-linecap: round; }
+#theme-cord .cord-knob { fill: #667eea; stroke: #4658c8; stroke-width: 2;
+  transition: fill .3s, filter .3s; }
+#theme-cord:hover .cord-knob,
+#theme-cord:focus-visible .cord-knob { filter: drop-shadow(0 0 6px #667eea); }
+html[data-theme="dark"] #theme-cord .cord-line { stroke: #9ca3af; }
+html[data-theme="dark"] #theme-cord .cord-knob { fill: #ffd166; stroke: #f4a261;
+  filter: drop-shadow(0 0 8px #ffd166); }
+
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { animation: vt-reveal .7s ease-in-out both; }
+@keyframes vt-reveal {
+  from { clip-path: circle(0 at var(--vt-x, 95%) var(--vt-y, 0)); }
+  to   { clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 95%) var(--vt-y, 0)); }
+}
+html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
+  transition: background-color .4s, color .4s, border-color .4s, box-shadow .4s !important;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --primary: #8b9cff;
+  --primary-hover: #a3b0ff;
+  --primary-dark: #6f82f0;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --white: #171b2e;
+  --page-bg: #0c0f1d;
+  --light-blue: #1d2243;
+  --border: #2b3260;
+  --shadow: 0 5px 20px rgba(0, 0, 0, .5);
+}
+html.dm-themed[data-theme="dark"] body { background: var(--page-bg); color: var(--text); }
+
+html[data-theme="dark"] .product-search,
+html[data-theme="dark"] .brand-filter,
+html[data-theme="dark"] .category-filter,
+html[data-theme="dark"] .sort-filter {
+  background-color: #171b2e; color: #e5e7eb; border-color: #2b3260;
+}
+html[data-theme="dark"] .product-search::placeholder { color: #9ca3af; }
+html[data-theme="dark"] .product-card { background: #171b2e; border-color: #2b3260; }
+html[data-theme="dark"] .product-image-wrap .product-image,
+html[data-theme="dark"] .product-image { background: linear-gradient(180deg, #1d2243, #171b2e); }
+html[data-theme="dark"] .product-info h3,
+html[data-theme="dark"] .product-title-link { color: #e5e7eb; }
+html[data-theme="dark"] .product-count,
+html[data-theme="dark"] .product-info .brand,
+html[data-theme="dark"] .brand { color: #9ca3af; }
+html[data-theme="dark"] .wishlist-btn,
+html[data-theme="dark"] .wishlist-toggle { background: #1d2243; color: #e5e7eb; border-color: #2b3260; }
+html[data-theme="dark"] .react-message { background: #171b2e; color: #9ca3af; }
+
+html[data-theme="dark"] .navbar { border-bottom-color: #2b3260; }
+html[data-theme="dark"] .hero {
+  background:
+    radial-gradient(circle at 10% 15%, rgba(139, 156, 255, .18), transparent 35%),
+    radial-gradient(circle at 90% 85%, rgba(139, 156, 255, .12), transparent 40%),
+    linear-gradient(135deg, #171b2e, #0f1324);
+}
+html[data-theme="dark"] .features,
+html[data-theme="dark"] .feature { border-color: #2b3260; }
+
+#theme-cord .cord-tip {
+  position: absolute; right: 48px; top: 62px;
+  padding: 7px 12px; border-radius: 10px; white-space: nowrap;
+  font: 600 13px/1.2 Arial, sans-serif;
+  background: #1f2937; color: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+  opacity: 0; transform: translateX(8px); pointer-events: none;
+  transition: opacity .2s, transform .2s;
+}
+#theme-cord .cord-tip::after {
+  content: ""; position: absolute; right: -5px; top: 50%; margin-top: -5px;
+  border: 5px solid transparent; border-left-color: #1f2937; border-right: 0;
+}
+#theme-cord .cord-tip.show { opacity: 1; transform: translateX(0); }
+html[data-theme="dark"] #theme-cord .cord-tip { background: #ffd166; color: #1f2937; }
+html[data-theme="dark"] #theme-cord .cord-tip::after { border-left-color: #ffd166; }
+
+html.dm-invert { filter: invert(1) hue-rotate(180deg); background: #fff; }
+html.dm-invert[data-native="dark"] { background: #000; }
+html.dm-invert img, html.dm-invert video, html.dm-invert picture,
+html.dm-invert canvas, html.dm-invert iframe, html.dm-invert #theme-cord {
+  filter: invert(1) hue-rotate(180deg);
+}

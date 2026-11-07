@@ -218,6 +218,8 @@ footer {
     }
 }    
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -316,6 +318,7 @@ footer {
     <span class="orange">ShopVibe</span>. All Rights Reserved.
 </footer>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>
 

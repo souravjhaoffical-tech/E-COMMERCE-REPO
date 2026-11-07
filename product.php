@@ -210,6 +210,8 @@ tbody tr:last-child td {
     }
 }
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -272,11 +274,18 @@ tbody tr:last-child td {
                             <a href="editproduct.php?id=<?php echo urlencode($x['id']); ?>"
                                class="edit">Edit</a>
 
-                            <a href="deleteproduct.php?id=<?php echo urlencode($x['id']); ?>"
-                               class="delete"
-                               onclick="return confirm('Are you sure you want to delete this product?');">
-                               Delete
-                            </a>
+                           <form method="POST" action="deleteproduct.php"
+                                onsubmit="return confirm('Are you sure you want to delete this product?');"
+                                style="display:inline;">
+
+                                 <input type="hidden" name="id"
+                                    value="<?php echo (int)$x['id']; ?>">
+
+                                <button type="submit" class="delete">
+                                Delete
+                                </button>
+
+                            </form>
 
                             <a href="add_cart.php?id=<?php echo urlencode($x['id']); ?>"
                                class="cart-link">Add to Cart</a>
@@ -300,5 +309,6 @@ tbody tr:last-child td {
 
 </div>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

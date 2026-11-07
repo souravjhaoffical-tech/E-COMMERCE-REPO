@@ -218,6 +218,8 @@ if (empty($products)) {
             }
         }
     </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -314,5 +316,6 @@ if (empty($products)) {
 
     </div>
 </div>
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

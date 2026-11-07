@@ -27,6 +27,8 @@ span{color:#ff9800}
 footer{background:#111827;color:white;text-align:center;padding:22px}
 @media(max-width:768px){nav{justify-content:center}nav ul{justify-content:center;gap:13px}.hero h1{font-size:32px}.cards{grid-template-columns:1fr}}
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 <body>
 <nav>
@@ -56,5 +58,6 @@ footer{background:#111827;color:white;text-align:center;padding:22px}
 </div>
 </section>
 <footer>&copy; <?php echo date("Y"); ?> <span>ShopVibe</span>. All Rights Reserved.</footer>
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

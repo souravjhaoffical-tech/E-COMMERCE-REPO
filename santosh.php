@@ -266,6 +266,8 @@ footer {
     }
 }
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -446,5 +448,6 @@ footer {
     &copy; 2026 Santosh | My Portfolio
 </footer>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

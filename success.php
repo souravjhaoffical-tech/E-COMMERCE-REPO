@@ -42,6 +42,8 @@ session_start();
             border-radius: 8px;
         }
     </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 <body>
     <div class="success-box">
@@ -51,5 +53,6 @@ session_start();
         <p>Your order process has finished. Please check your order details before leaving this page.</p>
         <a href="index.php">Continue Shopping</a>
     </div>
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

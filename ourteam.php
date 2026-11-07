@@ -248,6 +248,8 @@ footer span {
     }
 }
 </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body id="top">
@@ -387,5 +389,6 @@ function showName(number) {
 
 </script>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>

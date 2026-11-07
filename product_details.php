@@ -141,6 +141,8 @@ function escapeHtml($value) {
             }
         }
     </style>
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -184,6 +186,7 @@ function escapeHtml($value) {
             </a>
         </div>
     </main>
+<script src="darkmode/darkmode.js"></script>
 </body>
 </html>
 

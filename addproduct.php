@@ -452,6 +452,8 @@ body {
 
     </style>
 
+<link rel="stylesheet" href="darkmode/darkmode.css">
+<script src="darkmode/darkmode-head.js"></script>
 </head>
 
 <body>
@@ -614,6 +616,7 @@ body {
 
     </main>
 
+<script src="darkmode/darkmode.js"></script>
 </body>
 
 </html>
