@@ -1,6 +1,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
+const WISHLIST_API = `${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/E-COMMERCE-REPO/wishlist_api.php`
 
 function App() {
   const [products, setProducts] = useState([])
@@ -10,6 +11,9 @@ function App() {
   const [selectedBrand, setSelectedBrand] = useState('All')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [sortOrder, setSortOrder] = useState('default')
+  const [showFilters, setShowFilters] = useState(false)
+  const [productQuantities, setProductQuantities] = useState({})
+  const [cartMessage, setCartMessage] = useState('')
 
 
 // Wishlist state: data comes from PHP + MySQL
@@ -20,7 +24,7 @@ const [wishlistMessage, setWishlistMessage] = useState('')
 // Load logged-in user's wishlist from database
 useEffect(() => {
   fetch(
-    '/E-COMMERCE-SITE/E-COMMERCE-REPO/wishlist_api.php?action=list',
+     `${WISHLIST_API}?action=list`,
     { credentials: 'include' }
   )
     .then(async (response) => {
@@ -38,8 +42,10 @@ useEffect(() => {
       }
     })
     .catch((err) => {
-      setWishlistMessage(err.message)
-    })
+  if (err.message !== 'Please log in as a user first.') {
+    setWishlistMessage(err.message)
+  }
+})
 }, [])
 
 // Add/remove wishlist item in database
@@ -48,7 +54,7 @@ const toggleWishlist = async (productId) => {
 
   try {
     const response = await fetch(
-      '/E-COMMERCE-SITE/E-COMMERCE-REPO/wishlist_api.php?action=toggle',
+      `${WISHLIST_API}?action=toggle`,
       {
         method: 'POST',
         credentials: 'include',
@@ -79,7 +85,41 @@ const toggleWishlist = async (productId) => {
   }
 }
 
+const handleAddToCart = async (productId) => {
+  const quantity = productQuantities[productId] || 1
 
+  const formData = new FormData()
+  formData.append('id', productId)
+  formData.append('quantity', quantity)
+
+  try {
+    const response = await fetch('add_cart.php', {
+      method: 'POST',
+      body: formData
+    })
+
+    const data = await response.json()
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || 'Could not add product')
+    }
+
+    setCartMessage(
+      `${quantity} ${quantity === 1 ? 'product' : 'products'} added to cart`
+    )
+
+    setTimeout(() => setCartMessage(''), 2500)
+
+    setProductQuantities((current) => ({
+      ...current,
+      [productId]: 1
+    }))
+
+  } catch (error) {
+    setCartMessage(error.message)
+    setTimeout(() => setCartMessage(''), 2500)
+  }
+}
   // Fetch products from PHP API
   useEffect(() => {
     
@@ -233,52 +273,48 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           aria-label="Search products or brands"
+          onFocus={() => setShowFilters(true)}
         />
 
-        <select
-          className="brand-filter"
-          value={selectedBrand}
-          onChange={(event) => setSelectedBrand(event.target.value)}
-          aria-label="Filter by brand"
-        >
-          {brands.map((brand) => (
-            <option key={brand} value={brand}>
-              {brand === 'All' ? 'All Brands' : brand}
-            </option>
-          ))}
-        </select>
+        {showFilters && (
+  <>
+    <select
+      className="brand-filter"
+      value={selectedBrand}
+      onChange={(event) => setSelectedBrand(event.target.value)}
+    >
+      {brands.map((brand) => (
+        <option key={brand} value={brand}>
+          {brand === 'All' ? 'All Brands' : brand}
+        </option>
+      ))}
+    </select>
 
-        <select
-          className="category-filter"
-          value={selectedCategory}
-          onChange={(event) =>
-            setSelectedCategory(event.target.value)
-          }
-          aria-label="Filter by category"
-        >
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category === 'All'
-                ? 'All Categories'
-                : category}
-            </option>
-          ))}
-        </select>
+    <select
+      className="category-filter"
+      value={selectedCategory}
+      onChange={(event) => setSelectedCategory(event.target.value)}
+    >
+      {categories.map((category) => (
+        <option key={category} value={category}>
+          {category === 'All' ? 'All Categories' : category}
+        </option>
+      ))}
+    </select>
 
-        <select
-          className="sort-filter"
-          value={sortOrder}
-          onChange={(event) => setSortOrder(event.target.value)}
-          aria-label="Sort products by price"
-        >
-          <option value="default">Sort by Price</option>
-          <option value="low-high">
-            Price: Low to High
-          </option>
-          <option value="high-low">
-            Price: High to Low
-          </option>
-        </select>
+    <select
+      className="sort-filter"
+      value={sortOrder}
+      onChange={(event) => setSortOrder(event.target.value)}
+    >
+      <option value="default">Sort by Price</option>
+      <option value="low-high">Price: Low to High</option>
+      <option value="high-low">Price: High to Low</option>
+    </select>
+  </>
+)}
+
+        
 
         <button
           type="button"
@@ -294,7 +330,11 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
     {wishlistMessage}
   </p>
 )}
-
+      {cartMessage && (
+  <div className="cart-notification" role="status">
+    ✓ {cartMessage}
+  </div>
+)}
       <p className="product-count">
         {showWishlist ? 'Wishlist: ' : 'Showing '}
         {filteredProducts.length} of{' '}
@@ -354,12 +394,41 @@ return (
 
       <div className="price">₹{product.price}</div>
 
-      <a
-        className="cart-btn"
-        href={`add_cart.php?id=${encodeURIComponent(product.id)}`}
-      >
-        <span>🛒</span> Add to Cart
-      </a>
+<div className="product-quantity-control">
+  <button
+    type="button"
+    onClick={() =>
+      setProductQuantities((current) => ({
+        ...current,
+        [product.id]: Math.max(1, (current[product.id] || 1) - 1)
+      }))
+    }
+  >
+    −
+  </button>
+
+  <span>{productQuantities[product.id] || 1}</span>
+
+  <button
+    type="button"
+    onClick={() =>
+      setProductQuantities((current) => ({
+        ...current,
+        [product.id]: (current[product.id] || 1) + 1
+      }))
+    }
+  >
+    +
+  </button>
+</div>
+
+<button
+  type="button"
+  className="cart-btn"
+  onClick={() => handleAddToCart(product.id)}
+>
+  🛒 Add to Cart
+</button>
     </div>
   </article>
 )

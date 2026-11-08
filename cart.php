@@ -8,40 +8,22 @@ if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Quantity update
+// Remove product from cart
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $id = (int)($_POST['id'] ?? 0);
     $action = $_POST['action'] ?? '';
 
-    if ($id > 0) {
+    if ($id > 0 && $action == 'remove') {
 
-        if ($action == 'plus') {
-
-            $_SESSION['cart'][] = $id;
-
-        } elseif ($action == 'minus') {
-
-            $key = array_search($id, $_SESSION['cart']);
-
-            if ($key !== false) {
-                unset($_SESSION['cart'][$key]);
-            }
-
-            $_SESSION['cart'] = array_values($_SESSION['cart']);
-
-        } elseif ($action == 'remove') {
-
-            $_SESSION['cart'] = array_values(
-                array_filter(
-                    $_SESSION['cart'],
-                    function($cartId) use ($id) {
-                        return (int)$cartId != $id;
-                    }
-                )
-            );
-
-        }
+        $_SESSION['cart'] = array_values(
+            array_filter(
+                $_SESSION['cart'],
+                function($cartId) use ($id) {
+                    return (int)$cartId != $id;
+                }
+            )
+        );
     }
 
     header("Location: cart.php");
@@ -444,45 +426,10 @@ tr:hover {
                 <td>
 
                     <div class="quantity-control">
-
-                        <!-- Minus Button -->
-
-                        <form method="POST" action="cart.php">
-
-                            <input type="hidden" name="id"
-                                value="<?php echo $id; ?>">
-
-                            <input type="hidden" name="action"
-                                value="minus">
-
-                            <button type="submit" class="qty-btn">
-                                −
-                            </button>
-
-                        </form>
-
-                        <span class="qty-number">
-                            <?php echo $quantity; ?>
-                        </span>
-
-                        <!-- Plus Button -->
-
-                        <form method="POST" action="cart.php">
-
-                            <input type="hidden" name="id"
-                                value="<?php echo $id; ?>">
-
-                            <input type="hidden" name="action"
-                                value="plus">
-
-                            <button type="submit" class="qty-btn">
-                                +
-                            </button>
-
-                        </form>
-
-                    </div>
-
+    <span class="qty-number">
+        <?php echo $quantity; ?>
+    </span>
+</div>
                 </td>
 
                 <td>

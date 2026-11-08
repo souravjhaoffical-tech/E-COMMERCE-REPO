@@ -1394,3 +1394,179 @@
 .product-search::placeholder {
   color: #a1a8bb;
 }
+/* SHOPVIBE PROFESSIONAL TYPOGRAPHY */
+
+#products-root {
+    font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+#products-root button,
+#products-root input,
+#products-root select {
+    font-family: inherit;
+}
+
+/* =====================================
+   SHOPVIBE - COMPACT PRODUCT CARD DESIGN
+===================================== */
+
+/* Product grid */
+.react-products {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    align-items: stretch;
+}
+
+/* Product card */
+.react-products .product-card {
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* Product image area */
+.react-products .product-image-wrap {
+    height: 165px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.react-products .product-image-wrap .product-image {
+    width: 100%;
+    height: 100%;
+    max-height: 165px;
+    padding: 12px;
+    object-fit: contain;
+}
+
+/* Small ShopVibe badge */
+.react-products .product-badge {
+    top: 9px;
+    left: 9px;
+    padding: 4px 7px;
+    font-size: 9px;
+    letter-spacing: 0.4px;
+}
+
+/* Small wishlist icon */
+.react-products .product-image-wrap .wishlist-btn {
+    width: 34px;
+    height: 34px;
+    top: 9px;
+    right: 9px;
+    font-size: 18px;
+}
+
+/* Product details */
+.react-products .product-info {
+    padding: 12px;
+}
+
+/* Brand */
+.react-products .product-info .brand {
+    font-size: 10px;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+
+/* Product name - maximum 2 lines */
+.react-products .product-info h3 {
+    min-height: 40px;
+    max-height: 40px;
+    margin-bottom: 7px;
+    font-size: 14px;
+    line-height: 20px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+}
+
+/* Price */
+.react-products .product-info .price {
+    font-size: 18px;
+    margin: 2px 0 10px;
+}
+
+/* Add to cart */
+.react-products .product-info .cart-btn {
+    min-height: 40px;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+/* Tablet */
+@media (max-width: 950px) {
+    .react-products {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+    .react-products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .react-products .product-image-wrap {
+        height: 125px;
+    }
+
+    .react-products .product-image-wrap .product-image {
+        max-height: 125px;
+        padding: 8px;
+    }
+
+    .react-products .product-info {
+        padding: 9px;
+    }
+
+    .react-products .product-info h3 {
+        font-size: 12px;
+        min-height: 36px;
+        max-height: 36px;
+        line-height: 18px;
+    }
+
+    .react-products .product-info .price {
+        font-size: 16px;
+    }
+
+    .react-products .product-info .cart-btn {
+        min-height: 38px;
+        font-size: 12px;
+    }
+}
+
+/* Small phones */
+@media (max-width: 350px) {
+    .react-products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .react-products .product-image-wrap {
+        height: 115px;
+    }
+
+    .react-products .product-image-wrap .product-image {
+        max-height: 115px;
+    }
+}
+.product-search {
+    flex: 0 1 260px;
+    min-width: 180px;
+    height: 42px;
+    padding: 10px 14px;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .product-search {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+}

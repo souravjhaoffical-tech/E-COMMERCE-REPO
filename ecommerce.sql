@@ -26,6 +26,15 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE,
     password VARCHAR(255),
     role VARCHAR(20) NOT NULL DEFAULT 'user');
+    USE k;
+
+CREATE TABLE IF NOT EXISTS wishlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_user_product (user_id, product_id)
+);
 
 INSERT INTO users (name, email, password, role)
 VALUES ('Sourav', 'souravjha700377@gmail.com', '1234', 'admin');
