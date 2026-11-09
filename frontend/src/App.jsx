@@ -14,6 +14,7 @@ function App() {
   const [showFilters, setShowFilters] = useState(false)
   const [productQuantities, setProductQuantities] = useState({})
   const [cartMessage, setCartMessage] = useState('')
+  const [addedToCart, setAddedToCart] = useState({})
 
 
 // Wishlist state: data comes from PHP + MySQL
@@ -84,37 +85,43 @@ const toggleWishlist = async (productId) => {
     setWishlistMessage(err.message)
   }
 }
-
 const handleAddToCart = async (productId) => {
-  const quantity = productQuantities[productId] || 1
+  await changeCartQuantity(productId, 1, true)
+}
 
+const changeCartQuantity = async (productId, quantity, firstAdd = false) => {
   const formData = new FormData()
   formData.append('id', productId)
   formData.append('quantity', quantity)
+  formData.append('action', 'set_quantity')
 
   try {
     const response = await fetch('add_cart.php', {
       method: 'POST',
-      body: formData
+      body: formData,
+      credentials: 'include'
     })
 
     const data = await response.json()
 
     if (!response.ok || !data.success) {
-      throw new Error(data.message || 'Could not add product')
+      throw new Error(data.message || 'Could not update cart')
     }
 
-    setCartMessage(
-      `${quantity} ${quantity === 1 ? 'product' : 'products'} added to cart`
-    )
-
-    setTimeout(() => setCartMessage(''), 2500)
-
-    setProductQuantities((current) => ({
+    setProductQuantities(current => ({
       ...current,
-      [productId]: 1
+      [productId]: quantity
     }))
 
+    setAddedToCart(current => ({
+      ...current,
+      [productId]: true
+    }))
+
+    if (firstAdd) {
+      setCartMessage('Product added to cart')
+      setTimeout(() => setCartMessage(''), 2500)
+    }
   } catch (error) {
     setCartMessage(error.message)
     setTimeout(() => setCartMessage(''), 2500)
@@ -394,41 +401,43 @@ return (
 
       <div className="price">₹{product.price}</div>
 
-<div className="product-quantity-control">
+{!addedToCart[product.id] ? (
   <button
     type="button"
-    onClick={() =>
-      setProductQuantities((current) => ({
-        ...current,
-        [product.id]: Math.max(1, (current[product.id] || 1) - 1)
-      }))
-    }
+    className="cart-btn"
+    onClick={() => handleAddToCart(product.id)}
   >
-    −
+    🛒 Add to Cart
   </button>
+) : (
+  <div className="product-quantity-control">
+    <button
+      type="button"
+      onClick={() =>
+        changeCartQuantity(
+          product.id,
+          Math.max(1, (productQuantities[product.id] || 1) - 1)
+        )
+      }
+    >
+      −
+    </button>
 
-  <span>{productQuantities[product.id] || 1}</span>
+    <span>{productQuantities[product.id] || 1}</span>
 
-  <button
-    type="button"
-    onClick={() =>
-      setProductQuantities((current) => ({
-        ...current,
-        [product.id]: (current[product.id] || 1) + 1
-      }))
-    }
-  >
-    +
-  </button>
-</div>
-
-<button
-  type="button"
-  className="cart-btn"
-  onClick={() => handleAddToCart(product.id)}
->
-  🛒 Add to Cart
-</button>
+    <button
+      type="button"
+      onClick={() =>
+        changeCartQuantity(
+          product.id,
+          (productQuantities[product.id] || 1) + 1
+        )
+      }
+    >
+      +
+    </button>
+  </div>
+)}
     </div>
   </article>
 )

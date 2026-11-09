@@ -2044,14 +2044,60 @@ body.sv-swarm-running .sv-swarm-target.sv-swarm-built {
     }
     #sv-swarm-layer { display: none !important; }
 }
+/* Simple navbar like index.php */
 
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.nav-link {
+    color: var(--text);
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 15px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+}
+
+.cart-icon {
+    font-size: 25px;
+    color: var(--text);
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    transition: transform 0.3s ease;
+}
+
+.cart-icon:hover {
+    transform: scale(1.12);
+}
+
+@media (max-width: 600px) {
+    .nav-right {
+        gap: 13px;
+        flex-wrap: wrap;
+    }
+
+    .nav-link {
+        font-size: 13px;
+    }
+
+    .cart-icon {
+        font-size: 22px;
+    }
+}
 </style>
-<<<<<<< HEAD
-
-=======
 <link rel="stylesheet" href="darkmode/darkmode.css">
 <script src="darkmode/darkmode-head.js"></script>
->>>>>>> ea4156374bbb34fc89446e7526fc9936c4a98b62
 </head>
 
 
@@ -2069,7 +2115,9 @@ body.sv-swarm-running .sv-swarm-target.sv-swarm-built {
         <span>Shop <strong>Vibe</strong></span>
 
     </a>
-
+<span class="welcome">
+    Welcome, <?php echo htmlspecialchars(ucfirst($userName), ENT_QUOTES, 'UTF-8'); ?>
+</span>
 
 
     <button
@@ -2094,25 +2142,21 @@ body.sv-swarm-running .sv-swarm-target.sv-swarm-built {
 
     <div class="nav-right">
 
-        <span class="welcome">
+   
 
-            Welcome, <?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?>
+    <a href="index.php" class="nav-link">Home</a>
 
-        </span>
+    <a href="#products" class="nav-link">Products</a>
 
+    <a href="about.php" class="nav-link">About</a>
 
+    <a href="cart.php" class="cart-icon">
+        🛒
+    </a>
 
-        <a href="#products" class="nav-btn">Products</a>
+    <a href="logout.php" class="nav-link">Logout</a>
 
-        <a href="cart.php" class="nav-btn cart-nav-btn">
-
-            🛒 <span>Cart</span>
-
-        </a>
-
-        <a href="logout.php" class="nav-btn logout-btn">Logout</a>
-
-    </div>
+</div>
 
 </nav>
 
@@ -2131,16 +2175,9 @@ body.sv-swarm-running .sv-swarm-target.sv-swarm-built {
 
 
         <h1>
-<<<<<<< HEAD
-
-            Celebrate Diwali
-
-=======
-            Celebrate Diwali Puja
->>>>>>> ea4156374bbb34fc89446e7526fc9936c4a98b62
-            <span>with Amazing Deals!</span>
-
-        </h1>
+    Welcome to Shop Vibe
+    <span>Shop Your Favourite Products!</span>
+</h1>
 
 
 
@@ -2487,89 +2524,31 @@ document.addEventListener("click", function (event) {
     }
 
 }
+.welcome {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    white-space: nowrap;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+}
 
+@media (max-width: 650px) {
+    .welcome {
+        position: static;
+        transform: none;
+        order: 3;
+        width: 100%;
+        text-align: center;
+        padding: 8px 0;
+    }
+}
 </style>
 
 
-<<<<<<< HEAD
-
-
-
-
-
-
-
-<script>
-/* Swarm Rebuild visual effect — runs only on users_home.php */
-document.addEventListener("DOMContentLoaded", function () {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return;
-
-    const targets = [
-        document.querySelector(".navbar"),
-        document.querySelector(".hero"),
-        document.querySelector(".features"),
-        document.querySelector(".products-section .section-heading"),
-        document.querySelector("#products-root"),
-        ...Array.from(document.querySelectorAll(".products .product-card")).slice(0, 8),
-        document.querySelector(".deal-strip"),
-        document.querySelector("footer")
-    ].filter(Boolean);
-
-    if (!targets.length) return;
-
-    targets.forEach(function (item) { item.classList.add("sv-swarm-target"); });
-    document.body.classList.add("sv-swarm-running");
-
-    const layer = document.createElement("div");
-    layer.id = "sv-swarm-layer";
-    const names = ["Vibe", "Shop", "Build", "Team"];
-    names.forEach(function (name) {
-        const cursor = document.createElement("span");
-        cursor.className = "sv-swarm-cursor";
-        cursor.dataset.name = name;
-        layer.appendChild(cursor);
-    });
-    document.body.appendChild(layer);
-    const cursors = Array.from(layer.children);
-
-    function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-    function moveCursor(cursor, target, index) {
-        const rect = target.getBoundingClientRect();
-        const x = Math.max(18, Math.min(window.innerWidth - 28, rect.left + Math.min(rect.width * (.25 + (index % 3) * .25), rect.width - 12)));
-        const y = Math.max(22, Math.min(window.innerHeight - 32, rect.top + Math.min(35 + (index % 2) * 28, Math.max(25, rect.height - 10))));
-        cursor.classList.add("sv-cursor-active");
-        cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        const ping = document.createElement("span");
-        ping.className = "sv-swarm-ping";
-        ping.style.left = x + "px";
-        ping.style.top = y + "px";
-        layer.appendChild(ping);
-        ping.addEventListener("animationend", () => ping.remove(), { once: true });
-    }
-
-    (async function buildPage() {
-        for (let i = 0; i < targets.length; i++) {
-            const target = targets[i];
-            const cursor = cursors[i % cursors.length];
-            moveCursor(cursor, target, i);
-            await wait(280);
-            target.classList.add("sv-swarm-built");
-            await wait(i < 3 ? 220 : 105);
-        }
-        await wait(650);
-        cursors.forEach(cursor => cursor.classList.remove("sv-cursor-active"));
-        await wait(250);
-        layer.remove();
-        document.body.classList.remove("sv-swarm-running");
-        targets.forEach(target => target.classList.remove("sv-swarm-target", "sv-swarm-built"));
-    })();
-});
-</script>
-
-=======
 <script src="darkmode/darkmode.js"></script>
->>>>>>> ea4156374bbb34fc89446e7526fc9936c4a98b62
 </body>
 
 </html>
