@@ -82,6 +82,16 @@ if (!$result) {
         .out-stock {
             color: #d62828;
         }
+        .low-stock {
+            color: #dc2626;
+            font-weight: 700;
+        }
+        .low-stock-message {
+            color: #dc2626;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
     </style>
 
 <link rel="stylesheet" href="darkmode/darkmode.css">
@@ -141,23 +151,36 @@ if (!$result) {
 
                             <td>
 
-                                <?php if ((int) $product['stock_quantity'] > 0): ?>
-
-                                    <span class="status in-stock">
-                                        In Stock
-                                    </span>
-
-                                <?php else: ?>
-
-                                    <span class="status out-stock">
-                                        Out of Stock
-                                    </span>
-
-                                <?php endif; ?>
-
+                                <td>
+                                    <?php
+                                    $stock = (int) $product['stock_quantity'];
+                                    ?>
+                                    
+                                    <?php if ($stock == 0): ?>
+                                        <span class="status out-stock">
+                                            Out of Stock
+                                        </span>
+                                        <div class="low-stock-message">
+                                            Product Unavailable
+                                        
+                                        </div>
+                                        <?php elseif ($stock < 10): ?>
+                                            <span class="status low-stock">
+                                                Low Stock
+                                            </span>
+                                            <div class="low-stock-message">
+                                                Only <?= $stock ?> products left!
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="status in-stock">
+                                            In Stock
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
                             </td>
-
-                        </tr>
+                        </td>
+                    </tr>
 
                     <?php endwhile; ?>
 

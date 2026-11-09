@@ -1,3 +1,4 @@
+
 <?php
 
 session_start();
@@ -5,29 +6,107 @@ session_start();
 include "db.php";
 include "config.php";
 
+// Keep your existing session_start(), db.php and config.php above.
+
+
+// ==========================================
+// CHECK USER AND CHECKOUT SESSION
+// ==========================================
+
+if (
+    !isset($_SESSION['user_id']) ||
+    !isset($_SESSION['role']) ||
+    $_SESSION['role'] !== 'user' ||
+    empty($_SESSION['cart']) ||
+    empty($_SESSION['checkout_customer']) ||
+    !isset($_SESSION['checkout_total'])
+) {
+    exit("Invalid checkout session. Please restart checkout.");
+}
+
+
+// ==========================================
+// FETCH PRODUCTS AND CHECK STOCK
+// ==========================================
+
 $total = 0;
 $courses = [];
+$quantities = [];
 
-foreach (($_SESSION['cart'] ?? []) as $id) {
+foreach ($_SESSION['cart'] as $cartId) {
 
-    $id = (int)$id;
+    $id = filter_var($cartId, FILTER_VALIDATE_INT);
 
-    $result = mysqli_query(
-        $conn,
-        "SELECT * FROM eproduct WHERE id=$id"
-    );
-
-    $row = mysqli_fetch_assoc($result);
-
-    if (!$row || $row['p_price'] <= 0) {
-        die("Invalid product");
+    if (!$id || $id < 1) {
+        exit("Invalid product in cart.");
     }
 
-    $total += $row['p_price'];
-    $courses[] = $row;
+    $quantities[$id] = ($quantities[$id] ?? 0) + 1;
+}
+
+$stmt = mysqli_prepare(
+    $conn,
+    "SELECT id, p_name, p_price, image, stock_quantity
+     FROM eproduct
+     WHERE id = ?"
+);
+
+if (!$stmt) {
+    exit("Unable to prepare product query.");
+}
+
+foreach ($quantities as $id => $quantity) {
+
+    mysqli_stmt_bind_param($stmt, "i", $id);
+
+    if (!mysqli_stmt_execute($stmt)) {
+        exit("Unable to fetch product.");
+    }
+
+    $result = mysqli_stmt_get_result($stmt);
+    $row = mysqli_fetch_assoc($result);
+
+    if (!$row || !is_numeric($row['p_price']) || $row['p_price'] <= 0) {
+        exit("Invalid or unavailable product.");
+    }
+
+    if ((int)$row['stock_quantity'] < $quantity) {
+        exit(
+            "Insufficient stock for " .
+            htmlspecialchars($row['p_name'], ENT_QUOTES, 'UTF-8')
+        );
+    }
+
+    $total += (float)$row['p_price'] * $quantity;
+
+    // Preserve the existing repeated-product cart format.
+    for ($i = 0; $i < $quantity; $i++) {
+        $courses[] = $row;
+    }
+}
+
+mysqli_stmt_close($stmt);
+
+
+// ==========================================
+// VERIFY CHECKOUT AMOUNT
+// ==========================================
+
+$checkoutTotal = (float)$_SESSION['checkout_total'];
+
+if (
+    abs($total - $checkoutTotal) > 0.01 ||
+    $total <= 0
+) {
+    exit("Checkout amount mismatch. Please restart checkout.");
 }
 
 $amount = (int)round($total * 100);
+
+
+// ==========================================
+// CREATE RAZORPAY ORDER
+// ==========================================
 
 try {
 
@@ -37,8 +116,16 @@ try {
     ]);
 
 } catch (\Throwable $e) {
-    die("Payment setup failed");
+
+    error_log("Razorpay order creation error: " . $e->getMessage());
+
+    exit("Payment setup failed. Please try again.");
 }
+
+
+// ==========================================
+// SAVE RAZORPAY SESSION DETAILS
+// ==========================================
 
 $_SESSION['rzp_order'] = $order['id'];
 $_SESSION['rzp_amount'] = $amount;
