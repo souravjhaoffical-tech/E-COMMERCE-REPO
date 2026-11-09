@@ -1471,6 +1471,6 @@ if (file_exists($manifestPath)) {
 ?>
 
 <script src="darkmode/darkmode.js"></script>
-<script src="diwali.js"></script>
+<script src="chhath.js"></script>
 </body>
 </html>

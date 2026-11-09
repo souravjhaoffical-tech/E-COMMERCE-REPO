@@ -165,13 +165,13 @@ mysqli_stmt_bind_param(
     exit();
 
 } catch (Throwable $e) {
-    if ($conn->errno === 0 || mysqli_ping($conn)) {
-        mysqli_rollback($conn);
-    }
+
+    mysqli_rollback($conn);
 
     error_log("Shop Vibe Razorpay verification error: " . $e->getMessage());
 
     http_response_code(400);
-    echo "Payment verification or order saving failed. Do not pay again immediately; check your Razorpay dashboard and orders table first.";
+
+    echo "Actual Error: " . htmlspecialchars($e->getMessage());
 }
 ?>
