@@ -47,7 +47,7 @@ $userName = htmlspecialchars(
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shop Vibe | Diwali Puja Sale</title>
+<title>Shop Vibe | Chhath Puja Sale</title>
 
 
 
@@ -2175,8 +2175,8 @@ body.sv-swarm-running .sv-swarm-target.sv-swarm-built {
 
 
         <h1>
-    Welcome to Shop Vibe
-    <span>Shop Your Favourite Products!</span>
+        Chhath Puja Sale is Here!
+    <span>With Amazing Deals!</span>
 </h1>
 
 
@@ -2263,7 +2263,7 @@ body.sv-swarm-running .sv-swarm-target.sv-swarm-built {
 
         <h3>🎁 Special Festive Deals</h3>
 
-        <p>Explore your favourite products this Durga Puja!</p>
+        <p>Explore your favourite products this Chhath Puja!</p>
 
     </div>
 
