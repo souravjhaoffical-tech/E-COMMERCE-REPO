@@ -2,10 +2,10 @@
 import { useEffect, useState } from 'react'
 import './Countdown.css'
 
-const SALE_END = new Date('2026-10-25T23:59:00+05:30').getTime()
+const CHHATH_PUJA_START = new Date('2026-11-15T00:00:00+05:30').getTime()
 
 function getTimeLeft() {
-  const difference = Math.max(0, SALE_END - Date.now())
+  const difference = Math.max(0, CHHATH_PUJA_START - Date.now())
 
   return {
     days: Math.floor(difference / 86400000),
@@ -29,7 +29,7 @@ function Countdown() {
   const finished = Object.values(timeLeft).every((value) => value === 0)
 
   if (finished) {
-    return <p className="sale-ended">Sale has ended!</p>
+    return <p className="sale-ended">Chhath Puja has started!</p>
   }
 
   const units = [

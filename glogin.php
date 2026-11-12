@@ -49,6 +49,7 @@ if(isset($_POST['login'])){
                   $_SESSION['pending_name']);
 
             $error = "OTP Sending Failed. Please try again.";
+            $error .= " [" . htmlspecialchars($mail->ErrorInfo) . "]";
 
         }
 

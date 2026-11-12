@@ -38,13 +38,128 @@ function App() {
 
   const [productQuantities, setProductQuantities] = useState({})
   const [cartMessage, setCartMessage] = useState('')
+  const [addedToCart, setAddedToCart] = useState({})
 
   // Wishlist state
   const [wishlist, setWishlist] = useState([])
   const [showWishlist, setShowWishlist] = useState(false)
   const [wishlistMessage, setWishlistMessage] = useState('')
 
+<<<<<<< HEAD
   // Load wishlist
+=======
+// Wishlist state: data comes from PHP + MySQL
+const [wishlist, setWishlist] = useState([])
+const [showWishlist, setShowWishlist] = useState(false)
+const [wishlistMessage, setWishlistMessage] = useState('')
+
+// Load logged-in user's wishlist from database
+useEffect(() => {
+  fetch(
+     `${WISHLIST_API}?action=list`,
+    { credentials: 'include' }
+  )
+    .then(async (response) => {
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Please log in first.')
+      }
+
+      return data
+    })
+    .then((data) => {
+      if (data.success) {
+        setWishlist((data.wishlist || []).map(Number))
+      }
+    })
+    .catch((err) => {
+  if (err.message !== 'Please log in as a user first.') {
+    setWishlistMessage(err.message)
+  }
+})
+}, [])
+
+// Add/remove wishlist item in database
+const toggleWishlist = async (productId) => {
+  setWishlistMessage('')
+
+  try {
+    const response = await fetch(
+      `${WISHLIST_API}?action=toggle`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_id: Number(productId),
+        }),
+      }
+    )
+
+    const data = await response.json()
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || 'Wishlist update failed.')
+    }
+
+    setWishlist((current) => {
+      const id = Number(productId)
+
+      return data.added
+        ? [...new Set([...current, id])]
+        : current.filter((item) => item !== id)
+    })
+  } catch (err) {
+    setWishlistMessage(err.message)
+  }
+}
+const handleAddToCart = async (productId) => {
+  await changeCartQuantity(productId, 1, true)
+}
+
+const changeCartQuantity = async (productId, quantity, firstAdd = false) => {
+  const formData = new FormData()
+  formData.append('id', productId)
+  formData.append('quantity', quantity)
+  formData.append('action', 'set_quantity')
+
+  try {
+    const response = await fetch('add_cart.php', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include'
+    })
+
+    const data = await response.json()
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || 'Could not update cart')
+    }
+
+    setProductQuantities(current => ({
+      ...current,
+      [productId]: quantity
+    }))
+
+    setAddedToCart(current => ({
+      ...current,
+      [productId]: true
+    }))
+
+    if (firstAdd) {
+      setCartMessage('Product added to cart')
+      setTimeout(() => setCartMessage(''), 2500)
+    }
+  } catch (error) {
+    setCartMessage(error.message)
+    setTimeout(() => setCartMessage(''), 2500)
+  }
+}
+  // Fetch products from PHP API
+>>>>>>> 78502e8ebf62ae7a9b40cec04c12f0af3922f664
   useEffect(() => {
     fetch(`${WISHLIST_API}?action=list`, {
       credentials: 'include'
@@ -463,6 +578,7 @@ function App() {
 
                 </div>
 
+<<<<<<< HEAD
                 <div className="product-info">
 
                   <p className="brand">
@@ -481,6 +597,48 @@ function App() {
                   <div className="price">
                     ₹{product.price}
                   </div>
+=======
+{!addedToCart[product.id] ? (
+  <button
+    type="button"
+    className="cart-btn"
+    onClick={() => handleAddToCart(product.id)}
+  >
+    🛒 Add to Cart
+  </button>
+) : (
+  <div className="product-quantity-control">
+    <button
+      type="button"
+      onClick={() =>
+        changeCartQuantity(
+          product.id,
+          Math.max(1, (productQuantities[product.id] || 1) - 1)
+        )
+      }
+    >
+      −
+    </button>
+
+    <span>{productQuantities[product.id] || 1}</span>
+
+    <button
+      type="button"
+      onClick={() =>
+        changeCartQuantity(
+          product.id,
+          (productQuantities[product.id] || 1) + 1
+        )
+      }
+    >
+      +
+    </button>
+  </div>
+)}
+    </div>
+  </article>
+)
+>>>>>>> 78502e8ebf62ae7a9b40cec04c12f0af3922f664
 
                   <div className="product-quantity-control">
 

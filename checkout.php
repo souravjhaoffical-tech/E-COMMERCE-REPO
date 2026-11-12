@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 require_once "db.php";
@@ -12,7 +13,7 @@ if (empty($cart)) {
     exit();
 }
 
- // Login check
+// Login check
 if (
     !isset($_SESSION['user_id']) ||
     !isset($_SESSION['role']) ||
@@ -60,14 +61,18 @@ if (empty($products)) {
     exit();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Checkout - Shop Vibe</title>
 
     <style>
@@ -207,6 +212,102 @@ if (empty($products)) {
             line-height: 1.5;
         }
 
+        /* Form improvements */
+        .checkout-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkout-form label:not(.payment-option) {
+            margin-bottom: -5px;
+        }
+
+        .checkout-form input:not([type="radio"]),
+        .checkout-form textarea {
+            transition: 0.3s ease;
+        }
+
+        .checkout-form input:not([type="radio"]):focus,
+        .checkout-form textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12);
+        }
+
+        /* Payment options */
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 13px;
+            margin: 0;
+            border: 1px solid #e8e8e8;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .payment-option:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .payment-option input[type="radio"] {
+            width: auto;
+            margin: 0;
+            accent-color: #667eea;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .payment-heading {
+            font-size: 17px;
+            margin: 15px 0 5px;
+        }
+
+        /* Confirm Order Button */
+        .confirm-order-btn {
+            width: 100%;
+            min-height: 52px;
+            padding: 13px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea, #5266d8);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+
+            box-shadow: 0 5px 14px rgba(102, 126, 234, 0.25);
+            transition: all 0.25s ease;
+        }
+
+        .confirm-order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+        }
+
+        .confirm-order-btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-arrow {
+            font-size: 22px;
+            transition: transform 0.25s ease;
+        }
+
+        .confirm-order-btn:hover .btn-arrow {
+            transform: translateX(5px);
+        }
+
+        /* Mobile responsive */
         @media (max-width: 700px) {
             .checkout-layout {
                 grid-template-columns: 1fr;
@@ -220,12 +321,30 @@ if (empty($products)) {
                 padding: 20px;
             }
         }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 18px 12px;
+            }
+
+            .checkout-card {
+                padding: 17px;
+            }
+
+            .confirm-order-btn {
+                min-height: 48px;
+                font-size: 15px;
+            }
+        }
     </style>
-<link rel="stylesheet" href="darkmode/darkmode.css">
-<script src="darkmode/darkmode-head.js"></script>
+
+    <link rel="stylesheet" href="darkmode/darkmode.css">
+    <script src="darkmode/darkmode-head.js"></script>
+
 </head>
 
 <body>
+
 <div class="checkout-container">
 
     <header class="heading">
@@ -235,66 +354,103 @@ if (empty($products)) {
 
     <div class="checkout-layout">
 
+        <!-- Delivery Details -->
         <section class="checkout-card">
+
             <h2>📦 Delivery Details</h2>
-            
-<form action="place_order.php" method="POST">
 
-    <label for="customer_name">Full Name</label>
-    <input type="text" id="customer_name" name="customer_name"
-           required maxlength="100">
+            <form action="place_order.php" method="POST" class="checkout-form">
 
-    <label for="phone">Phone Number</label>
-    <input type="tel" id="phone" name="phone"
-           required maxlength="15" pattern="[0-9+ -]{10,15}">
+                <label for="customer_name">Full Name</label>
+                <input
+                    type="text"
+                    id="customer_name"
+                    name="customer_name"
+                    required
+                    maxlength="100"
+                >
 
-    <label for="address">Full Address</label>
-    <textarea id="address" name="address"
-              required maxlength="500"></textarea>
+                <label for="phone">Phone Number</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    required
+                    maxlength="15"
+                    pattern="[0-9+ -]{10,15}"
+                >
 
-    <label for="city">City</label>
-    <input type="text" id="city" name="city"
-           required maxlength="100">
+                <label for="address">Full Address</label>
+                <textarea
+                    id="address"
+                    name="address"
+                    required
+                    maxlength="500"
+                ></textarea>
 
-    <label for="pincode">PIN Code</label>
-    <input type="text" id="pincode" name="pincode"
-           required pattern="[0-9]{6}" maxlength="6">
+                <label for="city">City</label>
+                <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    required
+                    maxlength="100"
+                >
 
-    <h3>Select Payment Method</h3>
+                <label for="pincode">PIN Code</label>
+                <input
+                    type="text"
+                    id="pincode"
+                    name="pincode"
+                    required
+                    pattern="[0-9]{6}"
+                    maxlength="6"
+                >
 
-    <label>
-        <input type="radio" name="payment_method"
-               value="COD" required>
-        Cash on Delivery
-    </label>
+                <h3 class="payment-heading">Select Payment Method</h3>
 
-    <br>
+                <label class="payment-option">
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="COD"
+                        required
+                    >
+                    <span>Cash on Delivery</span>
+                </label>
 
-    <label>
-        <input type="radio" name="payment_method"
-               value="Razorpay" required>
-        Pay Online with Razorpay
-    </label>
+                <label class="payment-option">
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="Razorpay"
+                        required
+                    >
+                    <span>Pay Online with Razorpay</span>
+                </label>
 
-    <br><br>
+                <button type="submit" name="order" value="1" class="confirm-order-btn">
+                    <span>Confirm Order</span>
+                    <span class="btn-arrow">→</span>
+                </button>
 
-    <button type="submit" name="order" value="1">
-        Confirm Order →
-    </button>
-
-</form>
-
+            </form>
 
             <a class="back-link" href="cart.php">
                 ← Back to Cart
             </a>
+
         </section>
 
+        <!-- Order Summary -->
         <section class="checkout-card">
+
             <h2>🛒 Order Summary</h2>
 
             <?php foreach ($products as $product): ?>
+
                 <div class="product-row">
+
                     <span class="product-name">
                         <?= htmlspecialchars(
                             $product['p_name'],
@@ -306,19 +462,28 @@ if (empty($products)) {
                     <span class="product-price">
                         ₹<?= number_format($product['p_price'], 2) ?>
                     </span>
+
                 </div>
+
             <?php endforeach; ?>
 
             <div class="total-row">
+
                 <span>Total</span>
+
                 <span class="total-amount">
                     ₹<?= number_format($total, 2) ?>
                 </span>
+
             </div>
+
         </section>
 
     </div>
+
 </div>
+
 <script src="darkmode/darkmode.js"></script>
+
 </body>
 </html>

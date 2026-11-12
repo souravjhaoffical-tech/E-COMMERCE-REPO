@@ -377,7 +377,35 @@ button:hover {
 button:active {
     transform: translateY(0);
 }
+/* Google Button */
+.google-btn {
+    width: 100%;
+    min-height: 47px;
+    border: 1px solid #dfe2ed;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #252b45;
+    font-size: 15px;
+    font-weight: bold;
+    background: #ffffff;
+    transition: 0.3s;
+    margin-bottom: 14px;
+}
 
+.google-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.google-btn:hover {
+    background: #f5f6fa;
+    border-color: #667eea;
+}
 /* Error Message */
 .error-message {
     background: #fff0f0;
@@ -645,6 +673,10 @@ button:active {
                     </label>
                 </div>
             </div>
+            <a href="g_register.php" class="google-btn">
+    <img src="https://www.google.com/favicon.ico" alt="Google">
+    Sign in with Google
+</a>
             <button name="login"> Login </button>
             <div class="create-account">
             <a href="register.php">Create an Account</a>
