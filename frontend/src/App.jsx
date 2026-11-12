@@ -1,148 +1,200 @@
-
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
-const WISHLIST_API = `${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/E-COMMERCE-REPO/wishlist_api.php`
+
+// PHP backend base URL (XAMPP)
+const PHP_BASE_URL = `${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/E-COMMERCE-REPO`
+
+const PRODUCTS_API = `${PHP_BASE_URL}/products_api.php`
+const WISHLIST_API = `${PHP_BASE_URL}/wishlist_api.php`
+const ADD_CART_API = `${PHP_BASE_URL}/add_cart.php`
+// Convert database image path into PHP image URL
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return '';
+
+  let fileName = String(imagePath).trim();
+
+  // Complete URLs ko unchanged rakho
+  if (/^(https?:\/\/|data:)/i.test(fileName)) {
+    return fileName;
+  }
+
+  // Extra hash prefix remove karo
+  fileName = fileName.split('/').pop();
+  fileName = fileName.replace(/^[a-f0-9]{8,}_/i, '');
+
+  return `${PHP_BASE_URL}/images/${encodeURIComponent(fileName)}`;
+};
 
 function App() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
   const [search, setSearch] = useState('')
   const [selectedBrand, setSelectedBrand] = useState('All')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [sortOrder, setSortOrder] = useState('default')
   const [showFilters, setShowFilters] = useState(false)
+
   const [productQuantities, setProductQuantities] = useState({})
   const [cartMessage, setCartMessage] = useState('')
 
+  // Wishlist state
+  const [wishlist, setWishlist] = useState([])
+  const [showWishlist, setShowWishlist] = useState(false)
+  const [wishlistMessage, setWishlistMessage] = useState('')
 
-// Wishlist state: data comes from PHP + MySQL
-const [wishlist, setWishlist] = useState([])
-const [showWishlist, setShowWishlist] = useState(false)
-const [wishlistMessage, setWishlistMessage] = useState('')
-
-// Load logged-in user's wishlist from database
-useEffect(() => {
-  fetch(
-     `${WISHLIST_API}?action=list`,
-    { credentials: 'include' }
-  )
-    .then(async (response) => {
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Please log in first.')
-      }
-
-      return data
-    })
-    .then((data) => {
-      if (data.success) {
-        setWishlist((data.wishlist || []).map(Number))
-      }
-    })
-    .catch((err) => {
-  if (err.message !== 'Please log in as a user first.') {
-    setWishlistMessage(err.message)
-  }
-})
-}, [])
-
-// Add/remove wishlist item in database
-const toggleWishlist = async (productId) => {
-  setWishlistMessage('')
-
-  try {
-    const response = await fetch(
-      `${WISHLIST_API}?action=toggle`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          product_id: Number(productId),
-        }),
-      }
-    )
-
-    const data = await response.json()
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.message || 'Wishlist update failed.')
-    }
-
-    setWishlist((current) => {
-      const id = Number(productId)
-
-      return data.added
-        ? [...new Set([...current, id])]
-        : current.filter((item) => item !== id)
-    })
-  } catch (err) {
-    setWishlistMessage(err.message)
-  }
-}
-
-const handleAddToCart = async (productId) => {
-  const quantity = productQuantities[productId] || 1
-
-  const formData = new FormData()
-  formData.append('id', productId)
-  formData.append('quantity', quantity)
-
-  try {
-    const response = await fetch('add_cart.php', {
-      method: 'POST',
-      body: formData
-    })
-
-    const data = await response.json()
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.message || 'Could not add product')
-    }
-
-    setCartMessage(
-      `${quantity} ${quantity === 1 ? 'product' : 'products'} added to cart`
-    )
-
-    setTimeout(() => setCartMessage(''), 2500)
-
-    setProductQuantities((current) => ({
-      ...current,
-      [productId]: 1
-    }))
-
-  } catch (error) {
-    setCartMessage(error.message)
-    setTimeout(() => setCartMessage(''), 2500)
-  }
-}
-  // Fetch products from PHP API
+  // Load wishlist
   useEffect(() => {
-    
-      
-fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/E-COMMERCE-REPO/api_products.php`)
+    fetch(`${WISHLIST_API}?action=list`, {
+      credentials: 'include'
+    })
+      .then(async (response) => {
+        const data = await response.json()
 
-      .then((response) => {
         if (!response.ok) {
-          throw new Error('Could not load products')
+          throw new Error(data.message || 'Please log in first.')
         }
 
-        return response.json()
+        return data
       })
       .then((data) => {
-        if (data.success === false) {
-          throw new Error(data.message || 'Could not load products')
+        if (data.success) {
+          setWishlist((data.wishlist || []).map(Number))
+        }
+      })
+      .catch((err) => {
+        if (err.message !== 'Please log in as a user first.') {
+          setWishlistMessage(err.message)
+        }
+      })
+  }, [])
+
+  // Add or remove wishlist item
+  const toggleWishlist = async (productId) => {
+    setWishlistMessage('')
+
+    try {
+      const response = await fetch(
+        `${WISHLIST_API}?action=toggle`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            product_id: Number(productId)
+          })
+        }
+      )
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Wishlist update failed.')
+      }
+
+      setWishlist((current) => {
+        const id = Number(productId)
+
+        return data.added
+          ? [...new Set([...current, id])]
+          : current.filter((item) => item !== id)
+      })
+    } catch (err) {
+      setWishlistMessage(err.message)
+    }
+  }
+
+  // Add product to cart
+  const handleAddToCart = async (productId) => {
+    const quantity = productQuantities[productId] || 1
+
+    const formData = new FormData()
+    formData.append('id', productId)
+    formData.append('quantity', quantity)
+
+    try {
+      const response = await fetch(ADD_CART_API, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Could not add product')
+      }
+
+      setCartMessage(
+        `${quantity} ${quantity === 1 ? 'product' : 'products'} added to cart`
+      )
+
+      setTimeout(() => setCartMessage(''), 2500)
+
+      setProductQuantities((current) => ({
+        ...current,
+        [productId]: 1
+      }))
+    } catch (error) {
+      setCartMessage(error.message)
+      setTimeout(() => setCartMessage(''), 2500)
+    }
+  }
+
+  // Fetch products from PHP + MySQL API
+  useEffect(() => {
+    fetch(PRODUCTS_API, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+      .then(async (response) => {
+        const responseText = await response.text()
+        let data
+
+        try {
+          data = JSON.parse(responseText)
+        } catch {
+          throw new Error(
+            'PHP API ne JSON return nahi kiya. products_api.php check karo.'
+          )
         }
 
-        setProducts(data.products || [])
+        if (!response.ok || !data.success) {
+          throw new Error(
+            data.message || `Products API error (${response.status})`
+          )
+        }
+
+        if (!Array.isArray(data.products)) {
+          throw new Error('API response mein products list nahi mili.')
+        }
+
+        return data
       })
-      .catch(() => {
+      .then((data) => {
+        const formattedProducts = (data.products || []).map((item) => ({
+          id: item.id,
+          name: item.p_name,
+          brand: item.p_brand,
+          price: item.p_price,
+          image: item.image,
+          category: item.category || item.categories || '',
+          stock_quantity: item.stock_quantity
+        }))
+
+        setProducts(formattedProducts)
+      })
+      .catch((err) => {
+        console.error('Product API Error:', err)
+
         setError(
-          'Products load nahi ho paaye. Please refresh the page.'
+          err.message || 'Products load nahi ho paaye. Please refresh the page.'
         )
       })
       .finally(() => {
@@ -158,7 +210,7 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
         products
           .map((product) => product.brand)
           .filter(Boolean)
-      ),
+      )
     ]
   }, [products])
 
@@ -170,7 +222,7 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
         products
           .map((product) => product.category)
           .filter(Boolean)
-      ),
+      )
     ]
   }, [products])
 
@@ -192,8 +244,8 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
         product.category === selectedCategory
 
       const matchesWishlist =
-  !showWishlist || wishlist.includes(Number(product.id))
-        
+        !showWishlist ||
+        wishlist.includes(Number(product.id))
 
       return (
         matchesSearch &&
@@ -221,14 +273,14 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
     selectedCategory,
     sortOrder,
     showWishlist,
-    wishlist,
+    wishlist
   ])
 
-  
-  // Premium product loading skeleton
+  // Loading skeleton
   if (loading) {
     return (
       <div className="react-shop">
+
         <div className="product-toolbar sv-skeleton-toolbar">
           <div className="sv-skeleton sv-skeleton-filter" />
           <div className="sv-skeleton sv-skeleton-filter" />
@@ -236,7 +288,11 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
           <div className="sv-skeleton sv-skeleton-filter" />
         </div>
 
-        <div className="sv-skeleton-grid" aria-label="Loading products" role="status">
+        <div
+          className="sv-skeleton-grid"
+          aria-label="Loading products"
+          role="status"
+        >
           {Array.from({ length: 8 }).map((_, index) => (
             <div className="sv-skeleton-card" key={index}>
               <div className="sv-skeleton sv-skeleton-image" />
@@ -246,26 +302,38 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
               <div className="sv-skeleton sv-skeleton-button" />
             </div>
           ))}
-          <span className="sv-sr-only">Loading products, please wait...</span>
+
+          <span className="sv-sr-only">
+            Loading products, please wait...
+          </span>
         </div>
+
       </div>
     )
   }
 
-
   // Error state
   if (error) {
     return (
-      <p className="react-message">
-        {error}
-      </p>
+      <div className="react-message" role="alert">
+        <p>{error}</p>
+
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
     )
   }
 
   // Product section
   return (
     <div className="react-shop">
+
       <div className="product-toolbar">
+
         <input
           type="search"
           className="product-search"
@@ -277,44 +345,44 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
         />
 
         {showFilters && (
-  <>
-    <select
-      className="brand-filter"
-      value={selectedBrand}
-      onChange={(event) => setSelectedBrand(event.target.value)}
-    >
-      {brands.map((brand) => (
-        <option key={brand} value={brand}>
-          {brand === 'All' ? 'All Brands' : brand}
-        </option>
-      ))}
-    </select>
+          <>
 
-    <select
-      className="category-filter"
-      value={selectedCategory}
-      onChange={(event) => setSelectedCategory(event.target.value)}
-    >
-      {categories.map((category) => (
-        <option key={category} value={category}>
-          {category === 'All' ? 'All Categories' : category}
-        </option>
-      ))}
-    </select>
+            <select
+              className="brand-filter"
+              value={selectedBrand}
+              onChange={(event) => setSelectedBrand(event.target.value)}
+            >
+              {brands.map((brand) => (
+                <option key={brand} value={brand}>
+                  {brand === 'All' ? 'All Brands' : brand}
+                </option>
+              ))}
+            </select>
 
-    <select
-      className="sort-filter"
-      value={sortOrder}
-      onChange={(event) => setSortOrder(event.target.value)}
-    >
-      <option value="default">Sort by Price</option>
-      <option value="low-high">Price: Low to High</option>
-      <option value="high-low">Price: High to Low</option>
-    </select>
-  </>
-)}
+            <select
+              className="category-filter"
+              value={selectedCategory}
+              onChange={(event) => setSelectedCategory(event.target.value)}
+            >
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category === 'All' ? 'All Categories' : category}
+                </option>
+              ))}
+            </select>
 
-        
+            <select
+              className="sort-filter"
+              value={sortOrder}
+              onChange={(event) => setSortOrder(event.target.value)}
+            >
+              <option value="default">Sort by Price</option>
+              <option value="low-high">Price: Low to High</option>
+              <option value="high-low">Price: High to Low</option>
+            </select>
+
+          </>
+        )}
 
         <button
           type="button"
@@ -324,17 +392,21 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
         >
           ❤️ Wishlist ({wishlist.length})
         </button>
+
       </div>
+
       {wishlistMessage && (
-  <p className="react-message" role="status">
-    {wishlistMessage}
-  </p>
-)}
+        <p className="react-message" role="status">
+          {wishlistMessage}
+        </p>
+      )}
+
       {cartMessage && (
-  <div className="cart-notification" role="status">
-    ✓ {cartMessage}
-  </div>
-)}
+        <div className="cart-notification" role="status">
+          ✓ {cartMessage}
+        </div>
+      )}
+
       <p className="product-count">
         {showWishlist ? 'Wishlist: ' : 'Showing '}
         {filteredProducts.length} of{' '}
@@ -342,100 +414,128 @@ fetch(`${window.location.protocol}//${window.location.hostname}/E-COMMERCE-SITE/
       </p>
 
       {filteredProducts.length === 0 ? (
+
         <p className="react-message">
           {showWishlist
             ? 'Your wishlist is empty. Add products using the heart button!'
             : 'No matching products found. Try another search.'}
         </p>
+
       ) : (
+
         <div className="react-products">
+
           {filteredProducts.map((product) => {
             const isWishlisted = wishlist.includes(Number(product.id))
 
-           
-return (
-  <article className="product-card" key={product.id}>
-    <div className="product-image-wrap">
-      <img
-        className="product-image"
-        src={product.image}
-        alt={product.name || 'Product'}
-        loading="lazy"
-      />
+            return (
+              <article className="product-card" key={product.id}>
 
-      <span className="product-badge">SHOP VIBE</span>
+                <div className="product-image-wrap">
 
-      <button
-        type="button"
-        className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
-        onClick={() => toggleWishlist(product.id)}
-        aria-label={
-          isWishlisted
-            ? 'Remove from wishlist'
-            : 'Add to wishlist'
-        }
-        aria-pressed={isWishlisted}
-      >
-        {isWishlisted ? '❤️' : '🤍'}
-      </button>
-    </div>
+                <img
+  className="product-image"
+  src={getImageUrl(product.image)}
+  alt={product.name || 'Product'}
+  loading="lazy"
+  onError={(e) => {
+    console.error('Image not found:', e.currentTarget.src);
+  }}
+/>
 
-    <div className="product-info">
-      <p className="brand">{product.brand || 'Shop Vibe'}</p>
+                  <span className="product-badge">
+                    SHOP VIBE
+                  </span>
 
-      <h3>
-        <a
-          className="product-title-link"
-          href={`product_details.php?id=${encodeURIComponent(product.id)}`}
-        >
-          {product.name || 'Untitled Product'}
-        </a>
-      </h3>
+                  <button
+                    type="button"
+                    className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
+                    onClick={() => toggleWishlist(product.id)}
+                    aria-label={
+                      isWishlisted
+                        ? 'Remove from wishlist'
+                        : 'Add to wishlist'
+                    }
+                    aria-pressed={isWishlisted}
+                  >
+                    {isWishlisted ? '❤️' : '🤍'}
+                  </button>
 
-      <div className="price">₹{product.price}</div>
+                </div>
 
-<div className="product-quantity-control">
-  <button
-    type="button"
-    onClick={() =>
-      setProductQuantities((current) => ({
-        ...current,
-        [product.id]: Math.max(1, (current[product.id] || 1) - 1)
-      }))
-    }
-  >
-    −
-  </button>
+                <div className="product-info">
 
-  <span>{productQuantities[product.id] || 1}</span>
+                  <p className="brand">
+                    {product.brand || 'Shop Vibe'}
+                  </p>
 
-  <button
-    type="button"
-    onClick={() =>
-      setProductQuantities((current) => ({
-        ...current,
-        [product.id]: (current[product.id] || 1) + 1
-      }))
-    }
-  >
-    +
-  </button>
-</div>
+                  <h3>
+                    <a
+                      className="product-title-link"
+                      href={`${PHP_BASE_URL}/product_details.php?id=${encodeURIComponent(product.id)}`}
+                    >
+                      {product.name || 'Untitled Product'}
+                    </a>
+                  </h3>
 
-<button
-  type="button"
-  className="cart-btn"
-  onClick={() => handleAddToCart(product.id)}
->
-  🛒 Add to Cart
-</button>
-    </div>
-  </article>
-)
+                  <div className="price">
+                    ₹{product.price}
+                  </div>
 
+                  <div className="product-quantity-control">
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setProductQuantities((current) => ({
+                          ...current,
+                          [product.id]: Math.max(
+                            1,
+                            (current[product.id] || 1) - 1
+                          )
+                        }))
+                      }
+                    >
+                      −
+                    </button>
+
+                    <span>
+                      {productQuantities[product.id] || 1}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setProductQuantities((current) => ({
+                          ...current,
+                          [product.id]:
+                            (current[product.id] || 1) + 1
+                        }))
+                      }
+                    >
+                      +
+                    </button>
+
+                  </div>
+
+                  <button
+                    type="button"
+                    className="cart-btn"
+                    onClick={() => handleAddToCart(product.id)}
+                  >
+                    🛒 Add to Cart
+                  </button>
+
+                </div>
+
+              </article>
+            )
           })}
+
         </div>
+
       )}
+
     </div>
   )
 }
