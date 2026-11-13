@@ -46,7 +46,7 @@ const getImageUrl = (imagePath) => {
 
 
 
-  return `${PHP_BASE_URL}/images/${encodeURIComponent(fileName)}`;
+  return `${PHP_BASE_URL}/uploads/${encodeURIComponent(fileName)}`;
 
 };
 
@@ -966,97 +966,66 @@ const toggleWishlist = async (productId) => {
 
                   </div>
 
+{Number(product.stock_quantity ?? 0) > 0 ? (
+  <>
+    <div className="product-quantity-control">
+      <button
+        type="button"
+        onClick={() =>
+          setProductQuantities((current) => ({
+            ...current,
+            [product.id]: Math.max(
+              1,
+              (current[product.id] || 1) - 1
+            )
+          }))
+        }
+      >
+        −
+      </button>
 
+      <span>
+        {productQuantities[product.id] || 1}
+      </span>
 
-                  <div className="product-quantity-control">
+      <button
+        type="button"
+        disabled={
+          (productQuantities[product.id] || 1) >=
+          Number(product.stock_quantity)
+        }
+        onClick={() =>
+          setProductQuantities((current) => ({
+            ...current,
+            [product.id]: Math.min(
+              Number(product.stock_quantity),
+              (current[product.id] || 1) + 1
+            )
+          }))
+        }
+      >
+        +
+      </button>
+    </div>
 
-
-
-                    <button
-
-                      type="button"
-
-                      onClick={() =>
-
-                        setProductQuantities((current) => ({
-
-                          ...current,
-
-                          [product.id]: Math.max(
-
-                            1,
-
-                            (current[product.id] || 1) - 1
-
-                          )
-
-                        }))
-
-                      }
-
-                    >
-
-                      −
-
-                    </button>
-
-
-
-                    <span>
-
-                      {productQuantities[product.id] || 1}
-
-                    </span>
-
-
-
-                    <button
-
-                      type="button"
-
-                      onClick={() =>
-
-                        setProductQuantities((current) => ({
-
-                          ...current,
-
-                          [product.id]:
-
-                            (current[product.id] || 1) + 1
-
-                        }))
-
-                      }
-
-                    >
-
-                      +
-
-                    </button>
-
-
-
-                  </div>
-
-
-
-                  <button
-
-                    type="button"
-
-                    className="cart-btn"
-
-                    onClick={() => handleAddToCart(product.id)}
-
-                  >
-
-                    🛒 Add to Cart
-
-                  </button>
-
-
-
-                </div>
+    <button
+      type="button"
+      className="cart-btn"
+      onClick={() => handleAddToCart(product.id)}
+    >
+      🛒 Add to Cart
+    </button>
+  </>
+) : (
+  <button
+    type="button"
+    className="cart-btn"
+    disabled
+  >
+    Out of Stock
+  </button>
+)}
+</div>
 
 
 

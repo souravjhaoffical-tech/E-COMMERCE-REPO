@@ -44,7 +44,6 @@ $sql = "SELECT
             p_price,
             image,
             category,
-            categories,
             stock_quantity
         FROM eproduct
         ORDER BY id DESC";
