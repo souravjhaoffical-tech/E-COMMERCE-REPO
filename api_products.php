@@ -23,7 +23,7 @@ if (!$conn) {
     exit;
 }
 
-$sql = "SELECT id, image, p_brand, p_name, p_price  FROM eproduct ORDER BY id DESC";
+$sql = "SELECT id, image, p_brand, p_name, p_price, stock_quantity FROM eproduct ORDER BY id DESC";
 $result = mysqli_query($conn, $sql);
 
 if (!$result) {
@@ -46,6 +46,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         "name" => $row["p_name"] ?? "",
         "brand" => $row["p_brand"] ?? "",
         "price" => (float) $row["p_price"],
+        "stock_quantity" => (int) $row["stock_quantity"],
         "image" => $imageName !== ""
         ? "http://" . $_SERVER['HTTP_HOST'] . "/E-COMMERCE-SITE/E-COMMERCE-REPO/uploads/" . rawurlencode($imageName)
         : null

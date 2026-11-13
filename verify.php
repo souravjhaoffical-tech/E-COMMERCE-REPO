@@ -223,7 +223,7 @@ try {
             throw new Exception("Invalid product price.");
         }
 
-        $product['p_price'] = (int)$product['p_price'];
+        $product['p_price'] = (float)$product['p_price'];
         $product['quantity'] = $quantity;
 
         $products[] = $product;
@@ -307,7 +307,7 @@ try {
 
         $productId = (int)$product['id'];
         $productName = $product['p_name'];
-        $price = (int)$product['p_price'];
+        $price = (float)$product['p_price'];
         $quantity = (int)$product['quantity'];
 
         // Store total amount only on the first product row.
@@ -315,7 +315,7 @@ try {
 
         mysqli_stmt_bind_param(
             $insert,
-            "iisiisssssssds",
+            "iisdisssssssds",
             $userId,
             $productId,
             $productName,

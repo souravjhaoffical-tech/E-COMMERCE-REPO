@@ -244,7 +244,7 @@ try {
 
         $productId = (int)$product['id'];
         $productName = $product['p_name'];
-        $price = (int)$product['p_price'];
+        $price = (float)$product['p_price'];
         $quantity = (int)$product['quantity'];
 
         // Save total amount only in the first product row.
@@ -252,7 +252,7 @@ try {
 
         mysqli_stmt_bind_param(
             $insert,
-            "iisiissssssds",
+            "iisdissssssds",
             $userId,
             $productId,
             $productName,
