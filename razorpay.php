@@ -119,9 +119,11 @@ try {
 
     error_log("Razorpay order creation error: " . $e->getMessage());
 
-    exit("Payment setup failed. Please try again.");
-}
+    echo "Razorpay Error: " .
+         htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
 
+    exit();
+}
 
 // ==========================================
 // SAVE RAZORPAY SESSION DETAILS

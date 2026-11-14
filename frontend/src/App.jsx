@@ -20,33 +20,33 @@ const ADD_CART_API = `${PHP_BASE_URL}/add_cart.php`
 
 const getImageUrl = (imagePath) => {
 
-  if (!imagePath) return '';
+  if (!imagePath) return '';
 
 
 
-  let fileName = String(imagePath).trim();
+  let fileName = String(imagePath).trim();
 
 
 
-  // Complete URLs ko unchanged rakho
+  // Complete URLs ko unchanged rakho
 
-  if (/^(https?:\/\/|data:)/i.test(fileName)) {
+  if (/^(https?:\/\/|data:)/i.test(fileName)) {
 
-    return fileName;
+    return fileName;
 
-  }
-
-
-
-  // Extra hash prefix remove karo
-
-  fileName = fileName.split('/').pop();
-
-  fileName = fileName.replace(/^[a-f0-9]{8,}_/i, '');
+  }
 
 
 
-  return `${PHP_BASE_URL}/uploads/${encodeURIComponent(fileName)}`;
+  // Extra hash prefix remove karo
+
+  fileName = fileName.split('/').pop();
+
+  fileName = fileName.replace(/^[a-f0-9]{8,}_/i, '');
+
+
+
+  return `${PHP_BASE_URL}/uploads/${encodeURIComponent(fileName)}`;
 
 };
 
@@ -54,35 +54,35 @@ const getImageUrl = (imagePath) => {
 
 function App() {
 
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([])
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
 
-  const [error, setError] = useState('')
-
-
-
-  const [search, setSearch] = useState('')
-
-  const [selectedBrand, setSelectedBrand] = useState('All')
-
-  const [selectedCategory, setSelectedCategory] = useState('All')
-
-  const [sortOrder, setSortOrder] = useState('default')
-
-  const [showFilters, setShowFilters] = useState(false)
+  const [error, setError] = useState('')
 
 
 
-  const [productQuantities, setProductQuantities] = useState({})
+  const [search, setSearch] = useState('')
 
-  const [cartMessage, setCartMessage] = useState('')
+  const [selectedBrand, setSelectedBrand] = useState('All')
 
-  const [addedToCart, setAddedToCart] = useState({})
+  const [selectedCategory, setSelectedCategory] = useState('All')
+
+  const [sortOrder, setSortOrder] = useState('default')
+
+  const [showFilters, setShowFilters] = useState(false)
 
 
 
-  // Load wishlist
+  const [productQuantities, setProductQuantities] = useState({})
+
+  const [cartMessage, setCartMessage] = useState('')
+
+  const [addedToCart, setAddedToCart] = useState({})
+
+
+
+  // Load wishlist
 
 // Wishlist state: data comes from PHP + MySQL
 
@@ -98,49 +98,49 @@ const [wishlistMessage, setWishlistMessage] = useState('')
 
 useEffect(() => {
 
-  fetch(
+  fetch(
 
-     `${WISHLIST_API}?action=list`,
+     `${WISHLIST_API}?action=list`,
 
-    { credentials: 'include' }
+    { credentials: 'include' }
 
-  )
+  )
 
-    .then(async (response) => {
+    .then(async (response) => {
 
-      const data = await response.json()
-
-
-
-      if (!response.ok) {
-
-        throw new Error(data.message || 'Please log in first.')
-
-      }
+      const data = await response.json()
 
 
 
-      return data
+      if (!response.ok) {
 
-    })
+        throw new Error(data.message || 'Please log in first.')
 
-    .then((data) => {
+      }
 
-      if (data.success) {
 
-        setWishlist((data.wishlist || []).map(Number))
 
-      }
+      return data
 
-    })
+    })
 
-    .catch((err) => {
+    .then((data) => {
 
-  if (err.message !== 'Please log in as a user first.') {
+      if (data.success) {
 
-    setWishlistMessage(err.message)
+        setWishlist((data.wishlist || []).map(Number))
 
-  }
+      }
+
+    })
+
+    .catch((err) => {
+
+  if (err.message !== 'Please log in as a user first.') {
+
+    setWishlistMessage(err.message)
+
+  }
 
 })
 
@@ -152,902 +152,959 @@ useEffect(() => {
 
 const toggleWishlist = async (productId) => {
 
-  setWishlistMessage('')
+  setWishlistMessage('')
 
 
 
-  try {
+  try {
 
-    const response = await fetch(
+    const response = await fetch(
 
-      `${WISHLIST_API}?action=toggle`,
+      `${WISHLIST_API}?action=toggle`,
 
-      {
+      {
 
-        method: 'POST',
+        method: 'POST',
 
-        credentials: 'include',
+        credentials: 'include',
 
-        headers: {
+        headers: {
 
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
 
-        },
+        },
 
-        body: JSON.stringify({
+        body: JSON.stringify({
 
-          product_id: Number(productId),
+          product_id: Number(productId),
 
-        }),
+        }),
 
-      }
+      }
 
-    )
-
-
-
-    const data = await response.json()
+    )
 
 
 
-    if (!response.ok || !data.success) {
-
-      throw new Error(data.message || 'Wishlist update failed.')
-
-    }
+    const data = await response.json()
 
 
 
-    setWishlist((current) => {
+    if (!response.ok || !data.success) {
 
-      const id = Number(productId)
+      throw new Error(data.message || 'Wishlist update failed.')
+
+    }
 
 
 
-      return data.added
+    setWishlist((current) => {
 
-        ? [...new Set([...current, id])]
+      const id = Number(productId)
 
-        : current.filter((item) => item !== id)
 
-    })
 
-  } catch (err) {
+      return data.added
 
-    setWishlistMessage(err.message)
+        ? [...new Set([...current, id])]
 
-  }
+        : current.filter((item) => item !== id)
+
+    })
+
+  } catch (err) {
+
+    setWishlistMessage(err.message)
+
+  }
 
 }
 
-// Add product to cart
+// Add product to cart / update cart quantity
 
-  const handleAddToCart = async (productId) => {
+  const handleAddToCart = async (productId, quantity = 1) => {
 
-    const quantity = productQuantities[productId] || 1
+    const formData = new FormData()
 
+    formData.append('id', productId)
 
+    formData.append('quantity', quantity)
 
-    const formData = new FormData()
+    // add_cart.php requires this action for React requests
 
-    formData.append('id', productId)
+    formData.append('action', 'set_quantity')
 
-    formData.append('quantity', quantity)
+    try {
 
+      const response = await fetch(ADD_CART_API, {
 
+        method: 'POST',
 
-    try {
+        credentials: 'include',
 
-      const response = await fetch(ADD_CART_API, {
+        body: formData
 
-        method: 'POST',
+      })
 
-        credentials: 'include',
+      const data = await response.json()
 
-        body: formData
+      if (!response.ok || !data.success) {
 
-      })
+        throw new Error(data.message || 'Could not add product')
 
+      }
 
+      // Update React state only after PHP confirms the cart update
 
-      const data = await response.json()
+      setProductQuantities((current) => ({
 
+        ...current,
 
+        [productId]: quantity
 
-      if (!response.ok || !data.success) {
+      }))
 
-        throw new Error(data.message || 'Could not add product')
+      setAddedToCart((current) => ({
 
-      }
+        ...current,
 
+        [productId]: true
 
+      }))
 
-      setCartMessage(
+      setCartMessage(
 
-        `${quantity} ${quantity === 1 ? 'product' : 'products'} added to cart`
+        `${quantity} ${quantity === 1 ? 'product' : 'products'} added to cart`
 
-      )
+      )
 
+      setTimeout(() => setCartMessage(''), 2500)
 
+    } catch (error) {
 
-      setTimeout(() => setCartMessage(''), 2500)
+      setCartMessage(error.message)
 
+      setTimeout(() => setCartMessage(''), 2500)
 
+    }
 
-      setProductQuantities((current) => ({
+  }
 
-        ...current,
 
-        [productId]: 1
+  // Update quantity in PHP session
 
-      }))
+  const updateCartQuantity = (productId, quantity) => {
 
-    } catch (error) {
+    if (quantity < 1) return
 
-      setCartMessage(error.message)
+    handleAddToCart(productId, quantity)
 
-      setTimeout(() => setCartMessage(''), 2500)
+  }
 
-    }
 
-  }
+  // Fetch products from PHP + MySQL API
 
+  useEffect(() => {
 
+    fetch(PRODUCTS_API, {
 
-  // Fetch products from PHP + MySQL API
+      method: 'GET',
 
-  useEffect(() => {
+      credentials: 'include',
 
-    fetch(PRODUCTS_API, {
+      headers: {
 
-      method: 'GET',
+        Accept: 'application/json'
 
-      credentials: 'include',
+      }
 
-      headers: {
+    })
 
-        Accept: 'application/json'
+      .then(async (response) => {
 
-      }
+        const responseText = await response.text()
 
-    })
+        let data
 
-      .then(async (response) => {
 
-        const responseText = await response.text()
 
-        let data
+        try {
 
+          data = JSON.parse(responseText)
 
+        } catch {
 
-        try {
+          throw new Error(
 
-          data = JSON.parse(responseText)
+            'PHP API ne JSON return nahi kiya. products_api.php check karo.'
 
-        } catch {
+          )
 
-          throw new Error(
+        }
 
-            'PHP API ne JSON return nahi kiya. products_api.php check karo.'
 
-          )
 
-        }
+        if (!response.ok || !data.success) {
 
+          throw new Error(
 
+            data.message || `Products API error (${response.status})`
 
-        if (!response.ok || !data.success) {
+          )
 
-          throw new Error(
+        }
 
-            data.message || `Products API error (${response.status})`
 
-          )
 
-        }
+        if (!Array.isArray(data.products)) {
 
+          throw new Error('API response mein products list nahi mili.')
 
+        }
 
-        if (!Array.isArray(data.products)) {
 
-          throw new Error('API response mein products list nahi mili.')
 
-        }
+        return data
 
+      })
 
+      .then((data) => {
 
-        return data
+        const formattedProducts = (data.products || []).map((item) => ({
 
-      })
+          id: item.id,
 
-      .then((data) => {
+          name: item.p_name,
 
-        const formattedProducts = (data.products || []).map((item) => ({
+          brand: item.p_brand,
 
-          id: item.id,
+          price: item.p_price,
 
-          name: item.p_name,
+          image: item.image,
 
-          brand: item.p_brand,
+          category: item.category || item.categories || '',
 
-          price: item.p_price,
+          stock_quantity: item.stock_quantity
 
-          image: item.image,
+        }))
 
-          category: item.category || item.categories || '',
 
-          stock_quantity: item.stock_quantity
 
-        }))
+        setProducts(formattedProducts)
 
+      })
 
+      .catch((err) => {
 
-        setProducts(formattedProducts)
+        console.error('Product API Error:', err)
 
-      })
 
-      .catch((err) => {
 
-        console.error('Product API Error:', err)
+        setError(
 
+          err.message || 'Products load nahi ho paaye. Please refresh the page.'
 
+        )
 
-        setError(
+      })
 
-          err.message || 'Products load nahi ho paaye. Please refresh the page.'
+      .finally(() => {
 
-        )
+        setLoading(false)
 
-      })
+      })
 
-      .finally(() => {
+  }, [])
 
-        setLoading(false)
 
-      })
 
-  }, [])
+  // Get unique brands
 
+  const brands = useMemo(() => {
 
+    return [
 
-  // Get unique brands
+      'All',
 
-  const brands = useMemo(() => {
+      ...new Set(
 
-    return [
+        products
 
-      'All',
+          .map((product) => product.brand)
 
-      ...new Set(
+          .filter(Boolean)
 
-        products
+      )
 
-          .map((product) => product.brand)
+    ]
 
-          .filter(Boolean)
+  }, [products])
 
-      )
 
-    ]
 
-  }, [products])
+  // Get unique categories
 
+  const categories = useMemo(() => {
 
+    return [
 
-  // Get unique categories
+      'All',
 
-  const categories = useMemo(() => {
+      ...new Set(
 
-    return [
+        products
 
-      'All',
+          .map((product) => product.category)
 
-      ...new Set(
+          .filter(Boolean)
 
-        products
+      )
 
-          .map((product) => product.category)
+    ]
 
-          .filter(Boolean)
+  }, [products])
 
-      )
 
-    ]
 
-  }, [products])
+  // Search, filter and sort products
 
+  const filteredProducts = useMemo(() => {
 
+    const searchText = search.trim().toLowerCase()
 
-  // Search, filter and sort products
 
-  const filteredProducts = useMemo(() => {
 
-    const searchText = search.trim().toLowerCase()
+    const filtered = products.filter((product) => {
 
+      const matchesSearch =
 
+        (product.name || '').toLowerCase().includes(searchText) ||
 
-    const filtered = products.filter((product) => {
+        (product.brand || '').toLowerCase().includes(searchText)
 
-      const matchesSearch =
 
-        (product.name || '').toLowerCase().includes(searchText) ||
 
-        (product.brand || '').toLowerCase().includes(searchText)
+      const matchesBrand =
 
+        selectedBrand === 'All' ||
 
+        product.brand === selectedBrand
 
-      const matchesBrand =
 
-        selectedBrand === 'All' ||
 
-        product.brand === selectedBrand
+      const matchesCategory =
 
+        selectedCategory === 'All' ||
 
+        product.category === selectedCategory
 
-      const matchesCategory =
 
-        selectedCategory === 'All' ||
 
-        product.category === selectedCategory
+      const matchesWishlist =
 
+        !showWishlist ||
 
+        wishlist.includes(Number(product.id))
 
-      const matchesWishlist =
 
-        !showWishlist ||
 
-        wishlist.includes(Number(product.id))
+      return (
 
+        matchesSearch &&
 
+        matchesBrand &&
 
-      return (
+        matchesCategory &&
 
-        matchesSearch &&
+        matchesWishlist
 
-        matchesBrand &&
+      )
 
-        matchesCategory &&
+    })
 
-        matchesWishlist
 
-      )
 
-    })
+    if (sortOrder === 'low-high') {
 
+      filtered.sort(
 
+        (a, b) => Number(a.price) - Number(b.price)
 
-    if (sortOrder === 'low-high') {
+      )
 
-      filtered.sort(
+    } else if (sortOrder === 'high-low') {
 
-        (a, b) => Number(a.price) - Number(b.price)
+      filtered.sort(
 
-      )
+        (a, b) => Number(b.price) - Number(a.price)
 
-    } else if (sortOrder === 'high-low') {
+      )
 
-      filtered.sort(
+    }
 
-        (a, b) => Number(b.price) - Number(a.price)
 
-      )
 
-    }
+    return filtered
 
+  }, [
 
+    products,
 
-    return filtered
+    search,
 
-  }, [
+    selectedBrand,
 
-    products,
+    selectedCategory,
 
-    search,
+    sortOrder,
 
-    selectedBrand,
+    showWishlist,
 
-    selectedCategory,
+    wishlist
 
-    sortOrder,
+  ])
 
-    showWishlist,
 
-    wishlist
 
-  ])
+  // Loading skeleton
 
+  if (loading) {
 
+    return (
 
-  // Loading skeleton
+      <div className="react-shop">
 
-  if (loading) {
 
-    return (
 
-      <div className="react-shop">
+        <div className="product-toolbar sv-skeleton-toolbar">
 
+          <div className="sv-skeleton sv-skeleton-filter" />
 
+          <div className="sv-skeleton sv-skeleton-filter" />
 
-        <div className="product-toolbar sv-skeleton-toolbar">
+          <div className="sv-skeleton sv-skeleton-filter" />
 
-          <div className="sv-skeleton sv-skeleton-filter" />
+          <div className="sv-skeleton sv-skeleton-filter" />
 
-          <div className="sv-skeleton sv-skeleton-filter" />
+        </div>
 
-          <div className="sv-skeleton sv-skeleton-filter" />
 
-          <div className="sv-skeleton sv-skeleton-filter" />
 
-        </div>
+        <div
 
+          className="sv-skeleton-grid"
 
+          aria-label="Loading products"
 
-        <div
+          role="status"
 
-          className="sv-skeleton-grid"
+        >
 
-          aria-label="Loading products"
+          {Array.from({ length: 8 }).map((_, index) => (
 
-          role="status"
+            <div className="sv-skeleton-card" key={index}>
 
-        >
+              <div className="sv-skeleton sv-skeleton-image" />
 
-          {Array.from({ length: 8 }).map((_, index) => (
+              <div className="sv-skeleton sv-skeleton-line short" />
 
-            <div className="sv-skeleton-card" key={index}>
+              <div className="sv-skeleton sv-skeleton-line" />
 
-              <div className="sv-skeleton sv-skeleton-image" />
+              <div className="sv-skeleton sv-skeleton-line short" />
 
-              <div className="sv-skeleton sv-skeleton-line short" />
+              <div className="sv-skeleton sv-skeleton-button" />
 
-              <div className="sv-skeleton sv-skeleton-line" />
+            </div>
 
-              <div className="sv-skeleton sv-skeleton-line short" />
+          ))}
 
-              <div className="sv-skeleton sv-skeleton-button" />
 
-            </div>
 
-          ))}
+          <span className="sv-sr-only">
 
+            Loading products, please wait...
 
+          </span>
 
-          <span className="sv-sr-only">
+        </div>
 
-            Loading products, please wait...
 
-          </span>
 
-        </div>
+      </div>
 
+    )
 
+  }
 
-      </div>
 
-    )
 
-  }
+  // Error state
 
+  if (error) {
 
+    return (
 
-  // Error state
+      <div className="react-message" role="alert">
 
-  if (error) {
+        <p>{error}</p>
 
-    return (
 
-      <div className="react-message" role="alert">
 
-        <p>{error}</p>
+        <button
 
+          type="button"
 
+          onClick={() => window.location.reload()}
 
-        <button
+        >
 
-          type="button"
+          Retry
 
-          onClick={() => window.location.reload()}
+        </button>
 
-        >
+      </div>
 
-          Retry
+    )
 
-        </button>
+  }
 
-      </div>
 
-    )
 
-  }
+  // Product section
 
+  return (
 
+    <div className="react-shop">
 
-  // Product section
 
-  return (
 
-    <div className="react-shop">
+      <div className="product-toolbar">
 
 
 
-      <div className="product-toolbar">
+        <input
 
+          type="search"
 
+          className="product-search"
 
-        <input
+          placeholder="🔍 Search products or brands..."
 
-          type="search"
+          value={search}
 
-          className="product-search"
+          onChange={(event) => setSearch(event.target.value)}
 
-          placeholder="🔍 Search products or brands..."
+          aria-label="Search products or brands"
 
-          value={search}
+          onFocus={() => setShowFilters(true)}
 
-          onChange={(event) => setSearch(event.target.value)}
+        />
 
-          aria-label="Search products or brands"
 
-          onFocus={() => setShowFilters(true)}
 
-        />
+        {showFilters && (
 
+          <>
 
 
-        {showFilters && (
 
-          <>
+            <select
 
+              className="brand-filter"
 
+              value={selectedBrand}
 
-            <select
+              onChange={(event) => setSelectedBrand(event.target.value)}
 
-              className="brand-filter"
+            >
 
-              value={selectedBrand}
+              {brands.map((brand) => (
 
-              onChange={(event) => setSelectedBrand(event.target.value)}
+                <option key={brand} value={brand}>
 
-            >
+                  {brand === 'All' ? 'All Brands' : brand}
 
-              {brands.map((brand) => (
+                </option>
 
-                <option key={brand} value={brand}>
+              ))}
 
-                  {brand === 'All' ? 'All Brands' : brand}
+            </select>
 
-                </option>
 
-              ))}
 
-            </select>
+            <select
 
+              className="category-filter"
 
+              value={selectedCategory}
 
-            <select
+              onChange={(event) => setSelectedCategory(event.target.value)}
 
-              className="category-filter"
+            >
 
-              value={selectedCategory}
+              {categories.map((category) => (
 
-              onChange={(event) => setSelectedCategory(event.target.value)}
+                <option key={category} value={category}>
 
-            >
+                  {category === 'All' ? 'All Categories' : category}
 
-              {categories.map((category) => (
+                </option>
 
-                <option key={category} value={category}>
+              ))}
 
-                  {category === 'All' ? 'All Categories' : category}
+            </select>
 
-                </option>
 
-              ))}
 
-            </select>
+            <select
 
+              className="sort-filter"
 
+              value={sortOrder}
 
-            <select
+              onChange={(event) => setSortOrder(event.target.value)}
 
-              className="sort-filter"
+            >
 
-              value={sortOrder}
+              <option value="default">Sort by Price</option>
 
-              onChange={(event) => setSortOrder(event.target.value)}
+              <option value="low-high">Price: Low to High</option>
 
-            >
+              <option value="high-low">Price: High to Low</option>
 
-              <option value="default">Sort by Price</option>
+            </select>
 
-              <option value="low-high">Price: Low to High</option>
 
-              <option value="high-low">Price: High to Low</option>
 
-            </select>
+          </>
 
+        )}
 
 
-          </>
 
-        )}
+        <button
 
+          type="button"
 
+          className={`wishlist-toggle ${showWishlist ? 'active' : ''}`}
 
-        <button
+          onClick={() => setShowWishlist((value) => !value)}
 
-          type="button"
+          aria-pressed={showWishlist}
 
-          className={`wishlist-toggle ${showWishlist ? 'active' : ''}`}
+        >
 
-          onClick={() => setShowWishlist((value) => !value)}
+          ❤️ Wishlist ({wishlist.length})
 
-          aria-pressed={showWishlist}
+        </button>
 
-        >
 
-          ❤️ Wishlist ({wishlist.length})
 
-        </button>
+      </div>
 
 
 
-      </div>
+      {wishlistMessage && (
 
+        <p className="react-message" role="status">
 
+          {wishlistMessage}
 
-      {wishlistMessage && (
+        </p>
 
-        <p className="react-message" role="status">
+      )}
 
-          {wishlistMessage}
 
-        </p>
 
-      )}
+      {cartMessage && (
 
+        <div className="cart-notification" role="status">
 
+          ✓ {cartMessage}
 
-      {cartMessage && (
+        </div>
 
-        <div className="cart-notification" role="status">
+      )}
 
-          ✓ {cartMessage}
 
-        </div>
 
-      )}
+      <p className="product-count">
 
+        {showWishlist ? 'Wishlist: ' : 'Showing '}
 
+        {filteredProducts.length} of{' '}
 
-      <p className="product-count">
+        {showWishlist ? wishlist.length : products.length} products
 
-        {showWishlist ? 'Wishlist: ' : 'Showing '}
+      </p>
 
-        {filteredProducts.length} of{' '}
 
-        {showWishlist ? wishlist.length : products.length} products
 
-      </p>
+      {filteredProducts.length === 0 ? (
 
 
 
-      {filteredProducts.length === 0 ? (
+        <p className="react-message">
 
+          {showWishlist
 
+            ? 'Your wishlist is empty. Add products using the heart button!'
 
-        <p className="react-message">
+            : 'No matching products found. Try another search.'}
 
-          {showWishlist
+        </p>
 
-            ? 'Your wishlist is empty. Add products using the heart button!'
 
-            : 'No matching products found. Try another search.'}
 
-        </p>
+      ) : (
 
 
 
-      ) : (
+        <div className="react-products">
 
 
 
-        <div className="react-products">
+          {filteredProducts.map((product) => {
 
+            const isWishlisted = wishlist.includes(Number(product.id))
 
 
-          {filteredProducts.map((product) => {
 
-            const isWishlisted = wishlist.includes(Number(product.id))
+            return (
 
+              <article className="product-card" key={product.id}>
 
 
-            return (
 
-              <article className="product-card" key={product.id}>
+                <div className="product-image-wrap">
 
 
 
-                <div className="product-image-wrap">
+                <img
 
+  className="product-image"
 
+  src={getImageUrl(product.image)}
 
-                <img
+  alt={product.name || 'Product'}
 
-  className="product-image"
+  loading="lazy"
 
-  src={getImageUrl(product.image)}
+  onError={(e) => {
 
-  alt={product.name || 'Product'}
+    console.error('Image not found:', e.currentTarget.src);
 
-  loading="lazy"
-
-  onError={(e) => {
-
-    console.error('Image not found:', e.currentTarget.src);
-
-  }}
+  }}
 
 />
 
 
 
-                  <span className="product-badge">
+                  <span className="product-badge">
 
-                    SHOP VIBE
+                    SHOP VIBE
 
-                  </span>
-
-
-
-                  <button
-
-                    type="button"
-
-                    className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
-
-                    onClick={() => toggleWishlist(product.id)}
-
-                    aria-label={
-
-                      isWishlisted
-
-                        ? 'Remove from wishlist'
-
-                        : 'Add to wishlist'
-
-                    }
-
-                    aria-pressed={isWishlisted}
-
-                  >
-
-                    {isWishlisted ? '❤️' : '🤍'}
-
-                  </button>
+                  </span>
 
 
 
-                </div>
+                  <button
 
-                <div className="product-info">
+                    type="button"
 
+                    className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
 
+                    onClick={() => toggleWishlist(product.id)}
 
-                  <p className="brand">
+                    aria-label={
 
-                    {product.brand || 'Shop Vibe'}
+                      isWishlisted
 
-                  </p>
+                        ? 'Remove from wishlist'
 
+                        : 'Add to wishlist'
 
+                    }
 
-                  <h3>
+                    aria-pressed={isWishlisted}
 
-                    <a
+                  >
 
-                      className="product-title-link"
+                    {isWishlisted ? '❤️' : '🤍'}
 
-                      href={`${PHP_BASE_URL}/product_details.php?id=${encodeURIComponent(product.id)}`}
-
-                    >
-
-                      {product.name || 'Untitled Product'}
-
-                    </a>
-
-                  </h3>
+                  </button>
 
 
 
-                  <div className="price">
+                </div>
 
-                    ₹{product.price}
+                <div className="product-info">
 
-                  </div>
+
+
+                  <p className="brand">
+
+                    {product.brand || 'Shop Vibe'}
+
+                  </p>
+
+
+
+                  <h3>
+
+                    <a
+
+                      className="product-title-link"
+
+                      href={`${PHP_BASE_URL}/product_details.php?id=${encodeURIComponent(product.id)}`}
+
+                    >
+
+                      {product.name || 'Untitled Product'}
+
+                    </a>
+
+                  </h3>
+
+
+
+                  <div className="price">
+
+                    ₹{product.price}
+
+                  </div>
 
 {Number(product.stock_quantity ?? 0) > 0 ? (
-  <>
+
+  addedToCart[product.id] ? (
+
     <div className="product-quantity-control">
+
       <button
+
         type="button"
+
+        disabled={(productQuantities[product.id] || 1) <= 1}
+
         onClick={() =>
-          setProductQuantities((current) => ({
-            ...current,
-            [product.id]: Math.max(
-              1,
-              (current[product.id] || 1) - 1
-            )
-          }))
+
+          updateCartQuantity(
+
+            product.id,
+
+            (productQuantities[product.id] || 1) - 1
+
+          )
+
         }
+
       >
+
         −
+
       </button>
+
+
 
       <span>
+
         {productQuantities[product.id] || 1}
+
       </span>
 
+
+
       <button
+
         type="button"
+
         disabled={
+
           (productQuantities[product.id] || 1) >=
+
           Number(product.stock_quantity)
+
         }
+
         onClick={() =>
-          setProductQuantities((current) => ({
-            ...current,
-            [product.id]: Math.min(
-              Number(product.stock_quantity),
-              (current[product.id] || 1) + 1
-            )
-          }))
+
+          updateCartQuantity(
+
+            product.id,
+
+            (productQuantities[product.id] || 1) + 1
+
+          )
+
         }
+
       >
+
         +
+
       </button>
+
     </div>
 
+  ) : (
+
     <button
+
       type="button"
+
       className="cart-btn"
-      onClick={() => handleAddToCart(product.id)}
+
+      onClick={() => handleAddToCart(product.id, 1)}
+
     >
+
       🛒 Add to Cart
+
     </button>
-  </>
+
+  )
+
 ) : (
+
   <button
+
     type="button"
+
     className="cart-btn"
+
     disabled
+
   >
+
     Out of Stock
+
   </button>
+
 )}
+
 </div>
 
 
 
-              </article>
+              </article>
 
-            )
+            )
 
-          })}
-
-
-
-        </div>
+          })}
 
 
 
-      )}
+        </div>
 
 
 
-    </div>
+      )}
 
-  )
+
+
+    </div>
+
+  )
 
 }
 
